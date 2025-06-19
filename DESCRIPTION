@@ -1,12 +1,20 @@
 Package: appdemo
-Title: An Amazing Shiny App
+Title: Union Election Stats
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "firstname",
-           family = "lastname",
+    c(person(given = "Zachary",
+           family = "Schaller",
            role = c("aut", "cre"),
-           email = "your@email.com")
-Description: What the package does (one paragraph).
+           email = "zachary.schaller@colostate.edu"),
+    person(given = "Lucy",
+           family = "Lewark",
+           role = "aut",
+           email = "lucylewark@gmail.com"),
+    person(given = "Nathan",
+           family = "Crane",
+           role = "aut",
+           email = "ncrane3d@gmail.com"),)
+Description: A shiny app designed to provide data visualizations and downloads for an expanded National Labor Relations Board union election dataset.
 License: What license is it under?
 Imports: 
     attempt,
