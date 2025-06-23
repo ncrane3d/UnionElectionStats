@@ -5,12 +5,39 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
+  #Importing local files
+  source('./R/pages/dashboard.R', local = TRUE)
+  source('./R/pages/about.R', local = TRUE)
+  source('./R/pages/downloads.R', local = TRUE)
+  source('./R/pages/featured_analysis.R', local = TRUE)
+  source('./R/pages/contact_us.R', local = TRUE)
+
+  #Set up site theme
+  theme <- bs_theme (
+    bg = "#93AFC2", #Light blue background
+    fg = "#283044", #Dark blue of navbar
+    primary = "#131620", #Black/blue for text
+    secondary = "#FDF9F6", #Off-white
+    base_font = "Jost"
+  )
+
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
     fluidPage(
-      golem::golem_welcome_page() # Remove this line to start building your UI
+      theme = theme,
+      
+      page_navbar(
+        sidebar = sidebar(),
+        title = "Union Election Stats",
+        nav_spacer(),
+        dashboard(),
+        about(),
+        downloads(),
+        featuredAnalysis(),
+        contact(),
+      )
     )
   )
 }
