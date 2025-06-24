@@ -26,8 +26,9 @@ app_ui <- function(request) {
     list(
       #Shiny adds in classes to most elements it generates, if you'd like to add more rules just inspect the webapge to find what the classes are.
       ".nav-link, .navbar-brand { color: #FDF9F6; }",
+      ".navbar-brand:hover { color: #FDF9F6; }",
       ".nav-link, .nav-link-active { font-size: medium; }",
-      ".card, .bslib-sidebar-4560 { background-color:#FDF9F6; }"
+      ".card, .sidebar { background-color:#FDF9F6 !important; }" #Using important here will overwrite everything, could cause errors.
     )
   )
 
