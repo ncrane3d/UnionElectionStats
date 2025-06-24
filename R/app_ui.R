@@ -3,6 +3,8 @@
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @import bslib
+#' @import magrittr
 #' @noRd
 app_ui <- function(request) {
   #Importing local files
@@ -16,28 +18,33 @@ app_ui <- function(request) {
   theme <- bs_theme (
     bg = "#93AFC2", #Light blue background
     fg = "#283044", #Dark blue of navbar
-    primary = "#131620", #Black/blue for text
-    secondary = "#FDF9F6", #Off-white
+    primary = "#FDF9F6", #Off-white
+    secondary = "#131620", #Black/blue for text
     base_font = "Jost"
+  ) %>%
+  bs_add_rules(
+    list(
+      #Shiny adds in classes to most elements it generates, if you'd like to add more rules just inspect the webapge to find what the classes are.
+      ".nav-link, .navbar-brand { color: #FDF9F6; }",
+      ".nav-link, .nav-link-active { font-size: medium; }",
+      ".card, .bslib-sidebar-4560 { background-color:#FDF9F6; }"
+    )
   )
 
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(
+    page_navbar(
       theme = theme,
-      
-      page_navbar(
-        sidebar = sidebar(),
-        title = "Union Election Stats",
-        nav_spacer(),
-        dashboard(),
-        about(),
-        downloads(),
-        featuredAnalysis(),
-        contact(),
-      )
+      navbar_options = list(bg = "#283044"),
+      title = "Union Election Stats",
+      nav_spacer(),
+      dashboard(),
+      about(),
+      downloads(),
+      featuredAnalysis(),
+      contact(),
     )
   )
 }

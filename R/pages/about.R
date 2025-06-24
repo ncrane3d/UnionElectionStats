@@ -1,6 +1,7 @@
 about <- function() {
     nav_panel(
     title = "About",
-    align = "right"
+    align = "right",
+    card(card_header("Color Example")),
     )
 }
