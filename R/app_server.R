@@ -6,6 +6,11 @@
 #' @noRd
 app_server <- function(input, output, session) {
   # Your application server logic
+  output$map <- renderLeaflet({
+    leaflet() |>
+      addTiles() |>
+      setView(0.249818018854, 0.57650864633, zoom = 3)
+  })
 
   #About Me Images TODO: Replace with actual images
   output$pfp_left<- renderImage( 

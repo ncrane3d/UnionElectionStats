@@ -13,7 +13,7 @@ Authors@R:
     person(given = "Nathan",
            family = "Crane",
            role = "aut",
-           email = "ncrane3d@gmail.com"),)
+           email = "ncrane3d@gmail.com"))
 Description: A shiny app designed to provide data visualizations and downloads for an expanded National Labor Relations Board union election dataset.
 License: What license is it under?
 Imports: 
