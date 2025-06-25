@@ -15,22 +15,24 @@ app_ui <- function(request) {
   source('./R/pages/contact_us.R', local = TRUE)
 
   #Set up site theme
-  theme <- bs_theme (
+  theme <- bs_theme(
     bg = "#93AFC2", #Light blue background
     fg = "#283044", #Dark blue of navbar
-    primary = "#FDF9F6", #Off-white
+    primary = "#93AFC2", #Light blue background
     secondary = "#131620", #Black/blue for text
     base_font = "Jost"
   ) %>%
-  bs_add_rules(
-    list(
-      #Shiny adds in classes to most elements it generates, if you'd like to add more rules just inspect the webapge to find what the classes are.
-      ".nav-link, .navbar-brand { color: #FDF9F6; }",
-      ".navbar-brand:hover { color: #FDF9F6; }",
-      ".nav-link, .nav-link-active { font-size: medium; }",
-      ".card, .sidebar { background-color:#FDF9F6 !important; }" #Using important here will overwrite everything, could cause errors.
+    bs_add_rules(
+      list(
+        #Shiny adds in classes to most elements it generates, if you'd like to add more rules just inspect the webapge to find what the classes are.
+        ".nav-link, .navbar-brand { color: #FDF9F6; }",
+        ".navbar-brand:hover { color: #FDF9F6; }",
+        ".nav-link, .nav-link-active { font-size: medium; }",
+        ".card, .sidebar { background-color:#FDF9F6 !important; }", #Using important here will overwrite everything, could cause errors.
+        ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px}",
+        ".sidebar {position: sticky; overflow: hidden !important;}"
+      )
     )
-  )
 
   tagList(
     # Leave this function for adding external resources
