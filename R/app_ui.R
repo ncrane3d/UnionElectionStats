@@ -15,7 +15,7 @@ app_ui <- function(request) {
   source('./R/pages/contact_us.R', local = TRUE)
 
   #Set up site theme
-  theme <- bs_theme(
+  theme <- bs_theme (
     bg = "#93AFC2", #Light blue background
     fg = "#283044", #Dark blue of navbar
     primary = "#FDF9F6", #Off-white
@@ -28,8 +28,7 @@ app_ui <- function(request) {
       ".nav-link, .navbar-brand { color: #FDF9F6; }",
       ".navbar-brand:hover { color: #FDF9F6; }",
       ".nav-link, .nav-link-active { font-size: medium; }",
-      ".card, .sidebar { background-color:#FDF9F6 !important; border-radius : 0rem; opacity: 1}",
-      ".transparentclass { background-color: #93AFC2;}" #Using important here will overwrite everything, could cause errors.
+      ".card, .sidebar { background-color:#FDF9F6 !important; }" #Using important here will overwrite everything, could cause errors.
     )
   )
 
