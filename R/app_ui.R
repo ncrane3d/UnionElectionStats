@@ -5,6 +5,8 @@
 #' @import shiny
 #' @import bslib
 #' @import magrittr
+#' @import leaflet
+#'
 #' @noRd
 app_ui <- function(request) {
   #Importing local files
