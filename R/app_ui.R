@@ -13,7 +13,7 @@ app_ui <- function(request) {
   source('./R/pages/contact_us.R', local = TRUE)
 
   #Set up site theme
-  theme <- bs_theme (
+  theme <- bs_theme(
     bg = "#93AFC2", #Light blue background
     fg = "#283044", #Dark blue of navbar
     primary = "#131620", #Black/blue for text
@@ -29,7 +29,6 @@ app_ui <- function(request) {
       theme = theme,
       
       page_navbar(
-        sidebar = sidebar(),
         title = "Union Election Stats",
         nav_spacer(),
         dashboard(),
