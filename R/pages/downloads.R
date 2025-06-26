@@ -12,7 +12,7 @@ downloads <- function() {
                 card(
                     card_header("Clean dataset"),
                     height = height,
-                    p("Description of format"),
+                    "Description of format",
                     random_text(nwords = 50),
                     tags$a(href = "", "Geographic Aggregates V"),
                     tags$a(href = "", "Time Aggregates V"),

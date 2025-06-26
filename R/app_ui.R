@@ -6,7 +6,6 @@
 #' @import bslib
 #' @import magrittr
 #' @import leaflet
-#' @import bslib
 #' @import shinipsum
 #'
 #' @noRd
