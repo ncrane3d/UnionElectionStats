@@ -6,6 +6,7 @@
 #' @import bslib
 #' @import magrittr
 #' @import leaflet
+#' @import shinipsum
 #'
 #' @noRd
 app_ui <- function(request) {
