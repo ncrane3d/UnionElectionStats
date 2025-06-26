@@ -17,7 +17,7 @@ about <- function() {
                 )
             ),
             card(
-                card_header("Priniple Investigators", align = "center"),
+                card_header("Principle Investigators", align = "center"),
                 div(
                     align = "center"
                 ),
