@@ -44,7 +44,6 @@ app_ui <- function(request) {
       theme = theme,
       navbar_options = list(bg = "#283044"),
       title = "Union Election Stats",
-      header = "",
       nav_spacer(),
       dashboard(),
       about(),
