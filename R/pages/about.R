@@ -17,8 +17,7 @@ about <- function() {
                 )
             ),
             card(
-                min_height = "40vh",
-                card_header("Meet the Team", align = "center"),
+                card_header("Principle Investigators", align = "center"),
                 div(
                     align = "center"
                 ),
@@ -40,6 +39,26 @@ about <- function() {
                         "pfp_right",
                         loremIpsum
                     ),
+                ),
+            ),
+            card(
+                card_header("Site Developers", align = "center"),
+                div(
+                    align = "center"
+                ),
+                layout_columns(
+                    col_widths = c(-1, 4, -2, 4, -1),
+                    min_width = 300,
+                    bioPanel(
+                        "First Last",
+                        "pfp_developer_left",
+                        loremIpsum
+                    ),
+                    bioPanel(
+                        "First Last",
+                        "pfp_developer_right",
+                        loremIpsum
+                    )
                 ),
             )
         )
