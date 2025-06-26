@@ -2,7 +2,7 @@ dashboard <- function() {
     nav_panel(
         title = "Home",
         align = "left",
-        absolutePanel(
+        div(
             width = "100vw",
             height = "85vh",
             left = "0px",
