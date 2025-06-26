@@ -17,13 +17,14 @@ about <- function() {
                 )
             ),
             card(
-                height = "50vh",
+                min_height = "40vh",
                 card_header("Meet the Team", align = "center"),
                 div(
                     align = "center"
                 ),
                 layout_column_wrap(
                     width = 1 / 3,
+                    min_width = 300,
                     bioPanel(
                         "First Last",
                         "pfp_left",
@@ -41,18 +42,14 @@ about <- function() {
                     ),
                 ),
             )
-            #page_fillable()
         )
     )
 }
 
 bioPanel <- function(firstlast, img, description) {
-    absolutePanel(
-        div(),
+    div(
         align = "center",
-        width = "25vw",
-        height = "25vw",
-        imageOutput(img, width = "10vw", height = "10vw"),
+        imageOutput(img, width = "150", height = "auto"),
         h4(firstlast),
         p(description)
     )
