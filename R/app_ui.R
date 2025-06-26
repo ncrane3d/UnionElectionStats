@@ -31,7 +31,7 @@ app_ui <- function(request) {
         ".navbar-brand:hover { color: #FDF9F6; }",
         ".nav-link, .nav-link-active { font-size: medium; }",
         ".card, .sidebar { background-color:#FDF9F6 !important; }", #Using important here will overwrite everything, could cause errors.
-        ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px}",
+        ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
         ".sidebar {position: sticky; overflow: hidden !important;}"
       )
     )
