@@ -53,7 +53,7 @@ bioPanel <- function(firstlast, img, description) {
         width = "25vw",
         height = "25vw",
         imageOutput(img, width = "10vw", height = "10vw"),
-        h2(firstlast),
+        h4(firstlast),
         p(description)
     )
 }
