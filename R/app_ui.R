@@ -34,7 +34,8 @@ app_ui <- function(request) {
         ".card, .sidebar { background-color:#FDF9F6 !important; border-radius: 0px;}", #Using important here will overwrite everything, could cause errors.
         ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
         ".sidebar {position: sticky; overflow: hidden !important;}",
-        ".tab-pane {padding:25px 0px 0px 0px !important; }"
+        ".tab-pane {padding:25px 0px 0px 0px !important; }",
+        ".collapsing { max-height: 200px; }"
       )
     )
 
