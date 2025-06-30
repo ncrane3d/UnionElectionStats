@@ -34,8 +34,9 @@ app_ui <- function(request) {
         ".card, .sidebar { background-color:#FDF9F6 !important; }", #Using important here will overwrite everything, could cause errors.
         ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
         ".sidebar {position: sticky; overflow: hidden !important;}",
-        ".contactcard {margin-top: 15vh;}",
-        ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}"
+        ".contactcard {margin-top: 8vh;}",
+        ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}",
+        ".contact_us_container {width:60%; margin: auto; }"
       )
     )
 

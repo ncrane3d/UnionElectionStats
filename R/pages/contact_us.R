@@ -3,19 +3,7 @@ contact <- function() {
         title = "Contact Us",
         align = "left",
         fillPage(
-            tags$div(
-                class = "contactbg",
-                img(
-                    src = "https://upload.wikimedia.org/wikipedia/commons/b/b4/Minnesota_rally_in_solidarity_with_Wisconsin_union_protesters_%285479652239%29.jpg",
-                    height = "100vh"
-                )
-            ),
-            #In the example above, we used CSS to add a scaling background image to the page. You can also use img() to create this effect:
-            #Pass img() to any Shiny UI page method (e.g., page_fillable()). img() creates an image.
-            #Pass the path or URL of your desired image to img()’s src parameter. Set additional parameters to control the appearance of the image (e.g., width and height).
-            absolutePanel(
-                right = "20vw",
-                left = "20vw",
+            div(
                 card(
                     class = "contactcard",
                     card_header("Contact us"),
@@ -41,7 +29,13 @@ contact <- function() {
                     ),
                     tags$div(align = "center", submitButton(text = "Submit"))
                 )
-            )
+            ) %>% tagAppendAttributes(class="contact_us_container")
+        ),
+        style = css(
+            background_image = "url(https://upload.wikimedia.org/wikipedia/commons/b/b4/Minnesota_rally_in_solidarity_with_Wisconsin_union_protesters_%285479652239%29.jpg)",
+            background_repeat = "no-repeat",
+            background_size = "cover",
+            background_position = "center bottom",
         )
     )
 }
