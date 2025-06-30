@@ -4,9 +4,8 @@ contact <- function() {
         align = "left",
         fillPage(
             tags$div(
-                position = "absolute",
                 class = "contactbg",
-                tags$img(
+                img(
                     src = "https://upload.wikimedia.org/wikipedia/commons/b/b4/Minnesota_rally_in_solidarity_with_Wisconsin_union_protesters_%285479652239%29.jpg",
                     height = "100vh"
                 )
