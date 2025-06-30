@@ -40,7 +40,7 @@ contact <- function() {
                         width = "100%",
                         height = "30vh"
                     ),
-                    submitButton(text = "Submit")
+                    tags$div(align = "center", submitButton(text = "Submit"))
                 )
             )
         )
