@@ -7,6 +7,7 @@
 #' @import magrittr
 #' @import leaflet
 #' @import shinipsum
+#' @import bsicons
 #'
 #' @noRd
 app_ui <- function(request) {
@@ -35,7 +36,13 @@ app_ui <- function(request) {
         ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
         ".sidebar {position: sticky; overflow: hidden !important;}",
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
-        ".collapsing { max-height: 200px; }"
+        ".collapsing { max-height: 200px; }",
+        ".accordion-item { background-color: #FDF9F6; margin-bottom: 20px; }",
+        ".accordion-button { padding: 16px; position: relative; }",
+        ".accordion-body p { margin-bottom: 0px; text-align:left; padding: 16px; }",
+        ".accordion-button.collapsed:after { content: '⯅'; font-size: 30px; color: #000000; position: absolute; margin-left: 5px;  right: 16px; } ", #alternative options: ⮝ 🢕 +
+        ".accordion-button:not(.collapsed)::after {  content: '⯆'; font-size: 30px; color: #000000; position: absolute; margin-left: 5px;  right: 16px; }", #alternative options: ⮟ 🢗 -
+        ".accordion-button:hover {background-color:rgb(189, 187, 185); }"
       )
     )
 
