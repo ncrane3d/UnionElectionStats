@@ -7,10 +7,7 @@ featuredAnalysis <- function() {
     nav_panel(
         title = "Featured Analysis",
         align = "right",
-        absolutePanel(
-            # align = "center",
-            right = "10vw",
-            left = "10vw",
+        accordion(
            paperPanel(
                 "Example Paper",
                 loremIpsum
@@ -35,5 +32,5 @@ paperPanel <- function(paperName, abstract) {
     accordion_panel(
         title = paperName,
         p(abstract)
-     ) %>% tagAppendAttributes(class="accordion-custom")
+     )
 }

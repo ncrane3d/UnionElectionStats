@@ -14,9 +14,32 @@ downloads <- function() {
                     height = height,
                     "Description of format",
                     random_text(nwords = 50),
-                    tags$a(href = "", "Geographic Aggregates V"),
-                    tags$a(href = "", "Time Aggregates V"),
-                    tags$a(href = "", "Industry Aggregates V")
+                    accordion(
+                        accordion_panel(
+                            title = "Geographic Aggregates",
+                            accordion(
+                                accordion_panel(
+                                    title = "State",
+                                    tags$a(href = "", "Link_To_State_Data")
+                                ),
+                                accordion_panel(
+                                    title = "County",
+                                    tags$a(href = "", "Link_To_County_Data")
+                                ),
+                            ),
+                            open = FALSE,
+                            multiple = FALSE
+                        ),
+                        accordion_panel(
+                            title = "Time Aggregates",
+                            p("Data is here")
+                        ),
+                        accordion_panel(
+                            title = "Industry Aggregates",
+                            p("Data is here")
+                        ),            
+                        open = FALSE
+                    )
                 ),
                 card(
                     card_header("Raw dataset"),
