@@ -31,12 +31,14 @@ app_ui <- function(request) {
         ".nav-link, .navbar-brand { color: #FDF9F6; }",
         ".navbar-brand:hover { color: #FDF9F6; }",
         ".nav-link, .nav-link-active { font-size: medium; }",
-        ".card, .sidebar { background-color:#FDF9F6 !important; }", #Using important here will overwrite everything, could cause errors.
+        ".card, .sidebar { background-color:#FDF9F6 !important; border-radius: 0px;}", #Using important here will overwrite everything, could cause errors.
         ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
         ".sidebar {position: sticky; overflow: hidden !important;}",
         ".contactcard {margin-top: 8vh;}",
         ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}",
-        ".contact_us_container {width:60%; margin: auto; }"
+        ".contact_us_container {width:60%; margin: auto; }",
+        ".tab-pane {padding:25px 0px 0px 0px !important; }",
+        ".collapsing { max-height: 200px; }"
       )
     )
 
