@@ -28,7 +28,7 @@ app_ui <- function(request) {
   ) %>%
     bs_add_rules(
       list(
-        #Shiny adds in classes to most elements it generates, if you'd like to add more rules just inspect the webapge to find what the classes are.
+        #Shiny adds in classes to most elements it generates, if you'd like to add more rules just inspect the webpage to find what the classes are.
         ".nav-link, .navbar-brand { color: #FDF9F6; }",
         ".navbar-brand:hover { color: #FDF9F6; }",
         ".nav-link, .nav-link-active { font-size: medium; }",
@@ -39,13 +39,13 @@ app_ui <- function(request) {
         ".navbar div .collapsing { max-height: 200px; }",
         # Below is styling for all accordions, as seen on featured analysis page
         ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
-        ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;  }",
+        ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;  font-weight: bold;}",
         ".accordion-item { margin-bottom: 18px; margin-top: 2px; border-top-width: 1px !important; }",
-        ".accordion-body p { margin-bottom: 0px; text-align:left; padding: 16px; }",
+        ".accordion-body p { margin-bottom: 0px; text-align:left; padding: 16px; font-weight: normal;}",
         ".accordion-button:hover {background-color:rgb(189, 185, 188); }",
         #Below is styling for text accordions, as seen on the download page
         "#accordion-download { margin: 0px; }",
-        "#accordion-download .accordion-header { display: inline-block; }",
+        "#accordion-download .accordion-header { display: inline-block; font-weight: normal !important;}",
         "#accordion-download .accordion-button.collapsed:after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; } ",
         "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }"
       )
