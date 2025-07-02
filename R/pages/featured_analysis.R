@@ -40,6 +40,7 @@ paperPanel <- function(paperName, authors, abstract) {
             align = "left",
             div(strong("Authors: "), p(paste(authors, collapse = ", "))),
             div(strong("Abstract: "), p(abstract))
-        )
+        ) %>%
+            tagAppendAttributes(id = "accordion-analysis")
     )
 }

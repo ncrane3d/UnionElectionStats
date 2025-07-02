@@ -21,23 +21,32 @@ downloads <- function() {
                                 accordion_panel(
                                     title = "State",
                                     tags$a(href = "", "Link_To_State_Data")
-                                )%>% tagAppendAttributes(id="accordion-download"), 
+                                ) %>%
+                                    tagAppendAttributes(
+                                        id = "accordion-download"
+                                    ),
                                 accordion_panel(
                                     title = "County",
                                     tags$a(href = "", "Link_To_County_Data")
-                                )%>% tagAppendAttributes(id="accordion-download"),
+                                ) %>%
+                                    tagAppendAttributes(
+                                        id = "accordion-download"
+                                    ),
                             ),
                             open = FALSE,
                             multiple = FALSE
-                        ) %>% tagAppendAttributes(id="accordion-download"),
+                        ) %>%
+                            tagAppendAttributes(id = "accordion-download"),
                         accordion_panel(
                             title = "Time Aggregates",
                             p("Data is here")
-                        ) %>% tagAppendAttributes(id="accordion-download"),
+                        ) %>%
+                            tagAppendAttributes(id = "accordion-download"),
                         accordion_panel(
                             title = "Industry Aggregates",
                             p("Data is here")
-                        ) %>% tagAppendAttributes(id="accordion-download"),           
+                        ) %>%
+                            tagAppendAttributes(id = "accordion-download"),
                         open = FALSE
                     )
                 ),
@@ -47,9 +56,10 @@ downloads <- function() {
                     "Description of format",
                     random_text(nwords = 50),
                     accordion_panel(
-                            title = "File Types",
-                            p("Data is here")
-                        )%>% tagAppendAttributes(id="accordion-download")
+                        title = "File Types",
+                        p("Data is here")
+                    ) %>%
+                        tagAppendAttributes(id = "accordion-download")
                 ),
                 card(
                     card_header("Documentation"),
@@ -58,9 +68,10 @@ downloads <- function() {
                     random_text(nwords = 50),
                     tags$a(href = "", "Documentation Spreadsheet"),
                     accordion_panel(
-                            title = "Version History",
-                            p("Data is here")
-                        )%>% tagAppendAttributes(id="accordion-download")    
+                        title = "Version History",
+                        p("Data is here")
+                    ) %>%
+                        tagAppendAttributes(id = "accordion-download")
                 )
             )
         )
