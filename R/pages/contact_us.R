@@ -2,8 +2,7 @@ contact <- function() {
     nav_panel(
         title = "Contact Us",
         align = "left",
-        fillPage(
-            div(
+        div(
                 card(
                     class = "contactcard",
                     card_header("Contact us"),
@@ -29,8 +28,7 @@ contact <- function() {
                     ),
                     tags$div(align = "center", submitButton(text = "Submit"))
                 )
-            ) %>% tagAppendAttributes(class="contact_us_container")
-        ),
+            ) %>% tagAppendAttributes(class="contact_us_container"),
         style = css(
             background_image = "url(https://upload.wikimedia.org/wikipedia/commons/b/b4/Minnesota_rally_in_solidarity_with_Wisconsin_union_protesters_%285479652239%29.jpg)",
             background_repeat = "no-repeat",
