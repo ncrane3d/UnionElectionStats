@@ -7,7 +7,7 @@
 #' @import magrittr
 #' @import leaflet
 #' @import shinipsum
-#' @import bsicons
+#'
 #'
 #' @noRd
 app_ui <- function(request) {
@@ -38,7 +38,7 @@ app_ui <- function(request) {
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
         ".navbar div .collapsing { max-height: 200px; }",
         # Below is styling for all accordions, as seen on featured analysis page
-        ".accordion { width: 80%; margin-left: auto; margin-right: auto; }",
+        ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;  }",
         ".accordion-item { margin-bottom: 18px; margin-top: 2px; border-top-width: 1px !important; }",
         ".accordion-body p { margin-bottom: 0px; text-align:left; padding: 16px; }",
@@ -46,7 +46,7 @@ app_ui <- function(request) {
         #Below is styling for text accordions, as seen on the download page
         "#accordion-download { margin: 0px; }",
         "#accordion-download .accordion-header { display: inline-block; }",
-        "#accordion-download .accordion-button.collapsed:after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; } ", 
+        "#accordion-download .accordion-button.collapsed:after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; } ",
         "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }"
       )
     )
