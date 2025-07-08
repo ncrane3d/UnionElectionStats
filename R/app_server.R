@@ -10,10 +10,10 @@
 
 con <- DBI::dbConnect(
   RPostgres::Postgres(),
-  host = "184.94.215.35",
+  host = Sys.getenv("UE_IP"),
   dbname = "unionelectiondb",
   user = "ueuser",
-  password = Sys.getenv("DBPASS"),
+  password = Sys.getenv("UE_DB_PASS"),
   port = 21701
 )
 
