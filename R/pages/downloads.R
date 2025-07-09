@@ -4,9 +4,6 @@ downloads <- function() {
         title = "Downloads",
         align = "left",
         div(
-            right = "10vw",
-            left = "10vw",
-            height = height,
             layout_column_wrap(
                 width = 1 / 3,
                 card(
