@@ -3,7 +3,20 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @import DBI
+#' @import RPostgres
 #' @noRd
+#'
+
+con <- DBI::dbConnect(
+  RPostgres::Postgres(),
+  host = Sys.getenv("UE_IP"),
+  dbname = "unionelectiondb",
+  user = "ueuser",
+  password = Sys.getenv("UE_DB_PASS"),
+  port = 21701
+)
+
 app_server <- function(input, output, session) {
   # Your application server logic
   output$map <- renderLeaflet({
