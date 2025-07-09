@@ -3,10 +3,7 @@ downloads <- function() {
     nav_panel(
         title = "Downloads",
         align = "left",
-        absolutePanel(
-            right = "10vw",
-            left = "10vw",
-            height = height,
+        div(
             layout_column_wrap(
                 width = 1 / 3,
                 card(
@@ -74,6 +71,7 @@ downloads <- function() {
                         tagAppendAttributes(id = "accordion-download")
                 )
             )
-        )
+        )  %>%
+            tagAppendAttributes(class = "centered-card"),
     )
 }
