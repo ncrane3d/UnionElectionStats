@@ -28,7 +28,7 @@ app_server <- function(input, output, session) {
   output$pfp_left <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./inst/app/www/pfp_empty.png",
         height = "auto",
         width = "100%"
       )
@@ -39,7 +39,7 @@ app_server <- function(input, output, session) {
   output$pfp_middle <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./inst/app/www/pfp_empty.png",
         height = "auto",
         width = "100%"
       )
@@ -50,7 +50,7 @@ app_server <- function(input, output, session) {
   output$pfp_right <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./inst/app/www/pfp_empty.png",
         height = "auto",
         width = "100%"
       )
@@ -61,7 +61,7 @@ app_server <- function(input, output, session) {
   output$contact_bg <- renderImage(
     {
       list(
-        src = "./resources/images/rally.jpg",
+        src = "./inst/app/www/rally1.jpg",
         height = "auto",
         width = "100%"
       )
@@ -72,7 +72,7 @@ app_server <- function(input, output, session) {
   output$pfp_developer_left <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./inst/app/www/pfp_empty.png",
         height = "auto",
         width = "100%"
       )
@@ -83,7 +83,7 @@ app_server <- function(input, output, session) {
   output$pfp_developer_right <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./inst/app/www/pfp_empty.png",
         height = "auto",
         width = "100%"
       )
