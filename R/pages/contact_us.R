@@ -4,7 +4,7 @@ contact <- function() {
         align = "left",
         div(
             card(
-                height = "35%",
+                height = "30%",
                 id = "picketpost",
                 fill = TRUE
             ),
@@ -36,10 +36,11 @@ contact <- function() {
         ) %>%
             tagAppendAttributes(class = "contact_us_container"),
         style = css(
-            background_image = "url(www/rally2.jpg)",
+            background_image = "url(www/rally3.jpg)",
             background_repeat = "repeat",
             background_size = "cover",
             background_position = "center bottom",
+            overflow = "hidden"
         )
     )
 }
