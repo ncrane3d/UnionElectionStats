@@ -40,6 +40,8 @@ app_ui <- function(request) {
         ".contact_us_container {width:60%; margin: auto; }",
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
         ".navbar div .collapsing { max-height: 200px; }",
+        ".bslib-sidebar-layout {margin-bottom: 0px; border-color: #000000!important; border: 1px 0 0 0 !important;}",
+        ".navbar {position: sticky; top: 0; }",
         # Below is styling for all accordions, as seen on featured analysis page
         ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;}",
