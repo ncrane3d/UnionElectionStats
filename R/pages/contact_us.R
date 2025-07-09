@@ -27,12 +27,19 @@ contact <- function() {
                     height = "30vh"
                 ),
                 tags$div(align = "center", submitButton(text = "Submit"))
+            ),
+            card(
+                height = "100%",
+                max_width = "10%",
+                min_width = "10%",
+                id = "picketpost",
+                fill = TRUE
             )
         ) %>%
             tagAppendAttributes(class = "contact_us_container"),
         style = css(
-            background_image = "url(www/rally1.jpg)",
-            background_repeat = "no-repeat",
+            background_image = "url(www/rally2.jpg)",
+            background_repeat = "repeat",
             background_size = "cover",
             background_position = "center bottom",
         )
