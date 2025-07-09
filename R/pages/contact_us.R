@@ -4,6 +4,11 @@ contact <- function() {
         align = "left",
         div(
             card(
+                height = "35%",
+                id = "picketpost",
+                fill = TRUE
+            ),
+            card(
                 class = "contactcard",
                 card_header("Contact us"),
                 fill = FALSE,
@@ -27,13 +32,6 @@ contact <- function() {
                     height = "30vh"
                 ),
                 tags$div(align = "center", submitButton(text = "Submit"))
-            ),
-            card(
-                height = "100%",
-                max_width = "10%",
-                min_width = "10%",
-                id = "picketpost",
-                fill = TRUE
             )
         ) %>%
             tagAppendAttributes(class = "contact_us_container"),
