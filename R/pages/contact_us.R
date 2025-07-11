@@ -11,7 +11,6 @@ contact <- function() {
             card(
                 class = "contactcard",
                 card_header("Contact us"),
-                id = "picketsign",
                 fill = FALSE,
                 layout_column_wrap(
                     width = 1 / 2,
@@ -30,21 +29,10 @@ contact <- function() {
                     resize = "none",
                     value = "Your message here...",
                     width = "100%",
-                    height = "20vh"
+                    height = "30vh"
                 ),
                 tags$div(align = "center", submitButton(text = "Submit"))
-            ),
-            tags$div(
-                position = "fixed",
-                bottom = 0,
-                left = 0,
-                right = 0,
-                marginLeft = "auto",
-                marginRight = "auto",
-                marginBottom = "0px",
-                id = "gompers",
-                imageOutput("gompers", width = "50%", height = "auto")
-            ),
+            )
         ) %>%
             tagAppendAttributes(class = "contact_us_container"),
         style = css(
@@ -52,6 +40,7 @@ contact <- function() {
             background_repeat = "repeat",
             background_size = "cover",
             background_position = "center bottom",
+            overflow = "hidden"
         )
     )
 }
