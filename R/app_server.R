@@ -57,17 +57,6 @@ app_server <- function(input, output, session) {
     },
     deleteFile = FALSE
   )
-  #Contact Us Background
-  output$contact_bg <- renderImage(
-    {
-      list(
-        src = "./inst/app/www/rally1.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
 
   output$pfp_developer_left <- renderImage(
     {
@@ -84,6 +73,28 @@ app_server <- function(input, output, session) {
     {
       list(
         src = "./inst/app/www/pfp_empty.png",
+        height = "auto",
+        width = "100%"
+      )
+    },
+    deleteFile = FALSE
+  )
+  #Contact Us Background
+  output$contact_bg <- renderImage(
+    {
+      list(
+        src = "./inst/app/www/rally1.jpg",
+        height = "auto",
+        width = "100%"
+      )
+    },
+    deleteFile = FALSE
+  )
+
+  output$gompers <- renderImage(
+    {
+      list(
+        src = "./inst/app/www/gompers.png",
         height = "auto",
         width = "100%"
       )

@@ -12,6 +12,7 @@ contact <- function() {
                 class = "contactcard",
                 card_header("Contact us"),
                 fill = FALSE,
+                width = "20vw",
                 layout_column_wrap(
                     width = 1 / 2,
                     height = "5vh",
@@ -29,10 +30,21 @@ contact <- function() {
                     resize = "none",
                     value = "Your message here...",
                     width = "100%",
-                    height = "30vh"
+                    height = "10vh"
                 ),
                 tags$div(align = "center", submitButton(text = "Submit"))
-            )
+            ),
+            tags$div(
+                position = "fixed",
+                bottom = 0,
+                left = 0,
+                right = 0,
+                marginLeft = "auto",
+                marginRight = "auto",
+                marginBottom = "0px",
+                id = "gompers",
+                imageOutput("gompers", width = "400px", height = "auto")
+            ),
         ) %>%
             tagAppendAttributes(class = "contact_us_container"),
         style = css(
