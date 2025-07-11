@@ -94,7 +94,17 @@ app_server <- function(input, output, session) {
   output$gompers <- renderImage(
     {
       list(
-        src = "./inst/app/www/gompers.png",
+        src = "./inst/app/www/gompers3.png",
+        height = "auto",
+        width = "100%"
+      )
+    },
+    deleteFile = FALSE
+  )
+  output$contact_us_text <- renderImage(
+    {
+      list(
+        src = "./inst/app/www/contactus.svg",
         height = "auto",
         width = "100%"
       )

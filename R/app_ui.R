@@ -35,7 +35,6 @@ app_ui <- function(request) {
         ".card, .sidebar { background-color:#FDF9F6 !important; border-radius: 0px;}", #Using important here will overwrite everything, could cause errors.
         ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
         ".sidebar {position: sticky; overflow: hidden !important;}",
-        ".contactcard {margin-top: 8vh;}",
         ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}",
         ".contact_us_container {width:60%; margin: auto; }",
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
@@ -54,10 +53,10 @@ app_ui <- function(request) {
         "#accordion-download .accordion-button.collapsed:after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; } ",
         "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }",
         #Picket sign post
-        "#picketpost {width: 50px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: auto; margin-right: auto;}",
-        "#picketsign {width: 20vw !important; left: 0; right: 0; margin-left: auto; margin-right: auto; position: fixed; top: 5; margin-top: -250px !important;}",
+        "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: auto; margin-right: auto;}",
+        "#picketsign {width: 30vw; min-width: 200px; left: 0; right: 0; margin-left: auto; margin-right: auto; position: fixed; top: 200px;}",
         #Samuel Gompers
-        "#gompers {position: fixed; bottom: 0; left: 0; right: 200px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;}"
+        "#gompers {position: fixed; bottom: 0; left: 0; right: 200px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;display: flex; justify-content: end; float: right;}"
       )
     )
 

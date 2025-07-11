@@ -4,15 +4,19 @@ contact <- function() {
         align = "left",
         div(
             card(
-                height = "30%",
+                height = "40%",
                 id = "picketpost",
                 fill = TRUE
             ),
             card(
-                class = "contactcard",
-                card_header("Contact us"),
+                id = "picketsign",
+                card_header(imageOutput(
+                    "contact_us_text",
+                    width = "100%",
+                    height = "auto"
+                )),
                 fill = FALSE,
-                width = "20vw",
+                width = "15vw",
                 layout_column_wrap(
                     width = 1 / 2,
                     height = "5vh",
