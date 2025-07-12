@@ -34,9 +34,9 @@ app_ui <- function(request) {
         ".nav-link, .nav-link-active { font-size: medium; }",
         ".card, .sidebar { background-color:#FDF9F6 !important; border-radius: 0px;}", #Using important here will overwrite everything, could cause errors.
         ".centered-card {  width: 80%; margin: auto; overflow: hidden; }",
-        ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
+        ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important; box-shadow: var(--bslib-card-box-shadow, 0px 0px 2px 0px RGBA(var(--bslib-box-shadow-color-rgb), 0.14), 0px 2px 4px 0px RGBA(var(--bslib-box-shadow-color-rgb), 0.16));}",
         ".scrollable-panel {overflow: hidden !important; }",
-        ".sidebar {position: sticky; overflow: hidden !important;}",
+        ".sidebar {position: sticky; overflow: hidden !important; z-index: -1 !important;}",
         ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}",
         ".contact_us_container {width:60%; margin: auto; }",
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
@@ -57,10 +57,10 @@ app_ui <- function(request) {
         "#accordion-download .accordion-button.collapsed:after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; } ",
         "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }",
         #Picket sign post
-        "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: auto; margin-right: auto;}",
-        "#picketsign {width: 30vw; min-width: 200px; left: 0; right: 0; margin-left: auto; margin-right: auto; position: fixed; top: 200px; max-height: 680px;}",
+        "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: calc(max(248px, 50vw); margin-right: auto;}",
+        "#picketsign {width: 30vw; min-width: 200px; left: 0; right: 0; margin-left: calc(max(148px, 35vw)); margin-right: auto; position: fixed; top: 15vh; max-height: 680px;}",
         #Samuel Gompers
-        "#gompers {position: fixed; bottom: 0; left: 0; right: 200px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;display: flex; justify-content: end; float: right;}"
+        "#gompers {position: fixed; bottom: 0; left: 0; right: 190px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;display: flex; justify-content: end; float: right;}"
       )
     )
 

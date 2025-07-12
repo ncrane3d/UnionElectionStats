@@ -47,12 +47,12 @@ contact <- function() {
                 marginRight = "auto",
                 marginBottom = "0px",
                 id = "gompers",
-                imageOutput("gompers", width = "400px", height = "auto")
+                imageOutput("gompers", width = "320px", height = "auto")
             ),
         ) %>%
             tagAppendAttributes(class = "contact_us_container"),
         style = css(
-            background_image = "url(www/rally3.jpg)",
+            background_image = "url(www/rally1.jpg)",
             background_repeat = "repeat",
             background_size = "cover",
             background_position = "center bottom",
