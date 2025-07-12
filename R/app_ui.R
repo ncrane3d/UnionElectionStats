@@ -54,7 +54,7 @@ app_ui <- function(request) {
         "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }",
         #Picket sign post
         "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: auto; margin-right: auto;}",
-        "#picketsign {width: 30vw; min-width: 200px; left: 0; right: 0; margin-left: auto; margin-right: auto; position: fixed; top: 200px;}",
+        "#picketsign {width: 30vw; min-width: 200px; left: 0; right: 0; margin-left: auto; margin-right: auto; position: fixed; top: 200px; max-height: 680px;}",
         #Samuel Gompers
         "#gompers {position: fixed; bottom: 0; left: 0; right: 200px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;display: flex; justify-content: end; float: right;}"
       )
