@@ -33,12 +33,16 @@ app_ui <- function(request) {
         ".navbar-brand:hover { color: #FDF9F6; }",
         ".nav-link, .nav-link-active { font-size: medium; }",
         ".card, .sidebar { background-color:#FDF9F6 !important; border-radius: 0px;}", #Using important here will overwrite everything, could cause errors.
+        ".centered-card {  width: 80%; margin: auto; overflow: hidden; }",
         ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
+        ".scrollable-panel {overflow: hidden !important; }",
         ".sidebar {position: sticky; overflow: hidden !important;}",
         ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}",
         ".contact_us_container {width:60%; margin: auto; }",
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
         ".navbar div .collapsing { max-height: 200px; }",
+        ".bslib-sidebar-layout {margin-bottom: 0px; border: 0 !important;}",
+        ".navbar {position: sticky; top: 0; z-index:1; }",
         # Below is styling for all accordions, as seen on featured analysis page
         ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;}",
