@@ -10,11 +10,14 @@ contact <- function() {
             ),
             card(
                 id = "picketsign",
-                card_header(imageOutput(
-                    "contact_us_text",
-                    width = "100%",
-                    height = "auto"
-                )),
+                card_header(
+                    p(" "),
+                    imageOutput(
+                        "contact_us_text",
+                        width = "100%",
+                        height = "auto"
+                    )
+                ),
                 fill = FALSE,
                 width = "15vw",
                 layout_column_wrap(
@@ -32,7 +35,6 @@ contact <- function() {
                     "message",
                     "Message",
                     resize = "none",
-                    value = "Your message here...",
                     width = "100%",
                     height = "10vh"
                 ),
@@ -52,7 +54,7 @@ contact <- function() {
         ) %>%
             tagAppendAttributes(class = "contact_us_container"),
         style = css(
-            background_image = "url(www/rally1.jpg)",
+            background_image = "url(www/picket_line.jpg)",
             background_repeat = "repeat",
             background_size = "cover",
             background_position = "center bottom",

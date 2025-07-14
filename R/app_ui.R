@@ -42,7 +42,7 @@ app_ui <- function(request) {
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
         ".navbar div .collapsing { max-height: 200px; }",
         ".bslib-sidebar-layout {margin-bottom: 0px; border: 0 !important;}",
-        ".navbar {position: sticky; top: 0; z-index:1; }",
+        ".navbar {position: sticky; top: 0; z-index:1; overflow-y: hidden;}",
         # Below is styling for all accordions, as seen on featured analysis page
         ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;}",
@@ -57,8 +57,8 @@ app_ui <- function(request) {
         "#accordion-download .accordion-button.collapsed:after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; } ",
         "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }",
         #Picket sign post
-        "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: calc(max(248px, 50vw); margin-right: auto;}",
-        "#picketsign {width: 30vw; min-width: 200px; left: 0; right: 0; margin-left: calc(max(148px, 35vw)); margin-right: auto; position: fixed; top: 15vh; max-height: 680px;}",
+        "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: calc(max(238px, calc(50vw - 15px)); margin-right: auto;}",
+        "#picketsign {width: 30vw; min-width: 200px; left: 0; right: 0; margin-left: calc(max(153px, 35vw)); margin-right: auto; position: fixed; top: 15vh; max-height: 680px; font-family: 'Brush Script MT', cursive;}",
         #Samuel Gompers
         "#gompers {position: fixed; bottom: 0; left: 0; right: 190px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;display: flex; justify-content: end; float: right;}"
       )

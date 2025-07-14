@@ -94,7 +94,7 @@ app_server <- function(input, output, session) {
   output$gompers <- renderImage(
     {
       list(
-        src = "./inst/app/www/gompers3.png",
+        src = "./inst/app/www/gompers.png",
         height = "auto",
         width = "100%"
       )
