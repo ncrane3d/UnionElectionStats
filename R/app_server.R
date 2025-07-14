@@ -5,11 +5,12 @@
 #' @import shiny
 #' @import DBI
 #' @import RPostgres
+#' @import pool
 #' @noRd
 #'
 
-con <- DBI::dbConnect(
-  RPostgres::Postgres(),
+pool <- dbPool(
+  Postgres(),
   host = Sys.getenv("UE_IP"),
   dbname = "unionelectiondb",
   user = "ueuser",
@@ -24,6 +25,20 @@ app_server <- function(input, output, session) {
       addTiles() |>
       setView(0.249818018854, 0.57650864633, zoom = 3)
   })
+
+  output$testPlot <- renderPlot({
+    sql <- "
+      SELECT * 
+      FROM testdata 
+      WHERE yrclosed >= ?lowerBound AND yrclosed <= ?upperBound;
+      "
+    query <- sqlInterpolate(pool, sql, lowerBound = input$timeframe[1], upperBound = input$timeframe[2])
+    result <- dbGetQuery(pool, query)
+    plot <- result$yrclosed
+    eligble(plot) <- result$eligible
+    barplot(plot)
+  })
+  
   #About Me Images TODO: Replace with actual images
   output$pfp_left <- renderImage(
     {
