@@ -57,7 +57,7 @@ contact <- function() {
             background_image = "url(www/picket_line.jpg)",
             background_repeat = "repeat",
             background_size = "cover",
-            background_position = "center bottom",
+            background_position = "center",
             overflow = "hidden"
         )
     )
