@@ -6,6 +6,8 @@
 #' @import DBI
 #' @import RPostgres
 #' @import pool
+#' @import ggplot2
+#' @import ggthemes
 #' @noRd
 #'
 
@@ -26,18 +28,32 @@ app_server <- function(input, output, session) {
       setView(0.249818018854, 0.57650864633, zoom = 3)
   })
 
-  output$testPlot <- renderPlot({
+  #My first attempts to make the graph reactive, not working so far
+  query <- reactive ({
     sql <- "
-      SELECT * 
-      FROM testdata 
-      WHERE yrclosed >= ?lowerBound AND yrclosed <= ?upperBound;
-      "
+    SELECT *
+    FROM unionelections 
+    WHERE yrclosed >= ?lowerBound AND yrclosed <= ?upperBound;
+    "
     query <- sqlInterpolate(pool, sql, lowerBound = input$timeframe[1], upperBound = input$timeframe[2])
     result <- dbGetQuery(pool, query)
-    plot <- result$yrclosed
-    eligble(plot) <- result$eligible
-    barplot(plot)
   })
+  output$testPlot <- renderPlot({
+    ggplot(data = query(), aes(x = yrclosed, y = eligible)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(title = "Eligible Voters Per Year", x = "Year Closed", y = "Eligible Voters") +
+    theme_fivethirtyeight()
+  })
+
+  # output$testPlot <- renderTable({
+  #   sql <- "
+  #     SELECT *
+  #     FROM unionelections 
+  #     WHERE yrclosed >= ?lowerBound AND yrclosed <= ?upperBound;
+  #     "
+  #   query <- sqlInterpolate(pool, sql, lowerBound = input$timeframe[1], upperBound = input$timeframe[2])
+  #   result <- dbGetQuery(pool, query)
+  # })
   
   #About Me Images TODO: Replace with actual images
   output$pfp_left <- renderImage(
