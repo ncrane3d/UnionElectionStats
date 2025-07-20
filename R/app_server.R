@@ -11,14 +11,7 @@
 #' @noRd
 #'
 
-pool <- dbPool(
-  Postgres(),
-  host = Sys.getenv("UE_IP"),
-  dbname = "unionelectiondb",
-  user = "ueuser",
-  password = Sys.getenv("UE_DB_PASS"),
-  port = 21701
-)
+
 
 app_server <- function(input, output, session) {
   # Your application server logic
@@ -28,8 +21,18 @@ app_server <- function(input, output, session) {
       setView(0.249818018854, 0.57650864633, zoom = 3)
   })
 
+  #Move the pool over?
+  pool <- dbPool(
+  Postgres(),
+  host = Sys.getenv("UE_IP"),
+  dbname = "unionelectiondb",
+  user = "ueuser",
+  password = Sys.getenv("UE_DB_PASS"),
+  port = 21701
+)
+
   #My first attempts to make the graph reactive, not working so far
-  query <- reactive ({
+  query <- reactive({
     sql <- "
     SELECT *
     FROM unionelections 
@@ -38,22 +41,13 @@ app_server <- function(input, output, session) {
     query <- sqlInterpolate(pool, sql, lowerBound = input$timeframe[1], upperBound = input$timeframe[2])
     result <- dbGetQuery(pool, query)
   })
+
   output$testPlot <- renderPlot({
     ggplot(data = query(), aes(x = yrclosed, y = eligible)) +
     geom_bar(stat = "identity", position = "dodge") +
     labs(title = "Eligible Voters Per Year", x = "Year Closed", y = "Eligible Voters") +
     theme_fivethirtyeight()
   })
-
-  # output$testPlot <- renderTable({
-  #   sql <- "
-  #     SELECT *
-  #     FROM unionelections 
-  #     WHERE yrclosed >= ?lowerBound AND yrclosed <= ?upperBound;
-  #     "
-  #   query <- sqlInterpolate(pool, sql, lowerBound = input$timeframe[1], upperBound = input$timeframe[2])
-  #   result <- dbGetQuery(pool, query)
-  # })
   
   #About Me Images TODO: Replace with actual images
   output$pfp_left <- renderImage(
