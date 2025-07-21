@@ -4,7 +4,7 @@ contact <- function() {
         align = "left",
         div(
             card(
-                height = "60%",
+                height = "524px",
                 id = "picketpost",
                 fill = TRUE
             ),
