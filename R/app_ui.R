@@ -41,6 +41,7 @@ app_ui <- function(request) {
         ".sidebar {position: sticky; z-index: -1 !important;}",
         ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}",
         ".contact_us_container {width:60%; margin: auto; }",
+        ".container-fluid {height: 100%}",
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
         ".bslib-sidebar-layout {margin-bottom: 0px; border: 0 !important;}",
         # Below is styling for all accordions, as seen on featured analysis page
