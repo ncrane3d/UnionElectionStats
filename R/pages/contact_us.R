@@ -39,12 +39,11 @@ contact <- function() {
                         resize = "none",
                         width = "100%",
                         height = "10vh",
+                    ),
+                    tags$div(
+                        align = "center",
+                        actionButton(inputId = "submitButton", label = "Submit")
                     )
-                ),
-                tags$div(
-                    align = "center",
-                    class = "submitButton",
-                    actionButton(inputId = "submitButton", label = "Submit")
                 )
             ),
             tags$div(

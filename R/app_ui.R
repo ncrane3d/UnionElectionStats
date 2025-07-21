@@ -60,7 +60,6 @@ app_ui <- function(request) {
         "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: calc(max(233px, calc(50vw - 15px)); margin-right: auto;}",
         "#picketsign {width: 25vw; min-width: 200px; left: 0; right: 0; margin-left: calc(max(150px, 37vw)); margin-right: auto; position: fixed; bottom: 325px; margin-bottom: 0; margin-top: auto; top: auto; max-height: 680px !important; font-family: 'Brush Script MT', cursive; padding: 2px !important;}",
         "#picketInput {margin-top: -25px;}",
-        ".submitButton {margin-top: -25px;}",
         #Samuel Gompers
         "#gompers {position: fixed; bottom: 0; left: 0; right: 177px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;display: flex; justify-content: end; float: right;}"
       )
