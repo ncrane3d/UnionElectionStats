@@ -32,17 +32,17 @@ app_ui <- function(request) {
         ".nav-link, .navbar-brand { color: #FDF9F6; }",
         ".navbar-brand:hover { color: #FDF9F6; }",
         ".nav-link, .nav-link-active { font-size: medium; }",
+        ".navbar {position: sticky; top: 0; z-index: 2000; overflow-y: hidden;}",
+        ".navbar div .collapsing { max-height: 200px;}",
         ".card, .sidebar { background-color:#FDF9F6 !important; border-radius: 0px;}", #Using important here will overwrite everything, could cause errors.
         ".centered-card {  width: 80%; margin: auto; overflow: hidden; }",
-        ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important; box-shadow: var(--bslib-card-box-shadow, 0px 0px 2px 0px RGBA(var(--bslib-box-shadow-color-rgb), 0.14), 0px 2px 4px 0px RGBA(var(--bslib-box-shadow-color-rgb), 0.16));}",
+        ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important; pointer-events: none; box-shadow: var(--bslib-card-box-shadow, 0px 0px 2px 0px RGBA(var(--bslib-box-shadow-color-rgb), 0.14), 0px 2px 4px 0px RGBA(var(--bslib-box-shadow-color-rgb), 0.16));}",
         ".scrollable-panel {overflow: hidden !important; }",
-        ".sidebar {position: sticky; overflow: hidden !important; z-index: -1 !important;}",
+        ".sidebar {position: sticky; z-index: -1 !important;}",
         ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}",
         ".contact_us_container {width:60%; margin: auto; }",
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
-        ".navbar div .collapsing { max-height: 200px; }",
         ".bslib-sidebar-layout {margin-bottom: 0px; border: 0 !important;}",
-        ".navbar {position: sticky; top: 0; z-index:1; overflow-y: hidden;}",
         # Below is styling for all accordions, as seen on featured analysis page
         ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;}",
@@ -58,7 +58,7 @@ app_ui <- function(request) {
         "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }",
         #Picket sign post
         "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: calc(max(233px, calc(50vw - 15px)); margin-right: auto;}",
-        "#picketsign {width: 25vw; min-width: 200px; left: 0; right: 0; margin-left: calc(max(150px, 37vw)); margin-right: auto; position: fixed; top: 12vh; max-height: 680px !important; font-family: 'Brush Script MT', cursive; padding: 2px !important;}",
+        "#picketsign {width: 25vw; min-width: 200px; left: 0; right: 0; margin-left: calc(max(150px, 37vw)); margin-right: auto; position: fixed; bottom: 524px; margin-bottom: 0; margin-top: auto; top: auto; max-height: 680px !important; font-family: 'Brush Script MT', cursive; padding: 2px !important;}",
         "#picketInput {margin-top: -25px;}",
         ".submitButton {margin-top: -25px;}",
         #Samuel Gompers

@@ -44,7 +44,7 @@ contact <- function() {
                 tags$div(
                     align = "center",
                     class = "submitButton",
-                    actionButton(text = "Submit")
+                    actionButton(inputId = "submitButton", label = "Submit")
                 )
             ),
             tags$div(
