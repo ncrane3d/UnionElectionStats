@@ -57,10 +57,12 @@ app_ui <- function(request) {
         "#accordion-download .accordion-button.collapsed:after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; } ",
         "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }",
         #Picket sign post
-        "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: calc(max(238px, calc(50vw - 15px)); margin-right: auto;}",
-        "#picketsign {width: 30vw; min-width: 200px; left: 0; right: 0; margin-left: calc(max(153px, 35vw)); margin-right: auto; position: fixed; top: 15vh; max-height: 680px; font-family: 'Brush Script MT', cursive; padding: 2px !important;}",
+        "#picketpost {width: 30px; margin-bottom: -23px; align: center; position: fixed; bottom: 0; left: 0; right: 0; margin-left: calc(max(233px, calc(50vw - 15px)); margin-right: auto;}",
+        "#picketsign {width: 25vw; min-width: 200px; left: 0; right: 0; margin-left: calc(max(150px, 37vw)); margin-right: auto; position: fixed; top: 12vh; max-height: 680px !important; font-family: 'Brush Script MT', cursive; padding: 2px !important;}",
+        "#picketInput {margin-top: -25px;}",
+        ".submitButton {margin-top: -25px;}",
         #Samuel Gompers
-        "#gompers {position: fixed; bottom: 0; left: 0; right: 190px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;display: flex; justify-content: end; float: right;}"
+        "#gompers {position: fixed; bottom: 0; left: 0; right: 177px; margin-left: auto; margin-right: auto; margin-bottom: 0px; pointer-events: none;display: flex; justify-content: end; float: right;}"
       )
     )
 

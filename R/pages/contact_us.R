@@ -4,14 +4,14 @@ contact <- function() {
         align = "left",
         div(
             card(
-                height = "40%",
+                height = "60%",
                 id = "picketpost",
                 fill = TRUE
             ),
             card(
                 id = "picketsign",
                 card_header(
-                    p(" "),
+                    p(),
                     imageOutput(
                         "contact_us_text",
                         width = "100%",
@@ -31,14 +31,21 @@ contact <- function() {
                     width = 1,
                     textInput("subject", "Subject"),
                 ),
-                textAreaInput(
-                    "message",
-                    "Message",
-                    resize = "none",
-                    width = "100%",
-                    height = "10vh"
+                div(
+                    id = "picketInput",
+                    textAreaInput(
+                        "message",
+                        "Message",
+                        resize = "none",
+                        width = "100%",
+                        height = "10vh",
+                    )
                 ),
-                tags$div(align = "center", submitButton(text = "Submit"))
+                tags$div(
+                    align = "center",
+                    class = "submitButton",
+                    submitButton(text = "Submit")
+                )
             ),
             tags$div(
                 position = "fixed",
