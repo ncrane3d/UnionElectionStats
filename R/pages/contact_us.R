@@ -20,25 +20,28 @@ contact <- function() {
                 ),
                 fill = FALSE,
                 width = "15vw",
-                layout_column_wrap(
-                    width = 1 / 2,
-                    height = "5vh",
-                    fill = FALSE,
-                    textInput("name", "Name"),
-                    textInput("email", "Email"),
-                ),
-                layout_column_wrap(
-                    width = 1,
-                    textInput("subject", "Subject"),
-                ),
                 div(
                     id = "picketInput",
-                    textAreaInput(
-                        "message",
-                        "Message",
-                        resize = "none",
-                        width = "100%",
-                        height = "10vh",
+                    layout_column_wrap(
+                        width = 1 / 2,
+                        height = "5vh",
+                        fill = FALSE,
+                        textInput("name", "Name"),
+                        textInput("email", "Email"),
+                    ),
+                    layout_column_wrap(
+                        width = 1,
+                        textInput("subject", "Subject"),
+                    ),
+                    tags$div(
+                        id = "picketInput",
+                        textAreaInput(
+                            "message",
+                            "Message",
+                            resize = "none",
+                            width = "100%",
+                            height = "10vh",
+                        )
                     ),
                     tags$div(
                         align = "center",
