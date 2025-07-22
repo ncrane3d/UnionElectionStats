@@ -27,10 +27,16 @@ app_server <- function(input, output, session) {
     leaflet() |>
       addTiles() |>
       addGeoJSON(
-        geojson = stateBoundaries
+        geojson = stateBoundaries,
+        weight = 1,
+        color = "rgb(205,196,203)",
+        fill = FALSE,
       ) |>
       addGeoJSON(
         geojson = countyBoundaries,
+        weight = 1,
+        color = "rgb(205,196,203)",
+        fill = FALSE,
         group = "counties"
       ) |>
       groupOptions("counties", zoomLevels = 6:20) |>
