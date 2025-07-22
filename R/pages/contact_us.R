@@ -20,7 +20,9 @@ contact <- function() {
                 ),
                 fill = FALSE,
                 width = "15vw",
-                div(
+                layout_column_wrap(
+                    width = 1,
+                    max_height = "325px",
                     id = "picketInput",
                     layout_column_wrap(
                         width = 1 / 2,
@@ -29,10 +31,7 @@ contact <- function() {
                         textInput("name", "Name"),
                         textInput("email", "Email"),
                     ),
-                    layout_column_wrap(
-                        width = 1,
-                        textInput("subject", "Subject"),
-                    ),
+                    textInput("subject", "Subject", width = "100%"),
                     tags$div(
                         id = "picketInput",
                         textAreaInput(
@@ -40,12 +39,14 @@ contact <- function() {
                             "Message",
                             resize = "none",
                             width = "100%",
-                            height = "10vh",
                         )
                     ),
                     tags$div(
                         align = "center",
-                        actionButton(inputId = "submitButton", label = "Submit")
+                        actionButton(
+                            inputId = "submitButton",
+                            label = "Submit"
+                        )
                     )
                 )
             ),
