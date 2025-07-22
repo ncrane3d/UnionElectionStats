@@ -6,7 +6,8 @@
 #' @import DBI
 #' @import RPostgres
 #' @noRd
-#'
+
+source('./R/widgets/map.R', local = TRUE)
 
 con <- DBI::dbConnect(
   RPostgres::Postgres(),
@@ -19,29 +20,7 @@ con <- DBI::dbConnect(
 
 app_server <- function(input, output, session) {
   # Your application server logic
-  stateBoundaries <- readLines("./inst/app/www/states.json") %>%
-    paste(collapse = "\n")
-  countyBoundaries <- readLines("./inst/app/www/counties.json") %>%
-    paste(collapse = "\n")
-  output$map <- renderLeaflet({
-    leaflet() |>
-      addTiles() |>
-      addGeoJSON(
-        geojson = stateBoundaries,
-        weight = 1,
-        color = "rgb(205,196,203)",
-        fill = FALSE,
-      ) |>
-      addGeoJSON(
-        geojson = countyBoundaries,
-        weight = 1,
-        color = "rgb(205,196,203)",
-        fill = FALSE,
-        group = "counties"
-      ) |>
-      groupOptions("counties", zoomLevels = 6:20) |>
-      setView(0.249818018854, 0.57650864633, zoom = 3)
-  })
+  output$map <- map()
   #About Me Images TODO: Replace with actual images
   output$pfp_left <- renderImage(
     {
