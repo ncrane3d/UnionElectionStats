@@ -5,13 +5,12 @@ countyBoundaries <- readLines("./inst/app/www/counties.json") %>%
 
 map <- function() {
     renderLeaflet({
-        leaflet() |>
+        leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles() |>
             addGeoJSON(
                 geojson = stateBoundaries,
                 weight = 1,
                 color = "rgb(205,196,203)",
-                fill = FALSE,
             ) |>
             addGeoJSON(
                 geojson = countyBoundaries,
@@ -21,6 +20,16 @@ map <- function() {
                 group = "counties"
             ) |>
             groupOptions("counties", zoomLevels = 6:20) |>
-            setView(0.249818018854, 0.57650864633, zoom = 3)
+            setMaxBounds(
+                lat1 = 5.499550,
+                lng1 = -167.276413,
+                lat2 = 83.162102,
+                lng2 = -52.233040
+            ) |>
+            setView(
+                lat = 39.82,
+                lng = -98.58,
+                zoom = 3,
+            )
     })
 }
