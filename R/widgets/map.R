@@ -3,8 +3,8 @@ stateBoundaries <- readLines("./inst/app/www/states.json") %>%
 countyBoundaries <- readLines("./inst/app/www/counties.json") %>%
     paste(collapse = "\n")
 
-map <- function() {
-    renderLeaflet({
+map <- function(input, output) {
+    output$map <- renderLeaflet({
         leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles() |>
             addGeoJSON(
@@ -31,5 +31,16 @@ map <- function() {
                 lng = -98.58,
                 zoom = 3,
             )
+    })
+
+    observeEvent(input$map_geojson_click, {
+        evt <- input$map_geojson_click
+        if (is.null(evt)) {
+            return()
+        } else {
+            cat("click registered")
+            leafletProxy("map") %>%
+                setView(lng = evt$lng, lat = evt$lat, zoom = 5)
+        }
     })
 }

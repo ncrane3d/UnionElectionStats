@@ -51,7 +51,7 @@ dashboard <- function() {
                 ),
                 height = "85vh",
                 layout_columns(
-                    card(leafletOutput("map")),
+                    card(leafletOutput("leafmap")),
                     card(
                         card_header("Custom Visualization"),
                         card(),
