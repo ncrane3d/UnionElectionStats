@@ -10,12 +10,12 @@ map <- function() {
             addGeoJSON(
                 geojson = stateBoundaries,
                 weight = 1,
-                color = "rgb(205,196,203)",
+                color = "rgb(143,137,141)",
             ) |>
             addGeoJSON(
                 geojson = countyBoundaries,
                 weight = 1,
-                color = "rgb(205,196,203)",
+                color = "rgb(143,137,141)",
                 fill = FALSE,
                 group = "counties"
             ) |>
