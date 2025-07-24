@@ -51,13 +51,13 @@ app_server <- function(input, output, session) {
       )
   })
 
-  observeEvent(input$leafmap_geojson_mouseover, {
-    evt <- input$leafmap_geojson_mouseover
-    cat("click registered")
+  observeEvent(input$leafmap_geojson_click, {
+    evt <- input$leafmap_geojson_click
+    cat("click registered\n")
     if (is.null(evt)) {
       return()
     } else {
-      cat("click registered")
+      cat("click registered for real\n")
       leafletProxy("map") %>%
         setView(lng = evt$lng, lat = evt$lat, zoom = 5)
     }
