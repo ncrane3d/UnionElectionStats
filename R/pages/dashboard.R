@@ -43,13 +43,22 @@ dashboard <- function() {
                         )
                     ),
                     checkboxGroupInput(
+                        "regionType",
+                        "Region Type",
+                        c(
+                            "Urban" = 0,
+                            "Rural" = 1
+                        )
+                    ),
+                    checkboxGroupInput(
                         "electionType",
                         "Election Type",
                         c(
-                            "Certification (RC)" = 0,
-                            "Decertification (RD)" = 1,
-                            "Emp. Petition (RM)" = 2
-                        )
+                            "Certification (RC)" = "RC",
+                            "Decertification (RD)" = "RD",
+                            "Emp. Petition (RM)" = "RM"
+                        ),
+                        selected = list("RC", "RD", "RM")
                     ),
                     sliderInput(
                         "timeframe",
@@ -86,7 +95,7 @@ dashboard <- function() {
                 ),
                 layout_columns(
                     card(card_header("Preset Graph 1"), fill = TRUE, plotOutput("testPlot")),
-                    card(card_header("Preset Graph 2"), fill = TRUE),
+                    card(card_header("Preset Graph 2"), fill = TRUE, tableOutput("test")),
                     card(card_header("Preset Graph 3"), fill = TRUE)
                 )
             )

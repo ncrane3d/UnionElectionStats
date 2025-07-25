@@ -31,21 +31,53 @@ app_server <- function(input, output, session) {
   port = 21701
 )
 
-  #My first attempts to make the graph reactive, not working so far
-  query <- reactive({
-    sql <- "
-    SELECT *
-    FROM unionelections 
-    WHERE yrclosed >= ?lowerBound AND yrclosed <= ?upperBound;
-    "
-    query <- sqlInterpolate(pool, sql, lowerBound = input$timeframe[1], upperBound = input$timeframe[2])
-    result <- dbGetQuery(pool, query)
+get_static_sql <- function() {
+  staticSQL <- "
+  SELECT *, (CAST(votes_for AS float) / (votes_for + votes_against)) * 100  AS votePercentage
+  FROM unionelections 
+  WHERE yrclosed >= ?lowerBoundYear 
+  AND yrclosed <= ?upperBoundYear 
+  AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 >= ?lowerBoundFavor 
+  AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 <= ?upperBoundFavor "
+}
+
+get_dynamic_sql <- function() {
+  #Changes the part of the query that grabs the petition columns
+  if (length(input$electionType) == 3) {
+    dynamicSQL <- ""
+  } else if (length(input$electionType) == 2) {
+    dynamicSQL <- paste0("AND (petition = '", input$electionType[1], "' OR petition = '", input$electionType[2], "') ")
+  } else if (length(input$electionType) == 1) {
+    dynamicSQL <- paste0("AND petition = '", input$electionType[1], "' ")
+  } else {
+    dynamicSQL <- ""
+  }
+}
+
+current_data_slice <- reactive({
+
+  sql <- paste0(get_static_sql(), get_dynamic_sql(), ";")
+  query <- sqlInterpolate(
+    pool,
+    sql,
+    lowerBoundYear = input$timeframe[1],
+    upperBoundYear = input$timeframe[2],
+    lowerBoundFavor = input$percentageFavor[1],
+    upperBoundFavor = input$percentageFavor[2]
+  )
+  result <- dbGetQuery(pool, query)
+})
+
+#change the label
+#scatter / bar / histogram?
+  output$test <- renderTable({
+    current_data_slice()
   })
 
   output$testPlot <- renderPlot({
-    ggplot(data = query(), aes(x = yrclosed, y = eligible)) +
+    ggplot(data = current_data_slice(), aes(x = yrclosed, y = eligible)) +
     geom_bar(stat = "identity", position = "dodge") +
-    labs(title = "Eligible Voters Per Year", x = "Year Closed", y = "Eligible Voters") +
+    labs(title = "Title", x = "Year Closed", y = "Eligible Voters") +
     theme_fivethirtyeight()
   })
   

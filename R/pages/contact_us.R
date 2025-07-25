@@ -25,8 +25,7 @@ contact <- function() {
                         value = "Your message here...",
                         width = "100%",
                         height = "30vh"
-                    ),
-                    tags$div(align = "center", submitButton(text = "Submit"))
+                    )
                 )
             ) %>% tagAppendAttributes(class="contact_us_container"),
         style = css(
