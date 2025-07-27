@@ -18,15 +18,6 @@ dashboard <- function() {
             layout_sidebar(
                 sidebar = sidebar(
                     selectInput(
-                        "aggregate",
-                        "Aggregate",
-                        c(
-                            "State", 
-                            "County", 
-                            "Industry"
-                        )
-                    ),
-                    selectInput(
                         "state", 
                         "State", 
                         c(
@@ -42,13 +33,31 @@ dashboard <- function() {
                             "Larimer"
                         )
                     ),
+                    selectInput(
+                        "industry",
+                        "Industry",
+                        c(
+                            "All",
+                            "Agriculture, Forestry and Fishing",
+                            "Mining",
+                            "Construction",
+                            "Manufacturing",
+                            "Transportation and Utilities",
+                            "Wholesale",
+                            "Retail",
+                            "FIRE",
+                            "Services",
+                            "Public Administration"
+                        )
+                    ),
                     checkboxGroupInput(
                         "regionType",
                         "Region Type",
                         c(
                             "Urban" = 0,
                             "Rural" = 1
-                        )
+                        ),
+                        selected = list(0, 1)
                     ),
                     checkboxGroupInput(
                         "electionType",
@@ -70,7 +79,7 @@ dashboard <- function() {
                     ),
                     sliderInput(
                         "percentageFavor",
-                        "Percentage in favor",
+                        "Votes For Petition",
                         min = 0,
                         max = 100,
                         value = c(0, 100)
