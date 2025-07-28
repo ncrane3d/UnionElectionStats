@@ -11,8 +11,6 @@
 #' @noRd
 #'
 
-
-
 app_server <- function(input, output, session) {
   # Your application server logic
   output$map <- renderLeaflet({
@@ -21,7 +19,6 @@ app_server <- function(input, output, session) {
       setView(0.249818018854, 0.57650864633, zoom = 3)
   })
 
-  #Move the pool over?
   pool <- dbPool(
   Postgres(),
   host = Sys.getenv("UE_IP"),
@@ -31,8 +28,8 @@ app_server <- function(input, output, session) {
   port = 21701
 )
 
-get_static_sql <- function() {
-  staticSQL <- "
+get_slider_sql <- function() {
+  sliderSQL <- "
   SELECT *, (CAST(votes_for AS float) / (votes_for + votes_against)) * 100  AS votePercentage
   FROM unionelections 
   WHERE yrclosed >= ?lowerBoundYear 
@@ -41,22 +38,60 @@ get_static_sql <- function() {
   AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 <= ?upperBoundFavor "
 }
 
-get_dynamic_sql <- function() {
+get_petition_sql <- function() {
   #Changes the part of the query that grabs the petition columns
   if (length(input$electionType) == 3) {
-    dynamicSQL <- ""
+    petitionSQL <- ""
   } else if (length(input$electionType) == 2) {
-    dynamicSQL <- paste0("AND (petition = '", input$electionType[1], "' OR petition = '", input$electionType[2], "') ")
+    petitionSQL <- paste0("AND (petition = '", input$electionType[1], "' OR petition = '", input$electionType[2], "') ")
   } else if (length(input$electionType) == 1) {
-    dynamicSQL <- paste0("AND petition = '", input$electionType[1], "' ")
+    petitionSQL <- paste0("AND petition = '", input$electionType[1], "' ")
   } else {
-    dynamicSQL <- ""
+    petitionSQL <- ""
+  }
+}
+
+get_industry_sql <- function() {
+  #Changes the part of the query that grabs the industry columns
+  if (input$industry == 0) {
+    industrySQL <- ""
+  } else if (input$industry == 1) {
+    industrySQL <- paste0("AND sic2 IN (1, 2, 7, 8, 9) ")
+  } else if (input$industry == 2) {
+    industrySQL <- paste0("AND sic2 IN (10, 12, 13, 14) ")
+  } else if (input$industry == 3) {
+    industrySQL <- paste0("AND sic2 IN (15, 16, 17) ")
+  } else if (input$industry == 4) {
+    industrySQL <- paste0("AND sic2 IN (20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39) ")
+  } else if (input$industry == 5) {
+    industrySQL <- paste0("AND sic2 IN (40, 41, 42, 43, 44, 45, 46, 47, 48, 49) ")
+  } else if (input$industry == 6) {
+    industrySQL <- paste0("AND sic2 IN (50, 51) ")
+  } else if (input$industry == 7) {
+    industrySQL <- paste0("AND sic2 IN (52, 53, 54, 55, 56, 57, 58, 59) ")
+  } else if (input$industry == 8) {
+    industrySQL <- paste0("AND sic2 IN (60, 61, 62, 63, 64, 65, 67) ")
+  } else if (input$industry == 9) {
+    industrySQL <- paste0("AND sic2 IN (70, 72, 73, 75, 76, 78, 79, 80, 81, 82, 83, 84, 86, 87, 88, 89) ")
+  } else if (input$industry == 10) {
+    industrySQL <- paste0("AND sic2 IN (91, 92, 93, 94, 95, 96, 97, 99) ")
+  } else {
+    industrySQL <- ""
+  }
+}
+
+get_state_sql <- function() {
+  #Changes the part of the query that grabs the petition columns
+  if (input$state == 0) {
+    stateSQL <- ""
+  } else {
+    stateSQL <- paste0("AND state = '", input$state, "' ")
   }
 }
 
 current_data_slice <- reactive({
 
-  sql <- paste0(get_static_sql(), get_dynamic_sql(), ";")
+  sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), ";")
   query <- sqlInterpolate(
     pool,
     sql,
