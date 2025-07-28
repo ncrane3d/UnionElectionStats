@@ -13,21 +13,21 @@
 source('./R/map/map.R', local = TRUE)
 source('./R/map/map_logic.R', local = TRUE)
 
+pool <- dbPool(
+  Postgres(),
+  host = Sys.getenv("UE_IP"),
+  dbname = "unionelectiondb",
+  user = "ueuser",
+  password = Sys.getenv("UE_DB_PASS"),
+  port = 21701
+)
 
 app_server <- function(input, output, session) {
   # Your application server logic
-  output$leafmap <- map(input, output)
-  map_logic(input, output)
+  output$leafmap <- map(input, output, pool)
+  map_logic(input, output, pool)
 
   #Move the pool over?
-  pool <- dbPool(
-    Postgres(),
-    host = Sys.getenv("UE_IP"),
-    dbname = "unionelectiondb",
-    user = "ueuser",
-    password = Sys.getenv("UE_DB_PASS"),
-    port = 21701
-  )
 
   #My first attempts to make the graph reactive, not working so far
   query <- reactive({

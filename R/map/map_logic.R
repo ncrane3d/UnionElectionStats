@@ -1,4 +1,4 @@
-map_logic <- function(input, output) {
+map_logic <- function(input, output, pool) {
     observeEvent(input$leafmap_geojson_click, {
         evt <- input$leafmap_geojson_click
         cat("click registered\n")

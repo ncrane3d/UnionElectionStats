@@ -21,24 +21,24 @@ dashboard <- function() {
                         "aggregate",
                         "Aggregate",
                         c(
-                            "State", 
-                            "County", 
+                            "State",
+                            "County",
                             "Industry"
                         )
                     ),
                     selectInput(
-                        "state", 
-                        "State", 
+                        "state",
+                        "State",
                         c(
-                            "All", 
+                            "All",
                             "Colorado"
                         )
                     ),
                     selectInput(
                         "county",
-                        "County", 
+                        "County",
                         c(
-                            "All", 
+                            "All",
                             "Larimer"
                         )
                     ),
@@ -85,7 +85,11 @@ dashboard <- function() {
                     )
                 ),
                 layout_columns(
-                    card(card_header("Preset Graph 1"), fill = TRUE, plotOutput("testPlot")),
+                    card(
+                        card_header("Preset Graph 1"),
+                        fill = TRUE,
+                        plotOutput("testPlot")
+                    ),
                     card(card_header("Preset Graph 2"), fill = TRUE),
                     card(card_header("Preset Graph 3"), fill = TRUE)
                 )
