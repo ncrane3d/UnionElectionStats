@@ -20,17 +20,35 @@ dashboard <- function() {
                     selectInput(
                         "aggregate",
                         "Aggregate",
-                        c("State", "County", "Industry")
+                        c(
+                            "State", 
+                            "County", 
+                            "Industry"
+                        )
                     ),
-                    selectInput("State", "State", c("All", "Colorado")),
-                    selectInput("county", "County", c("All", "Larimer")),
+                    selectInput(
+                        "state", 
+                        "State", 
+                        c(
+                            "All", 
+                            "Colorado"
+                        )
+                    ),
+                    selectInput(
+                        "county",
+                        "County", 
+                        c(
+                            "All", 
+                            "Larimer"
+                        )
+                    ),
                     checkboxGroupInput(
                         "electionType",
                         "Election Type",
                         c(
-                            "Certification (RC)",
-                            "Decertification (RD)",
-                            "Emp. Petition (RM)"
+                            "Certification (RC)" = 0,
+                            "Decertification (RD)" = 1,
+                            "Emp. Petition (RM)" = 2
                         )
                     ),
                     sliderInput(
@@ -67,7 +85,7 @@ dashboard <- function() {
                     )
                 ),
                 layout_columns(
-                    card(card_header("Preset Graph 1"), fill = TRUE),
+                    card(card_header("Preset Graph 1"), fill = TRUE, plotOutput("testPlot")),
                     card(card_header("Preset Graph 2"), fill = TRUE),
                     card(card_header("Preset Graph 3"), fill = TRUE)
                 )
