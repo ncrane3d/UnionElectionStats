@@ -8,6 +8,8 @@
 #' @import pool
 #' @import ggplot2
 #' @import ggthemes
+#' @import sf
+#' @import dplyr
 #' @noRd
 
 source('./R/map/map.R', local = TRUE)
