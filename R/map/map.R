@@ -16,6 +16,16 @@ map <- function(input, output, pool) {
             return(linecolor)
         }
     }
+
+    sql <- 'SELECT SUBSTRING(cast (FIPS as varchar),1,LENGTH(cast (FIPS as varchar)) - 3), COUNT(*) AS state_count
+FROM unionelections
+GROUP BY SUBSTRING(cast (FIPS as varchar),1,LENGTH(cast (FIPS as varchar)) - 3);'
+    query <- sqlInterpolate(
+        pool,
+        sql,
+    )
+    result <- dbGetQuery(pool, query)
+    summary(result)
     return(renderLeaflet({
         leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles() |>
