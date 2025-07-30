@@ -10,6 +10,7 @@
 #' @import ggthemes
 #' @import sf
 #' @import dplyr
+#' @import htmltools
 #' @noRd
 
 source('./R/map/map.R', local = TRUE)

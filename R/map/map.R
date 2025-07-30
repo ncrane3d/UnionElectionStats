@@ -74,8 +74,40 @@ map <- function(input, output, pool) {
                 color = ~ pal2(county_count),
                 group = "counties"
             ) |>
-            addAwesomeMarkers(data = points, group = "counties") |>
-            #Conditional rendering for county layer
+            #Individual election markers
+            addCircleMarkers(
+                data = points,
+                group = "counties",
+                color = "red",
+                opacity = 0.75,
+                fillOpacity = 0.75,
+                clusterOptions = markerClusterOptions(
+                    #Expands overlapping markers out into a starburst on max zoom
+                    spiderfyOnMaxZoom = TRUE,
+                    showCoverageOnHover = TRUE
+                ),
+                popup = ~ paste(
+                    paste("Employer: ", htmlEscape(employer)),
+                    paste(
+                        paste("\nYear closed: ", htmlEscape(yrclosed)),
+                        paste(
+                            "\n\nPro-Union vote share: ",
+                            paste(
+                                htmlEscape(
+                                    round(
+                                        ((votes_for /
+                                            (votes_for + votes_against)) *
+                                            100),
+                                        digits = 2
+                                    ),
+                                )
+                            ),
+                            "%"
+                        )
+                    )
+                )
+            ) |>
+            #Zoom based conditional rendering for layers
             groupOptions("counties", zoomLevels = 6:20) |>
             groupOptions("states", zoomLevels = 0:5) |>
             #Map panning bounds
