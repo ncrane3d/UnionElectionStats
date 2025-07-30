@@ -30,14 +30,15 @@ app_server <- function(input, output, session) {
 
   get_slider_sql <- function() {
     sliderSQL <- "
-    SELECT *, (CAST(votes_for AS float) / (votes_for + votes_against)) * 100  AS votePercentage
+    SELECT unionelections.*, populationdata.rural, (CAST(votes_for AS float) / (votes_for + votes_against)) * 100  AS votePercentage
     FROM unionelections 
+    LEFT JOIN populationdata ON unionelections.fips = populationdata.fips 
     WHERE yrclosed >= ?lowerBoundYear 
     AND yrclosed <= ?upperBoundYear 
     AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 >= ?lowerBoundFavor 
     AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 <= ?upperBoundFavor "
   }
-#LEFT JOIN populationdata ON unionelections.fips = populationdata.fips 
+
   get_petition_sql <- function() {
     if (length(input$electionType) == 3) {
       petitionSQL <- ""
@@ -51,9 +52,9 @@ app_server <- function(input, output, session) {
   }
 
   get_region_sql <- function() {
-    if (input$regionType[1] == 0) {
-      petitionSQL <- paste0("AND rural = '", input$regionType[0], "' ")
-    } else if (input$regionType[1] == 1) {
+    if (length(input$regionType) == 2) {
+      petitionSQL <- ""
+    } else if (length(input$regionType) == 1) {
       petitionSQL <- paste0("AND rural = '", input$regionType[1], "' ")
     } else {
       petitionSQL <- ""
@@ -92,7 +93,7 @@ app_server <- function(input, output, session) {
     if (input$county == "No State Selected" | input$county == "All") {
       countySQL <- ""
     } else {
-      countySQL <- paste0("AND fips = '", input$county, "' ")
+      countySQL <- paste0("AND unionelections.fips = '", input$county, "' ")
     }
   }
 
@@ -100,12 +101,12 @@ app_server <- function(input, output, session) {
     if (input$state == 0) {
       stateSQL <- ""
     } else {
-      stateSQL <- paste0("AND state = '", input$state, "' ")
+      stateSQL <- paste0("AND unionelections.state = '", input$state, "' ")
     }
   }
 
   current_data_slice <- reactive({
-    sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), get_county_sql(), ";")
+    sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), get_county_sql(), get_region_sql(), ";")
     query <- sqlInterpolate(
       pool,
       sql,
