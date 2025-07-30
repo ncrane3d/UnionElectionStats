@@ -79,8 +79,8 @@ dashboard <- function() {
                         "county",
                         "County", 
                         c(
-                            "All", 
-                            "Larimer"
+                            "No State Selected"
+
                         )
                     ),
                     selectInput(

@@ -20,91 +20,111 @@ app_server <- function(input, output, session) {
   })
 
   pool <- dbPool(
-  Postgres(),
-  host = Sys.getenv("UE_IP"),
-  dbname = "unionelectiondb",
-  user = "ueuser",
-  password = Sys.getenv("UE_DB_PASS"),
-  port = 21701
-)
+    Postgres(),
+    host = Sys.getenv("UE_IP"),
+    dbname = "unionelectiondb",
+    user = "ueuser",
+    password = Sys.getenv("UE_DB_PASS"),
+    port = 21701
+ )
 
-get_slider_sql <- function() {
-  sliderSQL <- "
-  SELECT *, (CAST(votes_for AS float) / (votes_for + votes_against)) * 100  AS votePercentage
-  FROM unionelections 
-  WHERE yrclosed >= ?lowerBoundYear 
-  AND yrclosed <= ?upperBoundYear 
-  AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 >= ?lowerBoundFavor 
-  AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 <= ?upperBoundFavor "
-}
-
-get_petition_sql <- function() {
-  #Changes the part of the query that grabs the petition columns
-  if (length(input$electionType) == 3) {
-    petitionSQL <- ""
-  } else if (length(input$electionType) == 2) {
-    petitionSQL <- paste0("AND (petition = '", input$electionType[1], "' OR petition = '", input$electionType[2], "') ")
-  } else if (length(input$electionType) == 1) {
-    petitionSQL <- paste0("AND petition = '", input$electionType[1], "' ")
-  } else {
-    petitionSQL <- ""
+  get_slider_sql <- function() {
+    sliderSQL <- "
+    SELECT *, (CAST(votes_for AS float) / (votes_for + votes_against)) * 100  AS votePercentage
+    FROM unionelections 
+    WHERE yrclosed >= ?lowerBoundYear 
+    AND yrclosed <= ?upperBoundYear 
+    AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 >= ?lowerBoundFavor 
+    AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 <= ?upperBoundFavor "
   }
-}
 
-get_industry_sql <- function() {
-  #Changes the part of the query that grabs the industry columns
-  if (input$industry == 0) {
-    industrySQL <- ""
-  } else if (input$industry == 1) {
-    industrySQL <- paste0("AND sic2 IN (1, 2, 7, 8, 9) ")
-  } else if (input$industry == 2) {
-    industrySQL <- paste0("AND sic2 IN (10, 12, 13, 14) ")
-  } else if (input$industry == 3) {
-    industrySQL <- paste0("AND sic2 IN (15, 16, 17) ")
-  } else if (input$industry == 4) {
-    industrySQL <- paste0("AND sic2 IN (20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39) ")
-  } else if (input$industry == 5) {
-    industrySQL <- paste0("AND sic2 IN (40, 41, 42, 43, 44, 45, 46, 47, 48, 49) ")
-  } else if (input$industry == 6) {
-    industrySQL <- paste0("AND sic2 IN (50, 51) ")
-  } else if (input$industry == 7) {
-    industrySQL <- paste0("AND sic2 IN (52, 53, 54, 55, 56, 57, 58, 59) ")
-  } else if (input$industry == 8) {
-    industrySQL <- paste0("AND sic2 IN (60, 61, 62, 63, 64, 65, 67) ")
-  } else if (input$industry == 9) {
-    industrySQL <- paste0("AND sic2 IN (70, 72, 73, 75, 76, 78, 79, 80, 81, 82, 83, 84, 86, 87, 88, 89) ")
-  } else if (input$industry == 10) {
-    industrySQL <- paste0("AND sic2 IN (91, 92, 93, 94, 95, 96, 97, 99) ")
-  } else {
-    industrySQL <- ""
+  get_petition_sql <- function() {
+    #Changes the part of the query that grabs the petition columns
+    if (length(input$electionType) == 3) {
+      petitionSQL <- ""
+    } else if (length(input$electionType) == 2) {
+      petitionSQL <- paste0("AND (petition = '", input$electionType[1], "' OR petition = '", input$electionType[2], "') ")
+    } else if (length(input$electionType) == 1) {
+      petitionSQL <- paste0("AND petition = '", input$electionType[1], "' ")
+    } else {
+      petitionSQL <- ""
+    }
   }
-}
 
-get_state_sql <- function() {
-  #Changes the part of the query that grabs the petition columns
-  if (input$state == 0) {
-    stateSQL <- ""
-  } else {
-    stateSQL <- paste0("AND state = '", input$state, "' ")
+  get_industry_sql <- function() {
+    #Changes the part of the query that grabs the industry columns
+    if (input$industry == 0) {
+      industrySQL <- ""
+    } else if (input$industry == 1) {
+      industrySQL <- paste0("AND sic2 IN (1, 2, 7, 8, 9) ")
+    } else if (input$industry == 2) {
+      industrySQL <- paste0("AND sic2 IN (10, 12, 13, 14) ")
+    } else if (input$industry == 3) {
+      industrySQL <- paste0("AND sic2 IN (15, 16, 17) ")
+    } else if (input$industry == 4) {
+      industrySQL <- paste0("AND sic2 IN (20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39) ")
+    } else if (input$industry == 5) {
+      industrySQL <- paste0("AND sic2 IN (40, 41, 42, 43, 44, 45, 46, 47, 48, 49) ")
+    } else if (input$industry == 6) {
+      industrySQL <- paste0("AND sic2 IN (50, 51) ")
+    } else if (input$industry == 7) {
+      industrySQL <- paste0("AND sic2 IN (52, 53, 54, 55, 56, 57, 58, 59) ")
+    } else if (input$industry == 8) {
+      industrySQL <- paste0("AND sic2 IN (60, 61, 62, 63, 64, 65, 67) ")
+    } else if (input$industry == 9) {
+      industrySQL <- paste0("AND sic2 IN (70, 72, 73, 75, 76, 78, 79, 80, 81, 82, 83, 84, 86, 87, 88, 89) ")
+    } else if (input$industry == 10) {
+      industrySQL <- paste0("AND sic2 IN (91, 92, 93, 94, 95, 96, 97, 99) ")
+    } else {
+      industrySQL <- ""
+    }
   }
-}
 
-current_data_slice <- reactive({
+  get_state_sql <- function() {
+    #Changes the part of the query that grabs the petition columns
+    if (input$state == 0) {
+      stateSQL <- ""
+    } else {
+      stateSQL <- paste0("AND state = '", input$state, "' ")
+    }
+  }
 
-  sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), ";")
-  query <- sqlInterpolate(
-    pool,
-    sql,
-    lowerBoundYear = input$timeframe[1],
-    upperBoundYear = input$timeframe[2],
-    lowerBoundFavor = input$percentageFavor[1],
-    upperBoundFavor = input$percentageFavor[2]
-  )
-  result <- dbGetQuery(pool, query)
-})
+  current_data_slice <- reactive({
+    sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), ";")
+    query <- sqlInterpolate(
+      pool,
+      sql,
+      lowerBoundYear = input$timeframe[1],
+      upperBoundYear = input$timeframe[2],
+      lowerBoundFavor = input$percentageFavor[1],
+      upperBoundFavor = input$percentageFavor[2]
+    )
+    result <- dbGetQuery(pool, query)
+  })
 
-#change the label
-#scatter / bar / histogram?
+  current_county_selection <- reactive({
+    sql <- "
+      SELECT County
+      FROM populationdata 
+      WHERE State = ?selectedState;"
+
+    query <- sqlInterpolate(
+      pool,
+      sql,
+      selectedState = state_choices[input$state]
+    )
+    stateCounties <- dbGetQuery(pool, query) 
+  })
+
+  observeEvent(input$state, {
+    if (input$state == 0) {
+      countyDataframeToText <- "No State Selected"
+    } else {
+      countyDataframeToText <- as.vector(unlist(current_county_selection()))
+    }
+    updateSelectInput(inputId = "county", choices = countyDataframeToText)
+  })
+
   output$test <- renderTable({
     current_data_slice()
   })
@@ -181,5 +201,59 @@ current_data_slice <- reactive({
       )
     },
     deleteFile = FALSE
+  )
+
+  state_choices <- c(
+    "AL" = "Alabama",
+    "AK" = "Alaska",
+    "AZ" = "Arizona",
+    "AR" = "Arkansas",
+    "CA" = "California",
+    "CO" = "Colorado",
+    "CT" = "Connecticut",
+    "DE" = "Delaware",
+    #"DC" = "District of Columbia",
+    "FL" = "Florida",
+    "GA" = "Georgia",
+    "HI" = "Hawaii",
+    "ID" = "Idaho",
+    "IL" = "Illinois",
+    "IN" = "Indiana",
+    "IA" = "Iowa",
+    "KS" = "Kansas",
+    "KY" = "Kentucky",
+    "LA" = "Louisiana",
+    "ME" = "Maine",
+    "MT" = "Montana",
+    "NE" = "Nebraska",
+    "NV" = "Nevada",
+    "NH" = "New Hampshire",
+    "NJ" = "New Jersey",
+    "NM" = "New Mexico",
+    "NY" = "New York",
+    "NC" = "North Carolina",
+    "ND" = "North Dakota",
+    "OH" = "Ohio",
+    "OK" = "Oklahoma",
+    "OR" = "Oregon",
+    "MD" = "Maryland",
+    "MA" = "Massachusetts",
+    "MI" = "Michigan",
+    "MN" = "Minnesota",
+    "MS" = "Mississippi",
+    "MO" = "Missouri",
+    "PA" = "Pennsylvania",
+    "RI" = "Rhode Island",
+    "SC" = "South Carolina",
+    "SD" = "South Dakota",
+    "TN" = "Tennessee",
+    "TX" = "Texas",
+    "UT" = "Utah",
+    "VT" = "Vermont",
+    "VA" = "Virginia",
+    "WA" = "Washington",
+    "WV" = "West Virginia",
+    "WI" = "Wisconsin",
+    "WY" = "Wyoming"
   )
 }
