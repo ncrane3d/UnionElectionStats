@@ -89,9 +89,9 @@ map <- function(input, output, pool) {
                 popup = ~ paste(
                     paste("Employer: ", htmlEscape(employer)),
                     paste(
-                        paste("\nYear closed: ", htmlEscape(yrclosed)),
+                        paste("<br>Year closed: ", htmlEscape(yrclosed)),
                         paste(
-                            "\n\nPro-Union vote share: ",
+                            "<br>Pro-Union vote share: ",
                             paste(
                                 htmlEscape(
                                     round(
