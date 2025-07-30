@@ -37,9 +37,8 @@ app_server <- function(input, output, session) {
     AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 >= ?lowerBoundFavor 
     AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 <= ?upperBoundFavor "
   }
-
+#LEFT JOIN populationdata ON unionelections.fips = populationdata.fips 
   get_petition_sql <- function() {
-    #Changes the part of the query that grabs the petition columns
     if (length(input$electionType) == 3) {
       petitionSQL <- ""
     } else if (length(input$electionType) == 2) {
@@ -51,8 +50,17 @@ app_server <- function(input, output, session) {
     }
   }
 
+  get_region_sql <- function() {
+    if (input$regionType[1] == 0) {
+      petitionSQL <- paste0("AND rural = '", input$regionType[0], "' ")
+    } else if (input$regionType[1] == 1) {
+      petitionSQL <- paste0("AND rural = '", input$regionType[1], "' ")
+    } else {
+      petitionSQL <- ""
+    }
+  }
+
   get_industry_sql <- function() {
-    #Changes the part of the query that grabs the industry columns
     if (input$industry == 0) {
       industrySQL <- ""
     } else if (input$industry == 1) {
@@ -81,7 +89,14 @@ app_server <- function(input, output, session) {
   }
 
   get_state_sql <- function() {
-    #Changes the part of the query that grabs the petition columns
+    if (input$county == "No State Selected" | input$county == "All") {
+      countySQL <- ""
+    } else {
+      countySQL <- paste0("AND fips = '", input$county, "' ")
+    }
+  }
+
+  get_county_sql <- function() {
     if (input$state == 0) {
       stateSQL <- ""
     } else {
@@ -90,7 +105,7 @@ app_server <- function(input, output, session) {
   }
 
   current_data_slice <- reactive({
-    sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), ";")
+    sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), get_county_sql(), ";")
     query <- sqlInterpolate(
       pool,
       sql,
@@ -104,7 +119,7 @@ app_server <- function(input, output, session) {
 
   current_county_selection <- reactive({
     sql <- "
-      SELECT County
+      SELECT County, FIPS
       FROM populationdata 
       WHERE State = ?selectedState;"
 
@@ -120,7 +135,7 @@ app_server <- function(input, output, session) {
     if (input$state == 0) {
       countyDataframeToText <- "No State Selected"
     } else {
-      countyDataframeToText <- as.vector(unlist(current_county_selection()))
+      countyDataframeToText <-  c("All", setNames(current_county_selection()$fips, current_county_selection()$county))
     }
     updateSelectInput(inputId = "county", choices = countyDataframeToText)
   })
