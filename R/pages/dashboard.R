@@ -21,7 +21,7 @@ dashboard <- function() {
                         "state", 
                         "State", 
                         c(
-                            "All" = 0, 
+                            "All", 
                             "Alabama" = "AL",
                             "Alaska" = "AK",
                             "Arizona" = "AZ",
@@ -30,7 +30,7 @@ dashboard <- function() {
                             "Colorado" = "CO",
                             "Connecticut" = "CT",
                             "Delaware" = "DE",
-                            # "District of Columbia" = "DC",
+                            "District of Columbia" = "DC",
                             "Florida" = "FL",
                             "Georgia" = "GA",
                             "Hawaii" = "HI",
@@ -75,43 +75,42 @@ dashboard <- function() {
                             "Wyoming" = "WY"
                         )
                     ),
-                    selectInput(
-                        "county",
-                        "County", 
-                        c(
-                            "No State Selected"
-
-                        )
-                    ),
-                    selectInput(
-                        "industry",
-                        "Industry",
-                        c(
-                            "All" = 0,
-                            "Agriculture, Forestry and Fishing" = 1,
-                            "Mining" = 2,
-                            "Construction" = 3,
-                            "Manufacturing" = 4,
-                            "Transportation and Utilities" = 5,
-                            "Wholesale" = 6,
-                            "Retail" = 7,
-                            "FIRE" = 8,
-                            "Services" = 9,
-                            "Public Administration" = 10
-                        )
-                    ),
-                    checkboxGroupInput(
-                        "regionType",
-                        "Region Type",
-                        c(
-                            "Urban" = 0,
-                            "Rural" = 1
+                    tooltip(
+                        selectInput(
+                            "county",
+                            "County", 
+                            c(
+                                "No State Selected"
+                            )
                         ),
-                        selected = list(0, 1)
+                        "By 2020 FIPS Codes.",
+                        placement = "right"
                     ),
+                    tooltip(
+                        selectInput(
+                            "industry",
+                            "Industry",
+                            c(
+                                "All",
+                                "Agriculture, Forestry and Fishing",
+                                "Mining",
+                                "Construction",
+                                "Manufacturing",
+                                "Transportation and Utilities",
+                                "Wholesale",
+                                "Retail",
+                                "FIRE",
+                                "Services",
+                                "Public Administration"
+                            )
+                        ),
+                        "By SIC Code. No data after 2010.",
+                        placement = "right"
+                    ),
+                    
                     checkboxGroupInput(
                         "electionType",
-                        "Election Type",
+                        "Petition Type",
                         c(
                             "Certification (RC)" = "RC",
                             "Decertification (RD)" = "RD",
@@ -129,10 +128,19 @@ dashboard <- function() {
                     ),
                     sliderInput(
                         "percentageFavor",
-                        "Votes For Petition",
+                        "Pro Union Voter Share",
                         min = 0,
                         max = 100,
                         value = c(0, 100)
+                    ),
+                    tooltip(
+                        checkboxInput(
+                            "winnersChecked", 
+                            "Winning Elections Only", 
+                            value = FALSE
+                        ),
+                        "Sets slider to hundredths place.",
+                        placement = "right"
                     )
                 ),
                 height = "85vh",

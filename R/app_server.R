@@ -47,58 +47,52 @@ app_server <- function(input, output, session) {
     } else if (length(input$electionType) == 1) {
       petitionSQL <- paste0("AND petition = '", input$electionType[1], "' ")
     } else {
-      petitionSQL <- ""
-    }
-  }
-
-  get_region_sql <- function() {
-    if (length(input$regionType) == 2) {
-      petitionSQL <- ""
-    } else if (length(input$regionType) == 1) {
-      petitionSQL <- paste0("AND rural = '", input$regionType[1], "' ")
-    } else {
-      petitionSQL <- ""
+      petitionSQL <- "AND TRUE = FALSE "
     }
   }
 
   get_industry_sql <- function() {
-    if (input$industry == 0) {
+    if (input$industry == "All") {
       industrySQL <- ""
-    } else if (input$industry == 1) {
+    } else if (input$industry == "Agriculture, Forestry and Fishing") {
       industrySQL <- paste0("AND sic2 IN (1, 2, 7, 8, 9) ")
-    } else if (input$industry == 2) {
+    } else if (input$industry == "Mining") {
       industrySQL <- paste0("AND sic2 IN (10, 12, 13, 14) ")
-    } else if (input$industry == 3) {
+    } else if (input$industry == "Construction") {
       industrySQL <- paste0("AND sic2 IN (15, 16, 17) ")
-    } else if (input$industry == 4) {
+    } else if (input$industry == "Manufacturing") {
       industrySQL <- paste0("AND sic2 IN (20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39) ")
-    } else if (input$industry == 5) {
+    } else if (input$industry == "Transportation and Utilities") {
       industrySQL <- paste0("AND sic2 IN (40, 41, 42, 43, 44, 45, 46, 47, 48, 49) ")
-    } else if (input$industry == 6) {
+    } else if (input$industry == "Wholesale") {
       industrySQL <- paste0("AND sic2 IN (50, 51) ")
-    } else if (input$industry == 7) {
+    } else if (input$industry == "Retail") {
       industrySQL <- paste0("AND sic2 IN (52, 53, 54, 55, 56, 57, 58, 59) ")
-    } else if (input$industry == 8) {
+    } else if (input$industry == "FIRE") {
       industrySQL <- paste0("AND sic2 IN (60, 61, 62, 63, 64, 65, 67) ")
-    } else if (input$industry == 9) {
+    } else if (input$industry == "Services") {
       industrySQL <- paste0("AND sic2 IN (70, 72, 73, 75, 76, 78, 79, 80, 81, 82, 83, 84, 86, 87, 88, 89) ")
-    } else if (input$industry == 10) {
+    } else if (input$industry == "Public Administration") {
       industrySQL <- paste0("AND sic2 IN (91, 92, 93, 94, 95, 96, 97, 99) ")
     } else {
       industrySQL <- ""
     }
   }
 
-  get_state_sql <- function() {
+  get_county_sql <- function() {
     if (input$county == "No State Selected" | input$county == "All") {
       countySQL <- ""
+    } else if (input$county == "All Rural Counties") {
+      countySQL <- "AND rural = TRUE "
+    } else if (input$county == "All Urban Counties") {
+      countySQL <- "AND rural = FALSE "
     } else {
       countySQL <- paste0("AND unionelections.fips = '", input$county, "' ")
     }
   }
 
-  get_county_sql <- function() {
-    if (input$state == 0) {
+  get_state_sql <- function() {
+    if (input$state == "All") {
       stateSQL <- ""
     } else {
       stateSQL <- paste0("AND unionelections.state = '", input$state, "' ")
@@ -106,7 +100,7 @@ app_server <- function(input, output, session) {
   }
 
   current_data_slice <- reactive({
-    sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), get_county_sql(), get_region_sql(), ";")
+    sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), get_county_sql(), ";")
     query <- sqlInterpolate(
       pool,
       sql,
@@ -134,11 +128,19 @@ app_server <- function(input, output, session) {
 
   observeEvent(input$state, {
     if (input$state == 0) {
-      countyDataframeToText <- "No State Selected"
+      countyDataframeToText <- c("All", "All Rural Counties", "All Urban Counties")
     } else {
-      countyDataframeToText <-  c("All", setNames(current_county_selection()$fips, current_county_selection()$county))
+      countyDataframeToText <-  c("All", "All Rural Counties", "All Urban Counties", setNames(current_county_selection()$fips, current_county_selection()$county))
     }
     updateSelectInput(inputId = "county", choices = countyDataframeToText)
+  })
+
+  observeEvent(input$winnersChecked, {
+    if (input$winnersChecked == TRUE) {
+      updateSliderInput(inputId = "percentageFavor", step = .01, value = c(50.01, 100))
+    } else {
+      updateSliderInput(inputId = "percentageFavor", step = 1, value = c(0, 100))
+    }
   })
 
   output$test <- renderTable({
@@ -228,7 +230,7 @@ app_server <- function(input, output, session) {
     "CO" = "Colorado",
     "CT" = "Connecticut",
     "DE" = "Delaware",
-    #"DC" = "District of Columbia",
+    "DC" = "District of Columbia",
     "FL" = "Florida",
     "GA" = "Georgia",
     "HI" = "Hawaii",
