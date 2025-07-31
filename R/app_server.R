@@ -6,8 +6,6 @@
 #' @import DBI
 #' @import RPostgres
 #' @import pool
-#' @import ggplot2
-#' @import ggthemes
 #' @noRd
 #'
 
@@ -141,17 +139,6 @@ app_server <- function(input, output, session) {
     } else {
       updateSliderInput(inputId = "percentageFavor", step = 1, value = c(0, 100))
     }
-  })
-
-  output$test <- renderTable({
-    current_data_slice()
-  })
-
-  output$testPlot <- renderPlot({
-    ggplot(data = current_data_slice(), aes(x = yrclosed, y = eligible)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    labs(title = "Title", x = "Year Closed", y = "Eligible Voters") +
-    theme_fivethirtyeight()
   })
   
   #About Me Images TODO: Replace with actual images
