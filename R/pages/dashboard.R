@@ -18,38 +18,105 @@ dashboard <- function() {
             layout_sidebar(
                 sidebar = sidebar(
                     selectInput(
-                        "aggregate",
-                        "Aggregate",
-                        c(
-                            "State",
-                            "County",
-                            "Industry"
-                        )
-                    ),
-                    selectInput(
                         "state",
                         "State",
                         c(
                             "All",
-                            "Colorado"
+                            "Alabama" = "AL",
+                            "Alaska" = "AK",
+                            "Arizona" = "AZ",
+                            "Arkansas" = "AR",
+                            "California" = "CA",
+                            "Colorado" = "CO",
+                            "Connecticut" = "CT",
+                            "Delaware" = "DE",
+                            "District of Columbia" = "DC",
+                            "Florida" = "FL",
+                            "Georgia" = "GA",
+                            "Hawaii" = "HI",
+                            "Idaho" = "ID",
+                            "Illinois" = "IL",
+                            "Indiana" = "IN",
+                            "Iowa" = "IA",
+                            "Kansas" = "KS",
+                            "Kentucky" = "KY",
+                            "Louisiana" = "LA",
+                            "Maine" = "ME",
+                            "Montana" = "MT",
+                            "Nebraska" = "NE",
+                            "Nevada" = "NV",
+                            "New Hampshire" = "NH",
+                            "New Jersey" = "NJ",
+                            "New Mexico" = "NM",
+                            "New York" = "NY",
+                            "North Carolina" = "NC",
+                            "North Dakota" = "ND",
+                            "Ohio" = "OH",
+                            "Oklahoma" = "OK",
+                            "Oregon" = "OR",
+                            "Maryland" = "MD",
+                            "Massachusetts" = "MA",
+                            "Michigan" = "MI",
+                            "Minnesota" = "MN",
+                            "Mississippi" = "MS",
+                            "Missouri" = "MO",
+                            "Pennsylvania" = "PA",
+                            "Rhode Island" = "RI",
+                            "South Carolina" = "SC",
+                            "South Dakota" = "SD",
+                            "Tennessee" = "TN",
+                            "Texas" = "TX",
+                            "Utah" = "UT",
+                            "Vermont" = "VT",
+                            "Virginia" = "VA",
+                            "Washington" = "WA",
+                            "West Virginia" = "WV",
+                            "Wisconsin" = "WI",
+                            "Wyoming" = "WY"
                         )
                     ),
-                    selectInput(
-                        "county",
-                        "County",
-                        c(
-                            "All",
-                            "Larimer"
-                        )
+                    tooltip(
+                        selectInput(
+                            "county",
+                            "County",
+                            c(
+                                "No State Selected"
+                            )
+                        ),
+                        "By 2020 FIPS Codes.",
+                        placement = "right"
                     ),
+                    tooltip(
+                        selectInput(
+                            "industry",
+                            "Industry",
+                            c(
+                                "All",
+                                "Agriculture, Forestry and Fishing",
+                                "Mining",
+                                "Construction",
+                                "Manufacturing",
+                                "Transportation and Utilities",
+                                "Wholesale",
+                                "Retail",
+                                "FIRE",
+                                "Services",
+                                "Public Administration"
+                            )
+                        ),
+                        "By SIC Code. No data after 2010.",
+                        placement = "right"
+                    ),
+
                     checkboxGroupInput(
                         "electionType",
-                        "Election Type",
+                        "Petition Type",
                         c(
-                            "Certification (RC)" = 0,
-                            "Decertification (RD)" = 1,
-                            "Emp. Petition (RM)" = 2
-                        )
+                            "Certification (RC)" = "RC",
+                            "Decertification (RD)" = "RD",
+                            "Emp. Petition (RM)" = "RM"
+                        ),
+                        selected = list("RC", "RD", "RM")
                     ),
                     sliderInput(
                         "timeframe",
@@ -61,10 +128,19 @@ dashboard <- function() {
                     ),
                     sliderInput(
                         "percentageFavor",
-                        "Percentage in favor",
+                        "Pro Union Voter Share",
                         min = 0,
                         max = 100,
                         value = c(0, 100)
+                    ),
+                    tooltip(
+                        checkboxInput(
+                            "winnersChecked",
+                            "Winning Elections Only",
+                            value = FALSE
+                        ),
+                        "Sets slider to hundredths place.",
+                        placement = "right"
                     )
                 ),
                 height = "85vh",
@@ -85,11 +161,7 @@ dashboard <- function() {
                     )
                 ),
                 layout_columns(
-                    card(
-                        card_header("Preset Graph 1"),
-                        fill = TRUE,
-                        plotOutput("testPlot")
-                    ),
+                    card(card_header("Preset Graph 1"), fill = TRUE),
                     card(card_header("Preset Graph 2"), fill = TRUE),
                     card(card_header("Preset Graph 3"), fill = TRUE)
                 )
