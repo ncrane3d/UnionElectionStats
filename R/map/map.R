@@ -86,6 +86,7 @@ map <- function(input, output, pool) {
                     spiderfyOnMaxZoom = TRUE,
                     showCoverageOnHover = TRUE
                 ),
+                #Popup on click of individual elections that displays basic info
                 popup = ~ paste(
                     paste("Employer: ", htmlEscape(employer)),
                     paste(
