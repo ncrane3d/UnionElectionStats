@@ -135,9 +135,9 @@ app_server <- function(input, output, session) {
 
   observeEvent(input$winnersChecked, {
     if (input$winnersChecked == TRUE) {
-      updateSliderInput(inputId = "percentageFavor", step = .01, value = c(50.01, 100))
+      updateSliderInput(inputId = "percentageFavor", step = .01, value = c(50.01, 100), min = 50.01)
     } else {
-      updateSliderInput(inputId = "percentageFavor", step = 1, value = c(0, 100))
+      updateSliderInput(inputId = "percentageFavor", step = 1, value = c(0, 100), min = 0)
     }
   })
   
