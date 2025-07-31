@@ -25,16 +25,7 @@ GROUP BY cast (FIPS as varchar);'
     )
     return(dbGetQuery(pool, query))
 }
-getpoints <- function(pool) {
-    sql <- 'SELECT * FROM unionelections;'
-    query <- sqlInterpolate(
-        pool,
-        sql,
-    )
-    return(dbGetQuery(pool, query))
-}
-
-map <- function(input, output, pool) {
+map <- function(input, output, pool, current_data_slice) {
     highlightFunction <- function(fips) {
         if (fips == input$state) {
             return("white")
@@ -44,7 +35,6 @@ map <- function(input, output, pool) {
     }
     state_countdf <- getstate_count(pool)
     county_countdf <- getcounty_count(pool)
-    points <- getpoints(pool)
     stateBoundaries <- full_join(
         stateBoundaries,
         state_countdf,
@@ -76,7 +66,7 @@ map <- function(input, output, pool) {
             ) |>
             #Individual election markers
             addCircleMarkers(
-                data = points,
+                data = current_data_slice(),
                 group = "counties",
                 color = "red",
                 opacity = 0.75,

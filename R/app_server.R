@@ -25,8 +25,6 @@ pool <- dbPool(
 
 app_server <- function(input, output, session) {
   # Your application server logic
-  output$leafmap <- map(input, output, pool)
-  map_logic(input, output, pool)
 
   #Move the pool over?
 
@@ -146,7 +144,8 @@ app_server <- function(input, output, session) {
     )
     stateCounties <- dbGetQuery(pool, query)
   })
-
+  output$leafmap <- map(input, output, pool, current_data_slice)
+  map_logic(input, output, pool)
   observeEvent(input$state, {
     if (input$state == 0) {
       countyDataframeToText <- c(
