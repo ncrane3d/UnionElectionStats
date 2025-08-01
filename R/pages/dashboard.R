@@ -18,21 +18,109 @@ dashboard <- function() {
             layout_sidebar(
                 sidebar = sidebar(
                     selectInput(
-                        "aggregate",
-                        "Aggregate",
-                        c("State", "County", "Industry")
+                        "state", 
+                        "State", 
+                        c(
+                            "All", 
+                            "Alabama" = "AL",
+                            "Alaska" = "AK",
+                            "Arizona" = "AZ",
+                            "Arkansas" = "AR",
+                            "California" = "CA",
+                            "Colorado" = "CO",
+                            "Connecticut" = "CT",
+                            "Delaware" = "DE",
+                            "District of Columbia" = "DC",
+                            "Florida" = "FL",
+                            "Georgia" = "GA",
+                            "Hawaii" = "HI",
+                            "Idaho" = "ID",
+                            "Illinois" = "IL",
+                            "Indiana" = "IN",
+                            "Iowa" = "IA",
+                            "Kansas" = "KS",
+                            "Kentucky" = "KY",
+                            "Louisiana" = "LA",
+                            "Maine" = "ME",
+                            "Montana" = "MT",
+                            "Nebraska" = "NE",
+                            "Nevada" = "NV",
+                            "New Hampshire" = "NH",
+                            "New Jersey" = "NJ",
+                            "New Mexico" = "NM",
+                            "New York" = "NY",
+                            "North Carolina" = "NC",
+                            "North Dakota" = "ND",
+                            "Ohio" = "OH",
+                            "Oklahoma" = "OK",
+                            "Oregon" = "OR",
+                            "Maryland" = "MD",
+                            "Massachusetts" = "MA",
+                            "Michigan" = "MI",
+                            "Minnesota" = "MN",
+                            "Mississippi" = "MS",
+                            "Missouri" = "MO",
+                            "Pennsylvania" = "PA",
+                            "Rhode Island" = "RI",
+                            "South Carolina" = "SC",
+                            "South Dakota" = "SD",
+                            "Tennessee" = "TN",
+                            "Texas" = "TX",
+                            "Utah" = "UT",
+                            "Vermont" = "VT",
+                            "Virginia" = "VA",
+                            "Washington" = "WA",
+                            "West Virginia" = "WV",
+                            "Wisconsin" = "WI",
+                            "Wyoming" = "WY"
+                        )
+                    ) %>% 
+                        tagAppendAttributes(class = "artificial-gap"),
+                    tooltip(
+                        selectInput(
+                            "county",
+                            "County", 
+                            c(
+                                "No State Selected"
+                            )
+                        ) %>% 
+                        tagAppendAttributes(class = "tooltip-adjustment"), 
+                        "By 2020 FIPS Codes.",
+                        placement = "right"
                     ),
-                    selectInput("State", "State", c("All", "Colorado")),
-                    selectInput("county", "County", c("All", "Larimer")),
+                    tooltip(
+                        selectInput(
+                            "industry",
+                            "Industry",
+                            c(
+                                "All",
+                                "Agriculture, Forestry and Fishing",
+                                "Mining",
+                                "Construction",
+                                "Manufacturing",
+                                "Transportation and Utilities",
+                                "Wholesale",
+                                "Retail",
+                                "FIRE",
+                                "Services",
+                                "Public Administration"
+                            )
+                        ) %>% 
+                        tagAppendAttributes(class = "tooltip-adjustment"), 
+                        "By SIC Code. No data after 2010.",
+                        placement = "right"
+                    ),                    
                     checkboxGroupInput(
                         "electionType",
-                        "Election Type",
+                        "Petition Type",
                         c(
-                            "Certification (RC)",
-                            "Decertification (RD)",
-                            "Emp. Petition (RM)"
-                        )
-                    ),
+                            "Certification (RC)" = "RC",
+                            "Decertification (RD)" = "RD",
+                            "Emp. Petition (RM)" = "RM"
+                        ),
+                        selected = list("RC", "RD", "RM")
+                    ) %>% 
+                        tagAppendAttributes(class = "artificial-gap"),
                     sliderInput(
                         "timeframe",
                         "Timeframe",
@@ -40,13 +128,23 @@ dashboard <- function() {
                         min = 1960,
                         max = 2025,
                         value = c(1960, 2025)
-                    ),
+                    ) %>% 
+                        tagAppendAttributes(class = "artificial-gap"),
                     sliderInput(
                         "percentageFavor",
-                        "Percentage in favor",
+                        "Pro-union Vote Share",
                         min = 0,
                         max = 100,
                         value = c(0, 100)
+                    ),
+                    tooltip(
+                        checkboxInput(
+                            "winnersChecked", 
+                            "Winning Elections Only", 
+                            value = FALSE
+                        ),
+                        "Sets slider to hundredths place.",
+                        placement = "right"
                     )
                 ),
                 height = "85vh",
