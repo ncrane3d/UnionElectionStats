@@ -152,16 +152,34 @@ dashboard <- function() {
                     card(leafletOutput("map")),
                     card(
                         card_header("Custom Visualization"),
-                        card(),
-                        selectInput(
-                            "select",
-                            "Graph type:",
-                            list(
-                                "Pi Chart" = "PI",
-                                "Line Graph" = "LINE",
-                                "Histogram" = "HIST"
+                        layout_columns(
+                            width = 1/2,
+                            selectInput(
+                                "customGraphType",
+                                "Graph type:",
+                                list(
+                                    "Line Graph" = "LINE",
+                                    "Histogram" = "HIST"
+                                )
+                            ),
+                            selectInput(
+                                "customAxes",
+                                "Select Axes:",
+                                c(
+                                    "Elections",
+                                    "Eligible Employees",
+                                    "Total Votes",
+                                    "Eligible per Election",
+                                    "Avg. Votes per Election",
+                                    "Avg. Votes For Union",
+                                    "Avg. Votes Against Union",
+                                    "Avg. Union Vote Share",
+                                    "Avg. Participation Rate"
+                                )
                             )
-                        )
+                        ) %>% 
+                        tagAppendAttributes(class = "custom-visualization-margin"),
+                        card(plotOutput("customVisualization"))
                     )
                 ),
                 layout_columns(

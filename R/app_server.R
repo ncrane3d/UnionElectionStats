@@ -6,6 +6,8 @@
 #' @import DBI
 #' @import RPostgres
 #' @import pool
+#' @import tidyverse
+#' @import ggplot2
 #' @noRd
 #'
 
@@ -77,7 +79,89 @@ app_server <- function(input, output, session) {
       updateSliderInput(inputId = "percentageFavor", step = 1, value = c(0, 100))
     }
   })
+
+  output$customVisualization <- renderPlot ({
+    if (input$customGraphType == "LINE") {
+      req(customLineGraphVariableHandler())
+      ggplot(current_data_slice(), aes(x = yrclosed, y = customLineGraphVariableHandler())) +
+    geom_line() +
+    labs(x = "Year Election Closed", y = input$customAxes)
+    } else if (input$customGraphType == "HIST") {
+      req(customHistogramVariableHandler())
+      ggplot(current_data_slice(), aes(x = customHistogramVariableHandler())) +
+    geom_histogram(binwidth = 1.53) +
+    labs(x = input$customAxes, y = "Frequency")
+    }
+  })
+
+  customLineGraphVariableHandler <- function() {
+    if (input$customAxes == "Elections") {
+      #Temporary Value so errors aren't thrown on initial selection
+      yAxis <- current_data_slice()$eligible
+    } else if (input$customAxes == "Eligible Employees") {
+      
+    } else if (input$customAxes == "Total Votes") {
+      
+    } else if (input$customAxes == "Eligible per Election") {
+      
+    } else if (input$customAxes == "Avg. Votes per Election") {
+      
+    } else if (input$customAxes == "Avg. Votes For Union") {
+      
+    } else if (input$customAxes == "Avg. Votes Against Union") {
+      
+    } else if (input$customAxes == "Avg. Union Vote Share") {
+      
+    } else if (input$customAxes == "Avg. Participation Rate") {
+      
+    }
+  }
+
+  customHistogramVariableHandler <- function() {
+    if (input$customAxes == "Petition Type") {
+      #Temporary Value so errors aren't thrown on initial selection
+      xAxis <- current_data_slice()$yrclosed
+    } else if (input$customAxes == "Election Type") {
+
+    } else if (input$customAxes == "Votes For/Against Union") {
+      
+    } else if (input$customAxes == "Total Votes") {
+      
+    } else if (input$customAxes == "Union Vote Share") {
+      
+    } else if (input$customAxes == "Participation Rate") {
+      
+    }
+  }
   
+observeEvent(input$customGraphType, {
+    if (input$customGraphType == "LINE") {
+      lineGraphChoices <- c(
+        "Elections",
+        "Eligible Employees",
+        "Total Votes",
+        "Eligible per Election",
+        "Avg. Votes per Election",
+        "Avg. Votes For Union",
+        "Avg. Votes Against Union",
+        "Avg. Union Vote Share",
+        "Avg. Participation Rate"
+      )
+      axisLabel <- "Select Y Axis"
+    } else if (input$customGraphType == "HIST") {
+      lineGraphChoices <- c(
+        "Petition Type",
+        "Election Type",
+        "Votes For/Against Union", 
+        "Total Votes",
+        "Union Vote Share",
+        "Participation Rate"
+      )
+      axisLabel <- "Select X Axis"
+    }
+    updateSelectInput(inputId = "customAxes", label = axisLabel, choices = lineGraphChoices)
+  })
+
   #About Me Images TODO: Replace with actual images
   output$pfp_left <- renderImage(
     {

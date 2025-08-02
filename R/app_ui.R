@@ -46,6 +46,7 @@ app_ui <- function(request) {
         ".navbar {position: sticky; top: 0; z-index:1; }",
         ".tooltip-adjustment, .artificial-gap {margin-bottom: 16px !important; }",
         ".sidebar-content {row-gap: 8px !important; }", 
+        ".custom-visualization-margin { margin-bottom: 10px !important; }",
         # Below is styling for all accordions, as seen on featured analysis page
         ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;}",
