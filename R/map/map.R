@@ -45,8 +45,17 @@ map <- function(input, output, pool, current_data_slice) {
         county_countdf,
         by = c("FIPS" = "fips")
     )
+    countyBoundaries <- full_join(
+        countyBoundaries,
+        state_countdf,
+        by = c("STATE" = "substring")
+    )
+    countyBoundaries$normalized_vote <- with(
+        countyBoundaries,
+        (county_count / state_count)
+    )
     pal <- getpalette(stateBoundaries$state_count)
-    pal2 <- getpalette(countyBoundaries$county_count)
+    pal2 <- getpalette(countyBoundaries$normalized_vote)
     return(renderLeaflet({
         leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles() |>
@@ -61,7 +70,7 @@ map <- function(input, output, pool, current_data_slice) {
             addPolygons(
                 data = countyBoundaries,
                 weight = 1,
-                color = ~ pal2(county_count),
+                color = ~ pal2(normalized_vote),
                 group = "counties"
             ) |>
             #Individual election markers
