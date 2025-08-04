@@ -41,26 +41,18 @@ map <- function(input, output, pool, current_data_slice) {
                     showCoverageOnHover = FALSE
                 ),
                 #Popup on click of individual elections that displays basic info
-                popup = ~ paste(
-                    paste("Employer: ", htmlEscape(employer)),
-                    paste(
-                        paste("<br>Year closed: ", htmlEscape(yrclosed)),
-                        paste(
-                            "<br>Pro-Union vote share: ",
-                            paste(
-                                htmlEscape(
-                                    round(
-                                        ((votes_for /
-                                            (votes_for + votes_against)) *
-                                            100),
-                                        digits = 2
-                                    ),
-                                )
-                            ),
-                            "%"
-                        )
+                label = ~ sprintf(
+                    "Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
+                    employer,
+                    yrclosed,
+                    round(
+                        ((votes_for /
+                            (votes_for + votes_against)) *
+                            100),
+                        digits = 2
                     )
-                )
+                ) %>%
+                    lapply(htmltools::HTML)
             ) |>
             #Zoom based conditional rendering for layers
             groupOptions("counties", zoomLevels = 5:20) |>
