@@ -108,8 +108,8 @@ map <- function(input, output, pool, current_data_slice) {
                 )
             ) |>
             #Zoom based conditional rendering for layers
-            groupOptions("counties", zoomLevels = 6:20) |>
-            groupOptions("states", zoomLevels = 0:5) |>
+            groupOptions("counties", zoomLevels = 5:20) |>
+            groupOptions("states", zoomLevels = 0:4) |>
             #Map panning bounds
             setMaxBounds(
                 lat1 = 5.499550,
@@ -122,6 +122,19 @@ map <- function(input, output, pool, current_data_slice) {
                 lat = 39.82,
                 lng = -98.58,
                 zoom = 3,
+            ) %>%
+            #On render, applies click event to visible polygons (using leaflet javascript library)
+            onRender(
+                'function(el, x){
+                var map = this;
+                map.eachLayer(function(layer){
+                    if(layer instanceof L.Polygon){
+                        layer.on("click", function(e){
+                            map.fitBounds(layer.getBounds());
+                        })
+                    }
+            });
+            }'
             )
     }))
 }

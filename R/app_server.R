@@ -9,6 +9,7 @@
 #' @import sf
 #' @import dplyr
 #' @import htmltools
+#' @import htmlwidgets
 #' @noRd
 
 source('./R/map/map.R', local = TRUE)
@@ -18,13 +19,6 @@ source('./R/map/map_logic.R', local = TRUE)
 app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
-
-  output$map <- renderLeaflet({
-    leaflet() |>
-      addTiles() |>
-      setView(0.249818018854, 0.57650864633, zoom = 3)
-  })
-
   pool <- dbPool(
     Postgres(),
     host = Sys.getenv("UE_IP"),
@@ -67,8 +61,7 @@ app_server <- function(input, output, session) {
     )
     stateCounties <- dbGetQuery(pool, query)
   })
-  output$leafmap <- map(input, output, pool, current_data_slice)
-  map_logic(input, output, pool)
+  output$map <- map(input, output, pool, current_data_slice)
   observeEvent(input$state, {
     if (input$state == 0) {
       countyDataframeToText <- c(
