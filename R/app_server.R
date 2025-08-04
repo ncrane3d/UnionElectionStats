@@ -13,7 +13,6 @@
 #' @noRd
 
 source('./R/map/map.R', local = TRUE)
-source('./R/map/map_logic.R', local = TRUE)
 #'
 
 app_server <- function(input, output, session) {
@@ -27,6 +26,8 @@ app_server <- function(input, output, session) {
     password = Sys.getenv("UE_DB_PASS"),
     port = 21701
   )
+
+  output$map <- map(input, output, pool, current_data_slice)
 
   current_data_slice <- reactive({
     sql <- paste0(
@@ -61,7 +62,6 @@ app_server <- function(input, output, session) {
     )
     stateCounties <- dbGetQuery(pool, query)
   })
-  output$map <- map(input, output, pool, current_data_slice)
   observeEvent(input$state, {
     if (input$state == 0) {
       countyDataframeToText <- c(
