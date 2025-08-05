@@ -78,11 +78,10 @@ app_server <- function(input, output, session) {
     }
   })
   
-  #About Me Images TODO: Replace with actual images
-  output$pfp_left <- renderImage(
+  output$jonne <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./resources/images/jonne_kamphorst.webp",
         height = "auto",
         width = "100%"
       )
@@ -90,10 +89,10 @@ app_server <- function(input, output, session) {
     deleteFile = FALSE
   )
 
-  output$pfp_middle <- renderImage(
+  output$zachary <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./resources/images/zachary_schaller.png",
         height = "auto",
         width = "100%"
       )
@@ -101,10 +100,10 @@ app_server <- function(input, output, session) {
     deleteFile = FALSE
   )
 
-  output$pfp_right <- renderImage(
+  output$sam <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./resources/images/samuel_young.jpg",
         height = "auto",
         width = "100%"
       )
