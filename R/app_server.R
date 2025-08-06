@@ -81,7 +81,7 @@ app_server <- function(input, output, session) {
   output$jonne <- renderImage(
     {
       list(
-        src = "./resources/images/jonne_kamphorst.webp",
+        src = "./resources/images/jonne_kamphorst.jpg",
         height = "auto",
         width = "100%"
       )

@@ -69,7 +69,7 @@ about <- function() {
 bioPanel <- function(firstlast, img, description) {
     div(
         align = "center",
-        imageOutput(img),
+        imageOutput(img, width = "60%", height = "auto"),
         h4(firstlast),
         p(description)
     )%>%

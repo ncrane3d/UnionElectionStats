@@ -58,10 +58,7 @@ app_ui <- function(request) {
         "#accordion-download .accordion-title { font-weight: normal;}",
         "#accordion-download .accordion-header { display: inline-block; font-weight: normal !important;}",
         "#accordion-download .accordion-button.collapsed:after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; } ",
-        "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }",
-        #About me styling
-        ".bio-picture div { overflow: hidden; display: flex; justify-content: center; align-items: center; flex-direction: column;  }",
-        ".bio-picture div img { max-width: 100%; max-height: 100%; height: auto; width: auto; }" #margin-top: auto;
+        "#accordion-download .accordion-button:not(.collapsed)::after { background-image: url('https://www.svgrepo.com/show/470572/caret-down.svg') ; background-size: 20px; color: #000000;  margin-left: 5px; width: 20px; height: 20px; transform: rotate(180deg);  }"
       )
     )
 

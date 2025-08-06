@@ -11,7 +11,7 @@ dashboard <- function() {
                 layout_columns(
                     "Thank you for visting Union Election Stats.
                     The purpose of this website is to disaggregate data on union elections visually. Union elections have been 
-                    chosen because the National Labor Relations Board (NLRB) deeper levels of disaggregation on elections than 
+                    chosen because the National Labor Relations Board (NLRB) offers deeper levels of disaggregation on elections than 
                     there are with union membership data. You can use the filters on the left-hand side of the screen to filter
                     the dataset to your liking, then observe a heat map of election frequency at the national level, and the 
                     location of individual elections at the state level. The dataset itself has been cleaned from what was 
