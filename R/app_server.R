@@ -28,25 +28,8 @@ app_server <- function(input, output, session) {
   )
 
   output$map <- suppressMessages(map(input, output, pool, current_data_slice))
-
-  current_data_slice <- reactive({
-    sql <- paste0(
-      get_slider_sql(),
-      get_petition_sql(),
-      get_industry_sql(),
-      get_state_sql(),
-      get_county_sql(),
-      ";"
-    )
-    query <- sqlInterpolate(
-      pool,
-      sql,
-      lowerBoundYear = input$timeframe[1],
-      upperBoundYear = input$timeframe[2],
-      lowerBoundFavor = input$percentageFavor[1],
-      upperBoundFavor = input$percentageFavor[2]
-    )
-    result <- dbGetQuery(pool, query)
+  
+  current_data_slice <- reactive({dbGetQuery(pool, getCurrentData())
   })
 
   current_county_selection <- reactive({
