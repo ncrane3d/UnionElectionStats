@@ -27,7 +27,7 @@ app_server <- function(input, output, session) {
     port = 21701
   )
 
-  output$map <- map(input, output, pool, current_data_slice)
+  output$map <- suppressMessages(map(input, output, pool, current_data_slice))
 
   current_data_slice <- reactive({
     sql <- paste0(

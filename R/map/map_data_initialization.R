@@ -26,7 +26,7 @@ getStateBoundaries <- function(pool, state_countdf) {
     stateBoundaries <- full_join(
         stateBoundaries,
         state_countdf,
-        by = c("STATE" = "substring")
+        by = c("state" = "substring")
     )
     return(stateBoundaries)
 }

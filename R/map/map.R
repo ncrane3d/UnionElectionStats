@@ -6,11 +6,16 @@ source('./R/map/map_data_initialization.R', local = TRUE)
 getPalette <- function(column) {
     colorNumeric(c("red", "blue"), column)
 }
-
 map <- function(input, output, pool, current_data_slice) {
     boundaries <- getBoundaries(pool)
-    statePalette <- getPalette(stateBoundaries$state_count)
-    countyPalette <- getPalette(countyBoundaries$normalized_vote)
+    statePalette <- getPalette(boundaries[1]$state_count)
+    countyPalette <- getPalette(boundaries[2]$normalized_vote)
+    mapHighlight <- highlightOptions(
+        color = "white",
+        weight = 2,
+        opacity = 1,
+        bringToFront = TRUE
+    )
     return(renderLeaflet({
         leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles() |>
@@ -19,14 +24,15 @@ map <- function(input, output, pool, current_data_slice) {
                 data = boundaries[[1]],
                 weight = 1,
                 color = ~ statePalette(state_count),
-                group = "states"
+                group = "states",
+                highlightOptions = mapHighlight
             ) |>
             #County border layer
             addPolygons(
                 data = boundaries[[2]],
                 weight = 1,
                 color = ~ countyPalette(normalized_vote),
-                group = "counties"
+                group = "counties",
             ) |>
             #Individual election markers
             addCircleMarkers(
