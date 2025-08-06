@@ -16,9 +16,6 @@ about <- function() {
             tagAppendAttributes(class = "scrollable-panel"),
             card(
                 card_header("Principle Investigators", align = "center"),
-                div(
-                    align = "center"
-                ),
                 layout_column_wrap(
                     width = 1 / 3,
                     min_width = 300,
@@ -71,13 +68,10 @@ about <- function() {
 
 bioPanel <- function(firstlast, img, description) {
     div(
-        div(
-            align = "center",
-            imageOutput(img, width = "150", height = "auto"),
-            h4(firstlast)
-        )
-        div(
-            p(description)
-        )
-    ),
+        align = "center",
+        imageOutput(img),
+        h4(firstlast),
+        p(description)
+    )%>%
+    tagAppendAttributes(class = "bio-picture")
 }
