@@ -8,6 +8,7 @@
 #' @import pool
 #' @import tidyverse
 #' @import ggplot2
+#' @import dplyr
 #' @noRd
 #'
 
@@ -94,22 +95,26 @@ app_server <- function(input, output, session) {
     }
   })
 
+  getBaseData(){
+    if(input$customAxes == "Elections" || )
+  }
+
   customLineGraphVariableHandler <- function() {
     if (input$customAxes == "Elections") {
       #Temporary Value so errors aren't thrown on initial selection
       yAxis <- current_data_slice()$eligible
     } else if (input$customAxes == "Eligible Employees") {
-      
+      yAxis <- current_data_slice()$eligible
     } else if (input$customAxes == "Total Votes") {
-      
+      yAxis <- with(current_data_slice(), votes_for + votes_against)
     } else if (input$customAxes == "Eligible per Election") {
-      
+
     } else if (input$customAxes == "Avg. Votes per Election") {
-      
+
     } else if (input$customAxes == "Avg. Votes For Union") {
-      
+
     } else if (input$customAxes == "Avg. Votes Against Union") {
-      
+
     } else if (input$customAxes == "Avg. Union Vote Share") {
       
     } else if (input$customAxes == "Avg. Participation Rate") {
@@ -120,17 +125,17 @@ app_server <- function(input, output, session) {
   customHistogramVariableHandler <- function() {
     if (input$customAxes == "Petition Type") {
       #Temporary Value so errors aren't thrown on initial selection
-      xAxis <- current_data_slice()$yrclosed
+      xAxis <- count(current_data_slice()$petition)
     } else if (input$customAxes == "Election Type") {
-
+      xAxis <- count(current_data_slice()$elec_type)
     } else if (input$customAxes == "Votes For/Against Union") {
       
     } else if (input$customAxes == "Total Votes") {
-      
+      xAxis <- with(current_data_slice(), votes_for + votes_against)
     } else if (input$customAxes == "Union Vote Share") {
-      
+      xAxis <- with(current_data_slice(), (100 * votes_for/(votes_for + votes_against)))
     } else if (input$customAxes == "Participation Rate") {
-      
+      xAxis <- with(current_data_slice(), (100 * (votes_for + votes_against)/eligible))
     }
   }
   
