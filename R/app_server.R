@@ -27,10 +27,12 @@ app_server <- function(input, output, session) {
     port = 21701
   )
 
-  output$map <- map(input, output, pool, current_data_slice)
+  current_query <- reactive({get_current_data(input, pool)})
+  current_data_slice <- reactive({dbGetQuery(pool, paste0(current_query, ";"))
+    })
+  output$map <- reactive({map(input, output, pool, current_data_slice, current_query())})
   
-  current_data_slice <- reactive({dbGetQuery(pool, getCurrentData())
-  })
+  
 
   current_county_selection <- reactive({
     sql <- "
