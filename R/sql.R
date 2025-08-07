@@ -75,8 +75,7 @@ get_slider_sql <- function() {
       get_petition_sql(),
       get_industry_sql(),
       get_state_sql(),
-      get_county_sql(),
-      ";"
+      get_county_sql()
     )
     return(sqlInterpolate(
       pool,

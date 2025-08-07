@@ -6,8 +6,8 @@ source('./R/map/map_data_initialization.R', local = TRUE)
 getPalette <- function(column) {
     colorNumeric(c("red", "blue"), column)
 }
-map <- function(input, output, pool, current_data_slice) {
-    boundaries <- getBoundaries(pool)
+map <- function(input, output, pool, current_data_slice, current_query) {
+    boundaries <- getBoundaries(pool, current_query)
     statePalette <- getPalette(boundaries[1]$state_count)
     countyPalette <- getPalette(boundaries[2]$normalized_vote)
     mapHighlight <- highlightOptions(
@@ -21,7 +21,7 @@ map <- function(input, output, pool, current_data_slice) {
             addTiles() |>
             #State border layer
             addPolygons(
-                data = boundaries[[1]],
+                data = boundaries[[1]](),
                 weight = 1,
                 color = ~ statePalette(state_count),
                 group = "states",
@@ -29,7 +29,7 @@ map <- function(input, output, pool, current_data_slice) {
             ) |>
             #County border layer
             addPolygons(
-                data = boundaries[[2]],
+                data = boundaries[[2]](),
                 weight = 1,
                 color = ~ countyPalette(normalized_vote),
                 group = "counties",
