@@ -1,25 +1,23 @@
 stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
 countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
 
-getstate_count <- function(pool, current_query) {
+getstate_count <- function(pool) {
     sql <- 'SELECT SUBSTRING(cast (FIPS as varchar),1,LENGTH(cast (FIPS as varchar)) - 3), COUNT(*) AS state_count
-FROM (?userquery)
+FROM unionelections
 GROUP BY SUBSTRING(cast (FIPS as varchar),1,LENGTH(cast (FIPS as varchar)) - 3);'
     query <- sqlInterpolate(
         pool,
         sql,
-        userquery = current_query
     )
     return(dbGetQuery(pool, query))
 }
-getcounty_count <- function(pool, current_query) {
+getcounty_count <- function(pool) {
     sql <- 'SELECT cast (FIPS as varchar), COUNT(*) AS county_count
-FROM (?userquery)
+FROM unionelections
 GROUP BY cast (FIPS as varchar);'
     query <- sqlInterpolate(
         pool,
         sql,
-        userquery = current_query
     )
     return(dbGetQuery(pool, query))
 }
@@ -33,8 +31,8 @@ getStateBoundaries <- function(pool, state_countdf) {
     return(stateBoundaries)
 }
 
-getCountyBoundaries <- function(pool, state_countdf, current_query) {
-    county_countdf <- getcounty_count(pool, current_query)
+getCountyBoundaries <- function(pool, state_countdf) {
+    county_countdf <- getcounty_count(pool)
     countyBoundaries <- full_join(
         countyBoundaries,
         county_countdf,
@@ -52,10 +50,10 @@ getCountyBoundaries <- function(pool, state_countdf, current_query) {
     return(countyBoundaries)
 }
 
-getBoundaries <- function(pool, current_query) {
-    state_countdf <- getstate_count(pool, current_query)
+getBoundaries <- function(pool) {
+    state_countdf <- getstate_count(pool)
     return(list(
         stateBoundaries = getStateBoundaries(pool, state_countdf),
-        countyBoundaries = getCountyBoundaries(pool, state_countdf, current_query)
+        countyBoundaries = getCountyBoundaries(pool, state_countdf)
     ))
 }

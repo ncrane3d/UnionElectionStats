@@ -9,7 +9,7 @@ get_slider_sql <- function() {
     AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 <= ?upperBoundFavor "
   }
 
-  get_petition_sql <- function(input) {
+  get_petition_sql <- function() {
     if (length(input$electionType) == 3) {
       petitionSQL <- ""
     } else if (length(input$electionType) == 2) {
@@ -21,7 +21,7 @@ get_slider_sql <- function() {
     }
   }
 
-  get_industry_sql <- function(input) {
+  get_industry_sql <- function() {
     if (input$industry == "All") {
       industrySQL <- ""
     } else if (input$industry == "Agriculture, Forestry and Fishing") {
@@ -49,15 +49,7 @@ get_slider_sql <- function() {
     }
   }
 
-  get_state_sql <- function(input) {
-    if (input$state == "All") {
-      stateSQL <- ""
-    } else {
-      stateSQL <- paste0("AND unionelections.state = '", input$state, "' ")
-    }
-  }
-
-  get_county_sql <- function(input) {
+  get_county_sql <- function() {
     if (input$county == "No State Selected" | input$county == "All") {
       countySQL <- ""
     } else if (input$county == "All Rural Counties") {
@@ -69,13 +61,22 @@ get_slider_sql <- function() {
     }
   }
 
-  get_current_data <- function(input, pool) {
+  get_state_sql <- function() {
+    if (input$state == "All") {
+      stateSQL <- ""
+    } else {
+      stateSQL <- paste0("AND unionelections.state = '", input$state, "' ")
+    }
+  }
+
+  getCurrentData <- function() {
     sql <- paste0(
       get_slider_sql(),
-      get_petition_sql(input),
-      get_industry_sql(input),
-      get_state_sql(input),
-      get_county_sql(input)
+      get_petition_sql(),
+      get_industry_sql(),
+      get_state_sql(),
+      get_county_sql(),
+      ";"
     )
     return(sqlInterpolate(
       pool,

@@ -6,8 +6,8 @@ source('./R/map/map_data_initialization.R', local = TRUE)
 getPalette <- function(column) {
     colorNumeric(c("red", "blue"), column)
 }
-map <- function(input, output, pool, current_data_slice, current_query) {
-    boundaries <- getBoundaries(pool, current_query)
+map <- function(input, output, pool, current_data_slice) {
+    boundaries <- getBoundaries(pool)
     statePalette <- getPalette(boundaries[1]$state_count)
     countyPalette <- getPalette(boundaries[2]$normalized_vote)
     mapHighlight <- highlightOptions(
