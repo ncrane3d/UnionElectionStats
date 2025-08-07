@@ -9,14 +9,13 @@ dashboard <- function() {
             right = "10vw",
             card_header(
                 layout_columns(
-                    "Thank you for visting Union Election Stats.
-                    The purpose of this website is to disaggregate data on union elections visually. Union elections have been 
-                    chosen because the National Labor Relations Board (NLRB) offers deeper levels of disaggregation on elections than 
-                    there are with union membership data. You can use the filters on the left-hand side of the screen to filter
-                    the dataset to your liking, then observe a heat map of election frequency at the national level, and the 
-                    location of individual elections at the state level. The dataset itself has been cleaned from what was 
-                    initially provided by the NLRB, it can be accessed in the downloads tab. This project is in support of my 
-                    ongoing research, you can explore the other sections of this website to learn more.",
+                    "Thank you for visting Union Election Stats! Here you can explore the history of union elections through
+                    various visualizations and filters. It is important to note that this is not union membership
+                    data. The value in union elections is that they provide deeper levels of disaggregation than would
+                    otherwise be possible with just membership information. It allows us to analyze the decline of U.S. unions
+                    through geopgraphy, industry, time, and more. The data presented here is a cleaned version of what is publically
+                    released by the National Labor Relations Board (NLRB). This can be accesed in its raw/cleaned forms in the 
+                    downloads tab. If you would like to read further about our research o",
                     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
                 ),
                 class = "dashboardheader",
