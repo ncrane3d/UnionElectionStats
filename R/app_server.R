@@ -77,6 +77,48 @@ app_server <- function(input, output, session) {
       updateSliderInput(inputId = "percentageFavor", step = 1, value = c(0, 100))
     }
   })
+
+  output$insertFeaturedAnalysisFromCSV <- renderUI ({
+    req("./resources/csv/featured-analysis.csv")
+    faCSV <- read.csv("./resources/csv/featured-analysis.csv")
+    faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
+    formattedPapers <- NULL
+    for (i in 1:nrow(faCSV)) {
+      formattedPapers <- paste0(formattedPapers, accordion_panel(
+          title = faCSV$title[i],
+          div(
+              align = "left",
+              div(strong("Author(s): "), p(paste(faCSV$author[i], collapse = ", "))),
+              div(strong("Abstract: "), p(faCSV$abstract[i])),
+              div(strong("Link: "), p(tags$a(href=faCSV$link[i], faCSV$title[i])))
+          ) %>%
+              tagAppendAttributes(id = "accordion-analysis"),
+        )
+      )
+    }
+    # formattedPapers <- accordion_panel(
+    #     title = faCSV$title[1],
+    #     div(
+    #         align = "left",
+    #         div(strong("Author(s): "), p(paste(faCSV$author[1], collapse = ", "))),
+    #         div(strong("Abstract: "), p(faCSV$abstract[1])),
+    #         div(strong("Link: "), p(tags$a(href=faCSV$link[1], faCSV$title[1])))
+    #     ) %>%
+    #         tagAppendAttributes(id = "accordion-analysis")
+    #   )
+    # for (i in 1:1) {
+    #   formattedPapers <- accordion_panel(
+    #       title = faCSV$title[i],
+    #       div(
+    #           align = "left",
+    #           div(strong("Author(s): "), p(paste(faCSV$author[i], collapse = ", "))),
+    #           div(strong("Abstract: "), p(faCSV$abstract[i])),
+    #           div(strong("Link: "), p(tags$a(href=faCSV$link[i], faCSV$title[i])))
+    #       ) %>%
+    #           tagAppendAttributes(id = "accordion-analysis")
+    #     )
+    # }
+  })
   
   output$jonne <- renderImage(
     {
