@@ -9,14 +9,24 @@ dashboard <- function() {
             right = "10vw",
             card_header(
                 layout_columns(
-                    "Thank you for visting Union Election Stats! Here you can explore the history of union elections through
-                    various visualizations and filters. It is important to note that this is not union membership
-                    data. The value in union elections is that they provide deeper levels of disaggregation than would
-                    otherwise be possible with just membership information. It allows us to analyze the decline of U.S. unions
-                    through geopgraphy, industry, time, and more. The data presented here is a cleaned version of what is publically
-                    released by the National Labor Relations Board (NLRB). This can be accesed in its raw/cleaned forms in the 
-                    downloads tab. If you would like to read further about our research o",
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
+                    "Thank you for visiting Union Election Stats! Here you can explore the history of union elections '
+                    through various visualizations and filters. It is important to note that this is not union membership 
+                    data. The value in union elections is that they provide deeper levels of disaggregation than would  
+                    otherwise be possible with just membership information. It allows us to analyze the decline of U.S. 
+                    unions through geography, industry, time, and more. The data presented here is a cleaned version of 
+                    what is publicly released by the National Labor Relations Board (NLRB). This can be accessed in its 
+                    raw or cleaned forms in the Downloads tab. This website has been developed in relation to my ongoing 
+                    research, it can be found in the Featured Analysis tab, as well as other related works. Lastly, be 
+                    sure to submit a form in the Contact Us tab with any inquiries or bug reports.", 
+                    "It was noted that this website does not represent union membership data, however if you would like 
+                    access to that information please visit unionstats.com. In contrast, if you would like even more 
+                    visualizations of union election data, unionelections.org is another great resource. It includes 
+                    post 2000 information, as well as open union election cases.  
+                    Finally, I would like to thank the Russell Sage Foundation for their support in this project, it 
+                    has enabled my cleaning of this dataset, the creation of this website, and every other aspect of 
+                    this project. Real people are affected by the decline of unions in the United States, through 
+                    disaggregation we can figure out who they are and what those outcomes have been. It is both relevant 
+                    and important work that wouldn't be possible without the Russell Sage Foundation."
                 ),
                 class = "dashboardheader",
                 height = "10vh"

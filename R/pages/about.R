@@ -50,13 +50,13 @@ about <- function() {
                     col_widths = c(-1, 4, -2, 4, -1),
                     min_width = 300,
                     bioPanel(
-                        "First Last",
-                        "pfp_developer_left",
+                        "Lucy Lewark",
+                        "lucy",
                         loremIpsum
                     ),
                     bioPanel(
-                        "First Last",
-                        "pfp_developer_right",
+                        "Nathan Crane",
+                        "nathan",
                         loremIpsum
                     )
                 ),

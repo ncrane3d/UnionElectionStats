@@ -146,7 +146,7 @@ app_server <- function(input, output, session) {
     deleteFile = FALSE
   )
 
-  output$pfp_developer_left <- renderImage(
+  output$lucy <- renderImage(
     {
       list(
         src = "./resources/images/pfp_empty.png",
@@ -157,7 +157,7 @@ app_server <- function(input, output, session) {
     deleteFile = FALSE
   )
 
-  output$pfp_developer_right <- renderImage(
+  output$nathan <- renderImage(
     {
       list(
         src = "./resources/images/pfp_empty.png",
