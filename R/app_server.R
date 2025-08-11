@@ -89,15 +89,9 @@ app_server <- function(input, output, session) {
     labs(x = "Year Election Closed", y = input$customAxes)
     } else if (input$customGraphType == "HIST") {
       req(customHistogramVariableHandler())
-      ggplot(current_data_slice(), aes(x = customHistogramVariableHandler())) +
-    geom_histogram(binwidth = 1.53) +
-    labs(x = input$customAxes, y = "Frequency")
+      customHistogramVariableHandler() + labs(x = input$customAxes, y = "Frequency")
     }
   })
-
-  getBaseData(){
-    if(input$customAxes == "Elections" || )
-  }
 
   customLineGraphVariableHandler <- function() {
     if (input$customAxes == "Elections") {
@@ -123,20 +117,23 @@ app_server <- function(input, output, session) {
   }
 
   customHistogramVariableHandler <- function() {
+    ggplot(current_data_slice(), aes(x = customHistogramVariableHandler()))
     if (input$customAxes == "Petition Type") {
-      #Temporary Value so errors aren't thrown on initial selection
-      xAxis <- count(current_data_slice()$petition)
+      return(ggplot(data.frame(current_data_slice()$petition), aes(x=current_data_slice()$petition)) + geom_bar())
     } else if (input$customAxes == "Election Type") {
-      xAxis <- count(current_data_slice()$elec_type)
+      return(ggplot(data.frame(current_data_slice()$elec_type), aes(x=current_data_slice()$elec_type)) + geom_bar())
     } else if (input$customAxes == "Votes For/Against Union") {
-      
+      return(ggplot(current_data_slice()) + geom_histogram(aes(x = current_data_slice()$votes_for), alpha = 0.5, binwidth = 5, fill = "green") + geom_histogram(aes(x = current_data_slice()$votes_against), alpha = 0.5, binwidth = 5, fill = "red"))
     } else if (input$customAxes == "Total Votes") {
       xAxis <- with(current_data_slice(), votes_for + votes_against)
     } else if (input$customAxes == "Union Vote Share") {
       xAxis <- with(current_data_slice(), (100 * votes_for/(votes_for + votes_against)))
     } else if (input$customAxes == "Participation Rate") {
       xAxis <- with(current_data_slice(), (100 * (votes_for + votes_against)/eligible))
+    } else {
+      return()
     }
+    return(ggplot(current_data_slice(), aes(x = xAxis)) + geom_histogram(binwidth = 1.53))
   }
   
 observeEvent(input$customGraphType, {
