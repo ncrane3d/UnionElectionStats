@@ -84,9 +84,7 @@ app_server <- function(input, output, session) {
   output$customVisualization <- renderPlot ({
     if (input$customGraphType == "LINE") {
       req(customLineGraphVariableHandler())
-      ggplot(current_data_slice(), aes(x = yrclosed, y = customLineGraphVariableHandler())) +
-    geom_line() +
-    labs(x = "Year Election Closed", y = input$customAxes)
+      customLineGraphVariableHandler() + labs(x = "Year Election Closed", y = input$customAxes)
     } else if (input$customGraphType == "HIST") {
       req(customHistogramVariableHandler())
       customHistogramVariableHandler() + labs(x = input$customAxes, y = "Frequency")
@@ -96,24 +94,29 @@ app_server <- function(input, output, session) {
   customLineGraphVariableHandler <- function() {
     if (input$customAxes == "Elections") {
       #Temporary Value so errors aren't thrown on initial selection
-      yAxis <- current_data_slice()$eligible
+      return(ggplot(current_data_slice(), aes(x = yrclosed)) +
+    geom_line(aes(fill=..count..), stat="bin", binwidth=1))
     } else if (input$customAxes == "Eligible Employees") {
       yAxis <- current_data_slice()$eligible
     } else if (input$customAxes == "Total Votes") {
       yAxis <- with(current_data_slice(), votes_for + votes_against)
     } else if (input$customAxes == "Eligible per Election") {
-
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$eligible)) + stat_summary(fun.y = mean, geom="line", alpha = 0.5) + stat_summary(fun.y = median, geom="line", color="red", alpha = 0.5))
     } else if (input$customAxes == "Avg. Votes per Election") {
-
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = with(current_data_slice(), votes_for + votes_against))) + stat_summary(fun.y="mean", geom="line"))
     } else if (input$customAxes == "Avg. Votes For Union") {
-
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$votes_for)) + stat_summary(fun.y="mean", geom="line"))
     } else if (input$customAxes == "Avg. Votes Against Union") {
-
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$votes_against)) + stat_summary(fun.y="mean", geom="line"))
     } else if (input$customAxes == "Avg. Union Vote Share") {
-      
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = with(current_data_slice(), (100 * votes_for/(votes_for + votes_against))))) + stat_summary(fun.y="mean", geom="line"))
     } else if (input$customAxes == "Avg. Participation Rate") {
-      
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = with(current_data_slice(), (100 * (votes_for + votes_against)/eligible)))) + stat_summary(fun.y="mean", geom="line"))
+    } else {
+      return()
     }
+    return(ggplot(current_data_slice(), aes(x = yrclosed, y = yAxis)) +
+    geom_line())
   }
 
   customHistogramVariableHandler <- function() {
