@@ -91,27 +91,51 @@ app_server <- function(input, output, session) {
     }
   })
 
+  totalVotes <- function(){
+    return(with(current_data_slice(), votes_for + votes_against))
+  }
+  unionVoteShare <- function() {
+    return(with(current_data_slice(), (100 * votes_for/(votes_for + votes_against))))
+  }
+  participationRate <- function() {
+    return(with(current_data_slice(), (100 * (votes_for + votes_against)/eligible)))
+  }
+  plot <- function() {
+
+  }
+  statLine <- function(func, color, alpha) {
+    if (missing(func)){
+      func = "mean"
+    }
+    if (missing(color)){
+      color = "black"
+    }
+    if (missing(alpha)) {
+      alpha = 1
+    }
+    return(stat_summary(fun.y = func, geom="line", color = color, alpha = alpha))
+  }
+
   customLineGraphVariableHandler <- function() {
     if (input$customAxes == "Elections") {
-      #Temporary Value so errors aren't thrown on initial selection
       return(ggplot(current_data_slice(), aes(x = yrclosed)) +
     geom_line(aes(fill=..count..), stat="bin", binwidth=1))
     } else if (input$customAxes == "Eligible Employees") {
       yAxis <- current_data_slice()$eligible
     } else if (input$customAxes == "Total Votes") {
-      yAxis <- with(current_data_slice(), votes_for + votes_against)
+      yAxis <- totalVotes()
     } else if (input$customAxes == "Eligible per Election") {
-      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$eligible)) + stat_summary(fun.y = mean, geom="line", alpha = 0.5) + stat_summary(fun.y = median, geom="line", color="red", alpha = 0.5))
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$eligible)) + statLine(alpha=0.5) + statLine(func="median", color="red", alpha=0.5))
     } else if (input$customAxes == "Avg. Votes per Election") {
-      return(ggplot(current_data_slice(), aes(x = yrclosed, y = with(current_data_slice(), votes_for + votes_against))) + stat_summary(fun.y="mean", geom="line"))
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = totalVotes())) + statLine())
     } else if (input$customAxes == "Avg. Votes For Union") {
-      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$votes_for)) + stat_summary(fun.y="mean", geom="line"))
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$votes_for)) + statLine())
     } else if (input$customAxes == "Avg. Votes Against Union") {
-      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$votes_against)) + stat_summary(fun.y="mean", geom="line"))
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$votes_against)) + statLine())
     } else if (input$customAxes == "Avg. Union Vote Share") {
-      return(ggplot(current_data_slice(), aes(x = yrclosed, y = with(current_data_slice(), (100 * votes_for/(votes_for + votes_against))))) + stat_summary(fun.y="mean", geom="line"))
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = unionVoteShare())) + statLine())
     } else if (input$customAxes == "Avg. Participation Rate") {
-      return(ggplot(current_data_slice(), aes(x = yrclosed, y = with(current_data_slice(), (100 * (votes_for + votes_against)/eligible)))) + stat_summary(fun.y="mean", geom="line"))
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = unionVoteShare())) + statLine())
     } else {
       return()
     }
@@ -128,11 +152,11 @@ app_server <- function(input, output, session) {
     } else if (input$customAxes == "Votes For/Against Union") {
       return(ggplot(current_data_slice()) + geom_histogram(aes(x = current_data_slice()$votes_for), alpha = 0.5, binwidth = 5, fill = "green") + geom_histogram(aes(x = current_data_slice()$votes_against), alpha = 0.5, binwidth = 5, fill = "red"))
     } else if (input$customAxes == "Total Votes") {
-      xAxis <- with(current_data_slice(), votes_for + votes_against)
+      xAxis <- totalVotes()
     } else if (input$customAxes == "Union Vote Share") {
-      xAxis <- with(current_data_slice(), (100 * votes_for/(votes_for + votes_against)))
+      xAxis <- unionVoteShare()
     } else if (input$customAxes == "Participation Rate") {
-      xAxis <- with(current_data_slice(), (100 * (votes_for + votes_against)/eligible))
+      xAxis <- participationRate()
     } else {
       return()
     }
