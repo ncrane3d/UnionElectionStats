@@ -78,18 +78,63 @@ app_server <- function(input, output, session) {
     }
   })
 
+  observe({
+    req("./resources/csv/featured-analysis.csv")
+    faCSV <- read.csv("./resources/csv/featured-analysis.csv")
+    faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
+    for (i in 1:nrow(faCSV)) {
+      local({
+        ii <- i #Without this line only the last loop will be kept.
+        output[[paste0("figure", ii)]] <- 
+          renderImage({
+            list(src = faCSV$imagePath[ii], width = "80%", height ="auto")
+          }, deleteFile = FALSE)
+      })
+    }
+  })  
+
+  # output$word <- renderImage({
+  #   list(src = "./resources/images/featuredAnalysis/Where-Unions-Fell.png")
+  #   }, deleteFile = FALSE
+  # )
+
+  # output$homie <- renderImage({
+  #   list(src = "./resources/images/featuredAnalysis/Where-Unions-Fell.png")
+  #   }, deleteFile = FALSE
+  # )
+
+
   output$insertFeaturedAnalysisFromCSV <- renderUI ({
     req("./resources/csv/featured-analysis.csv")
     faCSV <- read.csv("./resources/csv/featured-analysis.csv")
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
     formattedPapers <- tagList()
     for (i in 1:nrow(faCSV)) {
-      formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordion(faCSV, i))
+      formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionWithImage(faCSV, i))
+      # if (faCSV$imagePath[i] == "" | faCSV$imagePath[i] == NULL) {
+      #   formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionWithImage(faCSV, i))
+      # } else {
+      #   formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionNoImage(faCSV, i))
+      # }    
     }
     return(formattedPapers)
   })
 
-  createFeaturedAnalysisAccordion <- function(faCSV, i) {
+  createFeaturedAnalysisAccordionWithImage <- function(faCSV, i) {
+    accordion_panel(
+      title = faCSV$title[i],
+      div(
+        align = "left",
+        div(strong("Author(s): "), p(paste(faCSV$author[i], collapse = ", "))),
+        div(strong("Abstract: "), p(faCSV$abstract[i])),
+        div(strong("Featured Figure: "), div(imageOutput(paste0("figure", i)) %>% tagAppendAttributes(class = "accordion-figure"), align = "center")),
+        div(strong("Link: "), p(tags$a(href=faCSV$link[i], faCSV$title[i])))
+      ) %>%
+      tagAppendAttributes(id = "accordion-analysis"),
+    )
+  }
+
+  createFeaturedAnalysisAccordionNoImage <- function(faCSV, i) {
     accordion_panel(
       title = faCSV$title[i],
       div(

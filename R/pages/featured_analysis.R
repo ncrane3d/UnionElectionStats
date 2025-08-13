@@ -10,6 +10,8 @@ featuredAnalysis <- function() {
         align = "right",
         accordion(
             uiOutput("insertFeaturedAnalysisFromCSV")
-        )
+        ),
+        imageOutput("word"),
+        imageOutput("homie")
     )
 }

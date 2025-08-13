@@ -53,6 +53,7 @@ app_ui <- function(request) {
         ".accordion-item { margin-bottom: 18px; margin-top: 2px; border-top-width: 1px !important; }",
         ".accordion-body p { margin-bottom: 0px; text-align:left; padding: 16px; font-weight: normal;}",
         ".accordion-button:hover {background-color:rgb(189, 185, 188); }",
+        ".accordion-figure { max-width: 80%; height: auto !important; }",
         #Below is styling for text accordions, as seen on the download page
         "#accordion-download { margin: 0px; }",
         "#accordion-download .accordion-title { font-weight: normal;}",
