@@ -102,9 +102,6 @@ app_server <- function(input, output, session) {
   participationRate <- function() {
     return(with(current_data_slice(), (100 * (votes_for + votes_against)/eligible)))
   }
-  plot <- function() {
-
-  }
   statLine <- function(func, color, alpha) {
     if (missing(func)){
       func = "mean"
@@ -158,7 +155,7 @@ app_server <- function(input, output, session) {
     } else if (input$customAxes == "Election Type") {
       return(ggplot(data.frame(current_data_slice()$elec_type), aes(x=current_data_slice()$elec_type)) + geom_bar())
     } else if (input$customAxes == "Votes For/Against Union") {
-      return(ggplot(current_data_slice()) + geom_histogram(aes(x = current_data_slice()$votes_for), alpha = 0.5, binwidth = 5, fill = "green") + geom_histogram(aes(x = current_data_slice()$votes_against), alpha = 0.5, binwidth = 5, fill = "red"))
+      return(ggplot(current_data_slice()) + geom_histogram(aes(x = current_data_slice()$votes_for), alpha = 0.5, bins = 30, fill = "green") + geom_histogram(aes(x = current_data_slice()$votes_against), alpha = 0.5, bins = 30, fill = "red"))
     } else if (input$customAxes == "Total Votes") {
       xAxis <- totalVotes()
     } else if (input$customAxes == "Union Vote Share") {
@@ -168,7 +165,7 @@ app_server <- function(input, output, session) {
     } else {
       return()
     }
-    return(ggplot(current_data_slice(), aes(x = xAxis)) + geom_histogram(binwidth = 1.53))
+    return(ggplot(current_data_slice(), aes(x = xAxis)) + geom_histogram(bins = 30))
   }
   
 observeEvent(input$customGraphType, {
