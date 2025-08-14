@@ -9,6 +9,8 @@
 #' @import tidyverse
 #' @import ggplot2
 #' @import dplyr
+#' @import gcookbook
+#' @import hrbrthemes
 #' @noRd
 #'
 
@@ -84,10 +86,10 @@ app_server <- function(input, output, session) {
   output$customVisualization <- renderPlot ({
     if (input$customGraphType == "LINE") {
       req(customLineGraphVariableHandler())
-      customLineGraphVariableHandler() + labs(x = "Year Election Closed", y = input$customAxes)
+      customLineGraphVariableHandler() + labs(x = "Year Election Closed", y = input$customAxes) + plotTheme()
     } else if (input$customGraphType == "HIST") {
       req(customHistogramVariableHandler())
-      customHistogramVariableHandler() + labs(x = input$customAxes, y = "Frequency")
+      customHistogramVariableHandler() + labs(x = input$customAxes, y = "Frequency") + plotTheme()
     }
   })
 
@@ -115,6 +117,9 @@ app_server <- function(input, output, session) {
     }
     return(stat_summary(fun.y = func, geom="line", color = color, alpha = alpha))
   }
+  plotTheme <- function() {
+    return(theme_ipsum_rc() + theme(plot.background = element_rect(fill="#FCF9F6", color = "#FCF9F6")))
+  }
   limitToMaxEligible <- function(){
     return(ylim(c(0, max(current_data_slice()$eligible))))
   }
@@ -128,7 +133,7 @@ app_server <- function(input, output, session) {
     } else if (input$customAxes == "Total Votes") {
       return(ggplot(current_data_slice(), aes(x= yrclosed, y = totalVotes())) + geom_line() + limitToMaxEligible())
     } else if (input$customAxes == "Eligible per Election") {
-      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$eligible)) + statLine(alpha=0.5) + statLine(func="median", color="red", alpha=0.5) + limitToMaxEligible())
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$eligible)) + statLine(alpha=0.5) + statLine(func="median", color="red", alpha=0.5) + limitToMaxEligible()+ scale_color_manual(values = c("Mean" = "black", "Median" = "red"), labels = c("Mean Eligible", "Median Eligible")))
     } else if (input$customAxes == "Avg. Votes per Election") {
       return(ggplot(current_data_slice(), aes(x = yrclosed, y = totalVotes())) + statLine() + limitToMaxEligible())
     } else if (input$customAxes == "Avg. Votes For Union") {
