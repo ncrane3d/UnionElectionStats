@@ -16,6 +16,15 @@ map <- function(input, output, pool, current_data_slice, current_query) {
         opacity = 1,
         bringToFront = TRUE
     )
+    #Error handling for when there are no points to render on map
+    getCircleMarkerData <- function(){
+        if (nrow(current_data_slice()) > 1){
+            return(current_data_slice())
+        } else {
+            #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
+            return(data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1)))
+        }
+    }
     return(renderLeaflet({
         leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles() |>
@@ -36,7 +45,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
             ) |>
             #Individual election markers
             addCircleMarkers(
-                data = current_data_slice(),
+                data = getCircleMarkerData(),
                 color = "red",
                 stroke = FALSE,
                 fillOpacity = 0.75,
