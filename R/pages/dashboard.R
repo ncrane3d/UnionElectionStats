@@ -184,7 +184,7 @@ dashboard <- function() {
                 ),
                 layout_columns(
                     card(card_header("Preset Graph 1"), fill = TRUE),
-                    card(card_header("Preset Graph 2"), fill = TRUE),
+                    card(card_header("Preset Graph 2"), fill = TRUE, plotOutput("unitTypePreset")),
                     card(card_header("Preset Graph 3"), fill = TRUE)
                 )
             )

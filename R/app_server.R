@@ -18,7 +18,7 @@ app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
   source('./R/custom_graphs.R', local = TRUE)
-
+  source('./R/preset_graphs.R', local = TRUE)
 
   output$map <- renderLeaflet({
     leaflet() |>
@@ -94,6 +94,10 @@ app_server <- function(input, output, session) {
       customHistogramVariableHandler() + labs(x = input$customAxes, y = "Frequency") + plotTheme()
     }
   })
+
+output$unitTypePreset <- renderPlot ({
+  getUnitTypeGraph()
+})
 
 observeEvent(input$customGraphType, {
     if (input$customGraphType == "LINE") {
