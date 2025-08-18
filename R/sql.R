@@ -68,3 +68,21 @@ get_slider_sql <- function() {
       stateSQL <- paste0("AND unionelections.state = '", input$state, "' ")
     }
   }
+
+  getCurrentData <- function() {
+    sql <- paste0(
+      get_slider_sql(),
+      get_petition_sql(),
+      get_industry_sql(),
+      get_state_sql(),
+      get_county_sql()
+    )
+    return(sqlInterpolate(
+      pool,
+      sql,
+      lowerBoundYear = input$timeframe[1],
+      upperBoundYear = input$timeframe[2],
+      lowerBoundFavor = input$percentageFavor[1],
+      upperBoundFavor = input$percentageFavor[2]
+    ))
+  }

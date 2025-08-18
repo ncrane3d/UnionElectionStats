@@ -6,19 +6,18 @@
 #' @import DBI
 #' @import RPostgres
 #' @import pool
+#' @import sf
+#' @import dplyr
+#' @import htmltools
+#' @import htmlwidgets
 #' @noRd
+
+source('./R/map/map.R', local = TRUE)
 #'
 
 app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
-
-  output$map <- renderLeaflet({
-    leaflet() |>
-      addTiles() |>
-      setView(0.249818018854, 0.57650864633, zoom = 3)
-  })
-
   pool <- dbPool(
     Postgres(),
     host = Sys.getenv("UE_IP"),
@@ -26,19 +25,11 @@ app_server <- function(input, output, session) {
     user = "ueuser",
     password = Sys.getenv("UE_DB_PASS"),
     port = 21701
- )
-
-  current_data_slice <- reactive({
-    sql <- paste0(get_slider_sql(), get_petition_sql(), get_industry_sql(), get_state_sql(), get_county_sql(), ";")
-    query <- sqlInterpolate(
-      pool,
-      sql,
-      lowerBoundYear = input$timeframe[1],
-      upperBoundYear = input$timeframe[2],
-      lowerBoundFavor = input$percentageFavor[1],
-      upperBoundFavor = input$percentageFavor[2]
-    )
-    result <- dbGetQuery(pool, query)
+  )
+  current_query <- reactive({getCurrentData()})
+  output$map <- map(input, output, pool, current_data_slice, current_query)
+  
+  current_data_slice <- reactive({dbGetQuery(pool, paste0(current_query(), ";"))
   })
 
   current_county_selection <- reactive({
@@ -52,32 +43,55 @@ app_server <- function(input, output, session) {
       sql,
       selectedState = state_choices[input$state]
     )
-    stateCounties <- dbGetQuery(pool, query) 
+    stateCounties <- dbGetQuery(pool, query)
   })
-
   observeEvent(input$state, {
     if (input$state == 0) {
-      countyDataframeToText <- c("All", "All Rural Counties", "All Urban Counties")
+      countyDataframeToText <- c(
+        "All",
+        "All Rural Counties",
+        "All Urban Counties"
+      )
     } else {
-      countyDataframeToText <-  c("All", "All Rural Counties", "All Urban Counties", setNames(current_county_selection()$fips, current_county_selection()$county))
+      countyDataframeToText <- c(
+        "All",
+        "All Rural Counties",
+        "All Urban Counties",
+        setNames(
+          current_county_selection()$fips,
+          current_county_selection()$county
+        )
+      )
     }
     updateSelectInput(inputId = "county", choices = countyDataframeToText)
   })
 
   observeEvent(input$percentageFavor, {
-    if ((input$winnersChecked == TRUE) & (input$percentageFavor[1] <= 50.01) ) {
-      updateSliderInput(inputId = "percentageFavor", step = .01, value = c(50.01, input$percentageFavor[2]))
+    if ((input$winnersChecked == TRUE) & (input$percentageFavor[1] <= 50.01)) {
+      updateSliderInput(
+        inputId = "percentageFavor",
+        step = .01,
+        value = c(50.01, input$percentageFavor[2])
+      )
     }
   })
 
   observeEvent(input$winnersChecked, {
     if (input$winnersChecked == TRUE) {
-      updateSliderInput(inputId = "percentageFavor", step = .01, value = c(50.01, 100))
+      updateSliderInput(
+        inputId = "percentageFavor",
+        step = .01,
+        value = c(50.01, 100)
+      )
     } else {
-      updateSliderInput(inputId = "percentageFavor", step = 1, value = c(0, 100))
+      updateSliderInput(
+        inputId = "percentageFavor",
+        step = 1,
+        value = c(0, 100)
+      )
     }
   })
-  
+
   #About Me Images TODO: Replace with actual images
   output$pfp_left <- renderImage(
     {
