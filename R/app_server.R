@@ -110,12 +110,11 @@ app_server <- function(input, output, session) {
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
     formattedPapers <- tagList()
     for (i in 1:nrow(faCSV)) {
-      formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionWithImage(faCSV, i))
-      # if (faCSV$imagePath[i] == "" | faCSV$imagePath[i] == NULL) {
-      #   formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionWithImage(faCSV, i))
-      # } else {
-      #   formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionNoImage(faCSV, i))
-      # }    
+      if (faCSV$imagePath[i] != "") {
+        formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionWithImage(faCSV, i))
+      } else {
+        formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionNoImage(faCSV, i))
+      }    
     }
     return(formattedPapers)
   })
@@ -146,6 +145,16 @@ app_server <- function(input, output, session) {
       tagAppendAttributes(id = "accordion-analysis"),
     )
   }
+
+  observeEvent(input$citationPopup, {
+      showModal(modalDialog(
+        title = "Suggested Citation Format",
+        "When citing this resource, plese use the following suggested citation style:",
+        p(tags$br(), "Schaller, Z., Young S., & Kamphorst, J. (2025). \"Union Election Stats.\" ", tags$i("Self Published."), 
+        "Retrieved from ", tags$a(href='http://unionelectionstats.com', 'unionelectionstats.com.')),
+        easyClose = TRUE
+      ))
+    })
   
   output$jonne <- renderImage(
     {
@@ -194,7 +203,7 @@ app_server <- function(input, output, session) {
   output$lucy <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./resources/images/lucy_lewark.png",
         height = "auto",
         width = "100%"
       )
@@ -205,7 +214,7 @@ app_server <- function(input, output, session) {
   output$nathan <- renderImage(
     {
       list(
-        src = "./resources/images/pfp_empty.png",
+        src = "./resources/images/nathan_crane.jpg",
         height = "auto",
         width = "100%"
       )

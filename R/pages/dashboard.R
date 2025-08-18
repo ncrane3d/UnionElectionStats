@@ -9,24 +9,32 @@ dashboard <- function() {
             right = "10vw",
             card_header(
                 layout_columns(
-                    "Thank you for visiting Union Election Stats! Here you can explore the history of union elections '
-                    through various visualizations and filters. It is important to note that this is not union membership 
-                    data. The value in union elections is that they provide deeper levels of disaggregation than would  
-                    otherwise be possible with just membership information. It allows us to analyze the decline of U.S. 
-                    unions through geography, industry, time, and more. The data presented here is a cleaned version of 
-                    what is publicly released by the National Labor Relations Board (NLRB). This can be accessed in its 
-                    raw or cleaned forms in the Downloads tab. This website has been developed in relation to my ongoing 
-                    research, it can be found in the Featured Analysis tab, as well as other related works. Lastly, be 
-                    sure to submit a form in the Contact Us tab with any inquiries or bug reports.", 
-                    "It was noted that this website does not represent union membership data, however if you would like 
-                    access to that information please visit unionstats.com. In contrast, if you would like even more 
-                    visualizations of union election data, unionelections.org is another great resource. It includes 
-                    post 2000 information, as well as open union election cases.  
-                    Finally, I would like to thank the Russell Sage Foundation for their support in this project, it 
-                    has enabled my cleaning of this dataset, the creation of this website, and every other aspect of 
-                    this project. Real people are affected by the decline of unions in the United States, through 
-                    disaggregation we can figure out who they are and what those outcomes have been. It is both relevant 
-                    and important work that wouldn't be possible without the Russell Sage Foundation."
+                    p("Welcome to Union Election Stats, a user-friendly hub for data on National Labor Relations Board (NLRB) 
+                    representation elections.  Here you can explore the history of union organizing through interactive 
+                    visualizations, learn about recent trends in the labor movement, and download data for your own bespoke 
+                    analysis.  The database was constructed by a team of academic economists/political scientists, Zachary 
+                    Schaller, Sammy Young, and Jonne Kamphorst, and is based on NLRB records.  It contains the known universe 
+                    of representation elections from 1962 to 2024.  Soon it will also track the most recent elections as cases 
+                    close.  Use the Downloads tab to access the database, check out the Featured Analysis tab to dive deeper 
+                    into union scholarship, and use the Contact Us tab with any inquiries or bug reports.", actionLink("citationPopup","Use of data requires 
+                    citation")) %>% 
+                        tagAppendAttributes(class = "paragraphIndent"),
+                    div(
+                        p("This website is about union election data (the flow of organizing activity), it is not about union 
+                            membership data (the stock of unionized workers). For membership data, please visit ", 
+                            tags$a(href="http://unionstats.com/", "unionstats.com."),  
+                            "For info on strikes and work stoppages, use the labor action tracker at" , 
+                            tags$a(href="http://striketracker.ilr.cornell.edu", "striketracker.ilr.cornell.edu."),    
+                            "And for additional election analysis (for years after 2000) and some excellent real-time case tracking, 
+                            check out ", 
+                            tags$a(href="http://unionelections.org", "unionelections.org."))%>% 
+                                tagAppendAttributes(class = "paragraphIndent"),
+                        p("We stand on the shoulders of giants to bring you this resource.  Many thanks to Henry Farber, Bruce Western, 
+                            J.P. Ferguson, Thomas Holmes, David Lee, Alexandre Mas, and Jack Fiorito for their seminal data collection 
+                            and research on union elections.  We also thank the Russell Sage Foundation for their support (grant # 2307-44744).") %>% 
+                                tagAppendAttributes(class = "paragraphIndent")
+                    ),  
+                    
                 ),
                 class = "dashboardheader",
                 height = "10vh"
