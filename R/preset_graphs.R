@@ -22,7 +22,7 @@ getIndustryData <- function(){
 }
 getIndustryBreakdown <- function(){
     industry_data = getIndustryData()
-    return(ggplot(data.frame(industry_data$sic2), aes(x=industry_data$sic2)) + geom_bar() + labs(x = "Industry", y = "Frequency"))
+    return(ggplot(data.frame(industry_data$sic2), aes(x=industry_data$sic2)) + geom_bar() + scale_color_viridis_d() + labs(x = "Industry", y = "Frequency") + plotTheme())
 
 }
 
@@ -43,10 +43,10 @@ getRegionalBreakdown <- function(){
     regional_data$state[regional_data$state %in% mideast] <- "Mideast"
     regional_data$state[regional_data$state %in% new_england] <- "New England"
     regional_data$state[regional_data$state %in% southeast] <- "Southeast"
-    return(ggplot(data.frame(regional_data$state), aes(x=regional_data$state)) + geom_bar() + labs(x = "Region", y = "Frequency"))
+    return(ggplot(data.frame(regional_data$state), aes(x=regional_data$state)) + geom_bar() + labs(x = "Region", y = "Frequency") + plotTheme())
 }
 getUnitTypeGraph <- function(){
-    return(ggplot(data.frame(current_data_slice()$unit_type), aes(x=current_data_slice()$unit_type)) + geom_bar() + labs(x = "Unit Type", y = "Frequency"))
+    return(ggplot(data.frame(current_data_slice()$unit), aes(x=current_data_slice()$unit)) + geom_bar() + labs(x = "Unit Type", y = "Frequency") + plotTheme())
 }
 
 getElectionTypeGraph <- function(){
@@ -56,15 +56,14 @@ getElectionTypeGraph <- function(){
     elec_type_data$elec_type[elec_type_data$elec_type == "R"] <- "Regional Director Ordered"
     elec_type_data$elec_type[elec_type_data$elec_type == "E"] <- "Expedited"
     elec_type_data$elec_type[elec_type_data$elec_type == "B"] <- "Board Ordered"
-    return(ggplot(elec_type_data, aes(x = yrclosed, color = elec_type, group = elec_type)) + geom_freqpoly_interactive(aes(tooltip=elec_type, data_id=elec_type)) + scale_color_viridis_d())
+    return(ggplot(elec_type_data, aes(x = yrclosed, color = elec_type, group = elec_type)) + geom_freqpoly_interactive(aes(tooltip=elec_type, data_id=elec_type)) + plotTheme())
 }
 
 getHeatmap <- function(){
     heatmap_data = current_data_slice()
     heatmap_data$filing_to_elec <- with(heatmap_data, election_date - filed_date)
     heatmap_data$elec_to_close <- with(heatmap_data, closed_date - election_date)
-    print(head(heatmap_data))
-    return(ggplot(heatmap_data, aes(x=filing_to_elec, y = elec_to_close)) + geom_tile())
+    return(ggplot(heatmap_data, aes(x=filing_to_elec, y = elec_to_close)) + geom_tile() + plotTheme())
 }
 
 getLineGraph <- function(){
@@ -77,7 +76,7 @@ getLineGraph <- function(){
     } else if (input$customAxes == "Total Votes") {
       return(ggplot(current_data_slice(), aes(x= yrclosed, y = totalVotes(), color = elec_type, group = elec_type)) + geom_line_interactive() + limitToMaxEligible())
     } else if (input$customAxes == "Eligible per Election") {
-      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$eligible, color = elec_type, group = elec_type)) + stat_summary(fun.y="mean", geom="line", alpha=0.5, show_guide=TRUE) + stat_summary_interactive(fun.y="median", geom="line", alpha=0.5, show_guide=TRUE) + limitToMaxEligible())
+      return(ggplot(current_data_slice(), aes(x = yrclosed, y = current_data_slice()$eligible, color = elec_type, group = elec_type)) + stat_summary(fun.y="mean", geom="line", alpha=0.5, show_guide=TRUE) + stat_summary(fun.y="median", geom="line", alpha=0.5, show_guide=TRUE) + limitToMaxEligible())
     } else if (input$customAxes == "Avg. Votes per Election") {
       return(ggplot(current_data_slice(), aes(x = yrclosed, y = totalVotes(), color = elec_type, group = elec_type)) + statLine() + limitToMaxEligible())
     } else if (input$customAxes == "Avg. Votes For Union") {

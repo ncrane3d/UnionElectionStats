@@ -23,7 +23,7 @@ totalVotes <- function(){
     return(stat_summary(fun.y = func, geom="line", color = color, alpha = alpha))
   }
   plotTheme <- function() {
-    return(theme_ipsum_rc() + theme(plot.background = element_rect(fill="#FCF9F6", color = "#FCF9F6")))
+    return(theme_ipsum_rc() + theme(plot.background = element_rect(fill="#FCF9F6", color = "#FCF9F6"), plot.margin = unit(c(0.5,0,0,0), "cm")))
   }
   limitToMaxEligible <- function(){
     return(ylim(c(0, max(current_data_slice()$eligible))))
