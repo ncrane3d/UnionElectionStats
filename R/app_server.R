@@ -11,6 +11,7 @@
 #' @import dplyr
 #' @import gcookbook
 #' @import hrbrthemes
+#' @import ggiraph
 #' @noRd
 #'
 
@@ -97,6 +98,30 @@ app_server <- function(input, output, session) {
 
 output$unitTypePreset <- renderPlot ({
   getUnitTypeGraph()
+})
+
+output$elecTypePreset <- renderPlot({
+  getElectionTypeGraph()
+})
+
+output$regionalPreset <- renderPlot({
+  getRegionalBreakdown()
+})
+
+output$industryPreset <- renderPlot({
+  getIndustryBreakdown()
+})
+
+output$elecTypePreset <- renderPlot({
+  getElectionTypeGraph()
+})
+
+output$linePreset <- renderPlot({
+  getLineGraph()
+})
+
+output$heatmapPreset <- renderPlot({
+  getHeatmap()
 })
 
 observeEvent(input$customGraphType, {

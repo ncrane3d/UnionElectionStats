@@ -182,10 +182,14 @@ dashboard <- function() {
                         card(plotOutput("customVisualization"))
                     )
                 ),
-                layout_columns(
-                    card(card_header("Preset Graph 1"), fill = TRUE),
-                    card(card_header("Preset Graph 2"), fill = TRUE, plotOutput("unitTypePreset")),
-                    card(card_header("Preset Graph 3"), fill = TRUE)
+                layout_column_wrap(
+                    width = 1/3,
+                    card(card_header("Industries"), fill = TRUE, plotOutput("industryPreset")),
+                    card(card_header("Unit Types"), fill = TRUE, plotOutput("unitTypePreset")),
+                    card(card_header("Regions"), fill = TRUE, plotOutput("regionalPreset")),
+                    card(card_header("Election Types"), fill = TRUE, plotOutput("elecTypePreset")),
+                    card(card_header("Heatmap"), fill = TRUE, plotOutput("heatmapPreset")),
+                    card(card_header("Lines"), fill = TRUE, plotOutput("linePreset"))
                 )
             )
         )

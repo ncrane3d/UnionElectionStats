@@ -59,6 +59,7 @@ totalVotes <- function(){
   customHistogramVariableHandler <- function() {
     ggplot(current_data_slice(), aes(x = customHistogramVariableHandler()))
     if (input$customAxes == "Petition Type") {
+      print(head(current_data_slice()$petition))
       return(ggplot(data.frame(current_data_slice()$petition), aes(x=current_data_slice()$petition)) + geom_bar())
     } else if (input$customAxes == "Election Type") {
       return(ggplot(data.frame(current_data_slice()$elec_type), aes(x=current_data_slice()$elec_type)) + geom_bar())
