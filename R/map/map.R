@@ -7,6 +7,7 @@ getPalette <- function(column) {
     colorNumeric(c("red", "blue"), column)
 }
 map <- function(input, output, pool, current_data_slice, current_query) {
+    territoryOpacity <- 0.5
     boundaries <- getBoundaries(pool, current_query)
     statePalette <- getPalette(boundaries[1]$state_count)
     countyPalette <- getPalette(boundaries[2]$normalized_vote)
@@ -45,7 +46,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
     addPolygons(
                 data = boundaries[[1]](),
                 weight = 1,
-                fillOpacity = 0.60,
+                fillOpacity = territoryOpacity,
                 color = ~ statePalette(state_count),
                 group = "states",
                 layerId=~boundaries[[1]]()$state,
@@ -56,7 +57,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
             addPolygons(
                 data = boundaries[[2]](),
                 weight = 1,
-                fillOpacity = 0.60,
+                fillOpacity = territoryOpacity,
                 color = ~ countyPalette(normalized_vote),
                 group = "counties",
                 layerId=~boundaries[[2]]()$FIPS,
