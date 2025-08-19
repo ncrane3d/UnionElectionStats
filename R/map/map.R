@@ -25,6 +25,29 @@ map <- function(input, output, pool, current_data_slice, current_query) {
             return(data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1)))
         }
     }
+    observeEvent( input$map_shape_click, {
+        print("Hey it's working")
+        click <- input$map_shape_click
+        print("CLICK")
+        print(click)
+        if(!is.null(click)){
+            print(click$id)
+            if(nchar(click$id) < 3) {
+                print("< 3")
+                print(head(boundaries[[1]]()))
+                shape <- boundaries[[2]]()$geometry[[which(boundaries[[1]]()$state == click$id)]]
+            } else {
+                shape <- boundaries[[2]]()$geometry[[which(boundaries[[2]]()$FIPS == click$id)]]
+            }
+            print("SHAPE")
+            print(head(shape))
+            bounds = st_bbox(shape)
+            print("BOUNDS")
+            print(bounds)
+            print(bounds$xmax)
+            leafletProxy("map") %>% flyToBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
+        }
+    })
   observe({
     req(boundaries)
     leafletProxy("map") %>%
@@ -36,6 +59,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 fillOpacity = 0.60,
                 color = ~ statePalette(state_count),
                 group = "states",
+                layerId=~boundaries[[1]]()$state,
                 highlightOptions = mapHighlight,
                 options= leafletOptions(pane="markers"),
             ) |>
@@ -46,6 +70,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 fillOpacity = 0.60,
                 color = ~ countyPalette(normalized_vote),
                 group = "counties",
+                layerId=~boundaries[[2]]()$FIPS,
                 options= leafletOptions(pane="markers"),
             ) |>
             #Individual election markers
