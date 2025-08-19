@@ -26,33 +26,22 @@ map <- function(input, output, pool, current_data_slice, current_query) {
         }
     }
     observeEvent( input$map_shape_click, {
-        print("Hey it's working")
         click <- input$map_shape_click
-        print("CLICK")
-        print(click)
         if(!is.null(click)){
-            print(click$id)
             if(nchar(click$id) < 3) {
-                print("< 3")
-                print(head(boundaries[[1]]()))
-                shape <- boundaries[[2]]()$geometry[[which(boundaries[[1]]()$state == click$id)]]
+                index <- which(boundaries[[1]]()$state == click$id)
+                shape <- boundaries[[1]]()$geometry[index]
             } else {
-                shape <- boundaries[[2]]()$geometry[[which(boundaries[[2]]()$FIPS == click$id)]]
+                index <- which(boundaries[[2]]()$FIPS == click$id)
+                shape <- boundaries[[2]]()$geometry[index]
             }
-            print("SHAPE")
-            print(head(shape))
             bounds = st_bbox(shape)
-            print("BOUNDS")
-            print(bounds)
-            print(bounds$xmax)
             leafletProxy("map") %>% flyToBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
         }
     })
   observe({
     req(boundaries)
     leafletProxy("map") %>%
-    clearShapes() %>%
-    clearMarkerClusters %>%
     addPolygons(
                 data = boundaries[[1]](),
                 weight = 1,
@@ -61,7 +50,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 group = "states",
                 layerId=~boundaries[[1]]()$state,
                 highlightOptions = mapHighlight,
-                options= leafletOptions(pane="markers"),
+                options= leafletOptions(pane="shapes"),
             ) |>
             #County border layer
             addPolygons(
@@ -71,7 +60,8 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 color = ~ countyPalette(normalized_vote),
                 group = "counties",
                 layerId=~boundaries[[2]]()$FIPS,
-                options= leafletOptions(pane="markers"),
+                highlightOptions = mapHighlight,
+                options= leafletOptions(pane="shapes"),
             ) |>
             #Individual election markers
             addCircleMarkers(
@@ -105,8 +95,9 @@ map <- function(input, output, pool, current_data_slice, current_query) {
     return(renderLeaflet({
         leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
-            addMapPane(name="markers", zIndex=410) %>%
-            addMapPane(name="labels", zIndex=420) %>%
+            addMapPane(name="shapes", zIndex=410) %>%
+            addMapPane(name="labels", zIndex=415) %>%
+            addMapPane(name="markers", zIndex=420) %>%
             addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
             #Zoom based conditional rendering for layers
             groupOptions("counties", zoomLevels = 5:20) |>
