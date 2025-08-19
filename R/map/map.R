@@ -36,7 +36,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 shape <- boundaries[[2]]()$geometry[index]
             }
             bounds = st_bbox(shape)
-            leafletProxy("map") %>% flyToBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
+            leafletProxy("map") %>% fitBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
         }
     })
   observe({
