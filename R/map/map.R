@@ -6,6 +6,7 @@ source('./R/map/map_data_initialization.R', local = TRUE)
 getPalette <- function(column) {
     colorNumeric(c("red", "blue"), column)
 }
+
 map <- function(input, output, pool, current_data_slice, current_query) {
     territoryOpacity <- 0.5
     boundaries <- getBoundaries(pool, current_query)
@@ -26,17 +27,22 @@ map <- function(input, output, pool, current_data_slice, current_query) {
             return(data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1)))
         }
     }
+    #Zoom on click of territory shape
     observeEvent( input$map_shape_click, {
         click <- input$map_shape_click
         if(!is.null(click)){
-            if(nchar(click$id) < 3) {
+            if(nchar(click$id) < 3) { #Clicked shape is a state
+                #Get index of row of clicked shape in geojson
                 index <- which(boundaries[[1]]()$state == click$id)
+                #Get geometry of clicked shape
                 shape <- boundaries[[1]]()$geometry[index]
-            } else {
+            } else { #Clicked shape is a county
                 index <- which(boundaries[[2]]()$FIPS == click$id)
                 shape <- boundaries[[2]]()$geometry[index]
             }
+            #Get bounds of clicked shape
             bounds = st_bbox(shape)
+            #Fit bounds of map to clicked shape
             leafletProxy("map") %>% fitBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
         }
     })
@@ -111,20 +117,4 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 lng2 = -54.892994
             )
     }))
-}
-
-originalClickEvent <- function(){
-    #This was originally chained onto the end of the leaflet function using |>
-    onRender(
-                'function(el, x){
-                var map = this;
-                map.eachLayer(function(layer){
-                    if(layer instanceof L.Polygon){
-                        layer.on("click", function(e){
-                            map.fitBounds(layer.getBounds());
-                        })
-                    }
-            });
-            }'
-            )
 }
