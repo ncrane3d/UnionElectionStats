@@ -14,7 +14,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
         color = "white",
         weight = 2,
         opacity = 1,
-        bringToFront = TRUE
+        bringToFront = FALSE
     )
     #Error handling for when there are no points to render on map
     getCircleMarkerData <- function(){
