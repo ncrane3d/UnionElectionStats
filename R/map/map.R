@@ -87,10 +87,10 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 label = ~ sprintf(
                     "Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
                     employer,
-                    yrclosed,
+                    year_closed,
                     round(
                         ((votes_for /
-                            (votes_for + votes_against)) *
+                            (votes_total)) *
                             100),
                         digits = 2
                     )
