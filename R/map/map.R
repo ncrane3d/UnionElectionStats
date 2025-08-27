@@ -49,6 +49,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
   observe({
     req(boundaries)
     leafletProxy("map") %>%
+    clearMarkerClusters() %>%
     addPolygons(
                 data = boundaries[[1]](),
                 weight = 1,

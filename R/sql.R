@@ -1,6 +1,6 @@
 get_slider_sql <- function() {
     sliderSQL <- "
-    SELECT unionelections.*, populationdata.rural, (CAST(votes_for AS float) / NULLIF(votes_total, 0)) * 100  AS votePercentage
+    SELECT unionelections.petition, unionelections.election_type, unionelections.eligible, unionelections.votes_for, unionelections.votes_against, unionelections.votes_total, unionelections.filed_date, unionelections.election_date, unionelections.closed_date, unionelections.year_closed, unionelections.city, unionelections.state, unionelections.county, unionelections.FIPS, unionelections.longitude, unionelections.latitude, unionelections.employer, unionelections.SIC, unionelections.unit_type, populationdata.rural, (CAST(votes_for AS float) / NULLIF(votes_total, 0)) * 100  AS votePercentage
     FROM unionelections 
     LEFT JOIN populationdata ON CAST(unionelections.fips AS int) = populationdata.fips 
     WHERE year_closed >= ?lowerBoundYear 
@@ -75,7 +75,8 @@ get_slider_sql <- function() {
       get_petition_sql(),
       get_industry_sql(),
       get_state_sql(),
-      get_county_sql()
+      get_county_sql(),
+      "LIMIT 500 "
     )
     return(sqlInterpolate(
       pool,
