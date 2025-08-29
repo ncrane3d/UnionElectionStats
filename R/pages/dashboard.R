@@ -9,8 +9,32 @@ dashboard <- function() {
             right = "10vw",
             card_header(
                 layout_columns(
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
+                    p("Welcome to Union Election Stats, a user-friendly hub for data on National Labor Relations Board (NLRB) 
+                    representation elections.  Here you can explore the history of union organizing through interactive 
+                    visualizations, learn about recent trends in the labor movement, and download data for your own bespoke 
+                    analysis.  The database was constructed by a team of academic economists/political scientists, Zachary 
+                    Schaller, Sammy Young, and Jonne Kamphorst, and is based on NLRB records.  It contains the known universe 
+                    of representation elections from 1962 to 2024.  Soon it will also track the most recent elections as cases 
+                    close.  Use the Downloads tab to access the database, check out the Featured Analysis tab to dive deeper 
+                    into union scholarship, and use the Contact Us tab with any inquiries or bug reports.", actionLink("citationPopup","Use of data requires 
+                    citation")) %>% 
+                        tagAppendAttributes(class = "paragraphIndent"),
+                    div(
+                        p("This website is about union election data (the flow of organizing activity), it is not about union 
+                            membership data (the stock of unionized workers). For membership data, please visit ", 
+                            tags$a(href="http://unionstats.com/", "unionstats.com."),  
+                            "For info on strikes and work stoppages, use the labor action tracker at" , 
+                            tags$a(href="http://striketracker.ilr.cornell.edu", "striketracker.ilr.cornell.edu."),    
+                            "And for additional election analysis (for years after 2000) and some excellent real-time case tracking, 
+                            check out ", 
+                            tags$a(href="http://unionelections.org", "unionelections.org."))%>% 
+                                tagAppendAttributes(class = "paragraphIndent"),
+                        p("We stand on the shoulders of giants to bring you this resource.  Many thanks to Henry Farber, Bruce Western, 
+                            J.P. Ferguson, Thomas Holmes, David Lee, Alexandre Mas, and Jack Fiorito for their seminal data collection 
+                            and research on union elections.  We also thank the Russell Sage Foundation for their support (grant # 2307-44744).") %>% 
+                                tagAppendAttributes(class = "paragraphIndent")
+                    ),  
+                    
                 ),
                 class = "dashboardheader",
                 height = "10vh"
@@ -42,6 +66,12 @@ dashboard <- function() {
                             "Kentucky" = "KY",
                             "Louisiana" = "LA",
                             "Maine" = "ME",
+                            "Maryland" = "MD",
+                            "Massachusetts" = "MA",
+                            "Michigan" = "MI",
+                            "Minnesota" = "MN",
+                            "Mississippi" = "MS",
+                            "Missouri" = "MO",
                             "Montana" = "MT",
                             "Nebraska" = "NE",
                             "Nevada" = "NV",
@@ -54,12 +84,6 @@ dashboard <- function() {
                             "Ohio" = "OH",
                             "Oklahoma" = "OK",
                             "Oregon" = "OR",
-                            "Maryland" = "MD",
-                            "Massachusetts" = "MA",
-                            "Michigan" = "MI",
-                            "Minnesota" = "MN",
-                            "Mississippi" = "MS",
-                            "Missouri" = "MO",
                             "Pennsylvania" = "PA",
                             "Rhode Island" = "RI",
                             "South Carolina" = "SC",
@@ -168,6 +192,14 @@ dashboard <- function() {
                     card(card_header("Preset Graph 1"), fill = TRUE),
                     card(card_header("Preset Graph 2"), fill = TRUE),
                     card(card_header("Preset Graph 3"), fill = TRUE)
+                ),
+                card(
+                    card_header("Responsible Data Use"),
+                    "As the saying goes, “figures never lie, but liars sure figure.”  Please use these 
+                    data responsibly and authentically.  Be transparent about your methods and avoid 
+                    temptations to graph hack and p-hack.  Additionally, real people are behind the data 
+                    generating process, so please be respectful of the blood, sweat, and tears that have 
+                    been shed on all sides of industrial relations."
                 )
             )
         )
