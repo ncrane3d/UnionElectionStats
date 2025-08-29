@@ -18,33 +18,28 @@ source('./R/map/map.R', local = TRUE)
 app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
-  pool <- dbPool(
-    Postgres(),
-    host = Sys.getenv("UE_IP"),
-    dbname = "unionelectiondb",
-    user = "ueuser",
-    password = Sys.getenv("UE_DB_PASS"),
-    port = 21701
-  )
+
+pool = dbConnect(duckdb())
+
   current_query <- reactive({getCurrentData()})
+  current_data_slice <- reactive({dbGetQuery(pool, current_query())})
+
   output$map <- map(input, output, pool, current_data_slice, current_query)
-  
-  current_data_slice <- reactive({dbGetQuery(pool, paste0(current_query(), ";"))
-  })
 
   current_county_selection <- reactive({
+    req(state_choices[input$state])
     sql <- "
       SELECT County, FIPS
-      FROM populationdata 
-      WHERE State = ?selectedState;"
+      FROM read_csv_auto('resources/Data/Population_Data_2020.csv', ignore_errors=true) 
+      WHERE State = {selectedState}"
 
-    query <- sqlInterpolate(
-      pool,
+    query <- glue(
       sql,
-      selectedState = state_choices[input$state]
+      selectedState = sQuote(state_choices[input$state])
     )
     stateCounties <- dbGetQuery(pool, query)
   })
+
   observeEvent(input$state, {
     if (input$state == 0) {
       countyDataframeToText <- c(
@@ -58,8 +53,8 @@ app_server <- function(input, output, session) {
         "All Rural Counties",
         "All Urban Counties",
         setNames(
-          current_county_selection()$fips,
-          current_county_selection()$county
+          current_county_selection()$FIPS,
+          current_county_selection()$County
         )
       )
     }
