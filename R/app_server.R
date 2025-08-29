@@ -10,6 +10,9 @@
 #' @import dplyr
 #' @import htmltools
 #' @import htmlwidgets
+#' @import lubridate
+#' @import duckdb
+#' @import glue
 #' @noRd
 
 source('./R/map/map.R', local = TRUE)
@@ -19,7 +22,8 @@ app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
 
-pool = dbConnect(duckdb())
+  pool = dbConnect(duckdb())
+  DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
 
   current_query <- reactive({getCurrentData()})
   current_data_slice <- reactive({dbGetQuery(pool, current_query())})
