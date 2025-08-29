@@ -6,6 +6,8 @@
 #' @import DBI
 #' @import RPostgres
 #' @import pool
+#' @import sendmailR
+#' @import shinyFeedback
 #' @noRd
 #'
 
@@ -93,17 +95,6 @@ app_server <- function(input, output, session) {
     }
   })  
 
-  # output$word <- renderImage({
-  #   list(src = "./resources/images/featuredAnalysis/Where-Unions-Fell.png")
-  #   }, deleteFile = FALSE
-  # )
-
-  # output$homie <- renderImage({
-  #   list(src = "./resources/images/featuredAnalysis/Where-Unions-Fell.png")
-  #   }, deleteFile = FALSE
-  # )
-
-
   output$insertFeaturedAnalysisFromCSV <- renderUI ({
     req("./resources/csv/featured-analysis.csv")
     faCSV <- read.csv("./resources/csv/featured-analysis.csv")
@@ -155,6 +146,55 @@ app_server <- function(input, output, session) {
         easyClose = TRUE
       ))
     })
+
+    observeEvent(input$submitButton, {
+      if(input$name == "") {
+        feedbackWarning("name", (input$name == ""), "Please fill out the name field before pressing submit.")
+      }  else {
+        hideFeedback("name")
+      }
+
+      if(input$email == "") {
+        feedbackWarning("email", (input$email == ""), "Please fill out the email field before pressing submit.")
+      } else {
+        hideFeedback("email")
+      }
+
+      if(input$subject == "") {
+        feedbackWarning("subject", (input$subject == ""), "Please fill out the subject field before pressing submit.")
+      } else {
+        hideFeedback("subject")
+      }
+
+      if(input$message == "") {
+        feedbackWarning("message", (input$message == ""), "Please fill out the message field before pressing submit.")
+      } else {
+        hideFeedback("message")
+      }
+
+      #TODO: Add in email functionality (will have to open email socket on computre)
+      if(!(input$name == "" || input$email == "" || input$subject == "" || input$message == "")) {
+        print(paste(input$name, input$email, input$subject, input$message, "\n"))
+        # from <- isolate(input$email)
+        # to <- isolate("ncrane3d@gmail.com")
+        # subject <- isolate(input$subject)
+        # msg <- isolate(input$message)
+        # sendmail(from, to, subject, msg)
+
+        showModal(modalDialog(
+        title = "Your Feedback Has Been Received",
+        "Thank you for submission! We will be in touch with you soon. In the meantime feel free to keep exploring the visualizations
+         on the home page, or take a dive into some further reading on the Featured Analysis Page.",
+        easyClose = TRUE
+      ))
+
+        #Clean up form
+        updateTextInput(inputId = "name", value = "")
+        updateTextInput(inputId = "email", value = "")
+        updateTextInput(inputId = "subject", value = "")
+        updateTextAreaInput(inputId = "message", value = "")
+      }
+  })
   
   output$jonne <- renderImage(
     {

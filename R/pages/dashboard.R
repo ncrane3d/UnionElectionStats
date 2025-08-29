@@ -66,6 +66,12 @@ dashboard <- function() {
                             "Kentucky" = "KY",
                             "Louisiana" = "LA",
                             "Maine" = "ME",
+                            "Maryland" = "MD",
+                            "Massachusetts" = "MA",
+                            "Michigan" = "MI",
+                            "Minnesota" = "MN",
+                            "Mississippi" = "MS",
+                            "Missouri" = "MO",
                             "Montana" = "MT",
                             "Nebraska" = "NE",
                             "Nevada" = "NV",
@@ -78,12 +84,6 @@ dashboard <- function() {
                             "Ohio" = "OH",
                             "Oklahoma" = "OK",
                             "Oregon" = "OR",
-                            "Maryland" = "MD",
-                            "Massachusetts" = "MA",
-                            "Michigan" = "MI",
-                            "Minnesota" = "MN",
-                            "Mississippi" = "MS",
-                            "Missouri" = "MO",
                             "Pennsylvania" = "PA",
                             "Rhode Island" = "RI",
                             "South Carolina" = "SC",
@@ -192,6 +192,14 @@ dashboard <- function() {
                     card(card_header("Preset Graph 1"), fill = TRUE),
                     card(card_header("Preset Graph 2"), fill = TRUE),
                     card(card_header("Preset Graph 3"), fill = TRUE)
+                ),
+                card(
+                    card_header("Responsible Data Use"),
+                    "As the saying goes, “figures never lie, but liars sure figure.”  Please use these 
+                    data responsibly and authentically.  Be transparent about your methods and avoid 
+                    temptations to graph hack and p-hack.  Additionally, real people are behind the data 
+                    generating process, so please be respectful of the blood, sweat, and tears that have 
+                    been shed on all sides of industrial relations."
                 )
             )
         )
