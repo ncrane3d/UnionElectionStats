@@ -30,7 +30,7 @@ about <- function() {
             )%>%
             tagAppendAttributes(class = "scrollable-panel"),
             card(
-                card_header("Principle Investigators", align = "center"),
+                card_header("Principal Investigators", align = "center"),
                 layout_column_wrap(
                     width = 1 / 3,
                     min_width = 300,
