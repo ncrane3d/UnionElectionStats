@@ -2,20 +2,18 @@ stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
 countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
 
 getstate_count <- function(pool, current_query) {
-    sQuote(current_query)
-    sql <- glue("SELECT SUBSTRING(sub.FIPS,1,LENGTH(sub.FIPS) - 3), COUNT(*) AS state_count, SUBSTRING(sub.FIPS, 1, LENGTH(FIPS) - 3) AS substring
+    sql <- glue("SELECT SUBSTRING(sub.FIPS,1,LENGTH(sub.FIPS) - 3), COUNT(*) AS state_count, SUBSTRING(sub.FIPS, 1, LENGTH(sub.FIPS) - 3) AS substring
         FROM ({userQuery}) AS sub
         GROUP BY substring",
-        userQuery = current_query
+        userQuery = current_query()
     )
     return(dbGetQuery(pool, sql))
 }
 getcounty_count <- function(pool, current_query) {
-    sQuote(current_query)
     sql <- glue("SELECT sub.FIPS, COUNT(*) AS county_count
         FROM ({userQuery}) AS sub
         GROUP BY sub.FIPS",
-        userQuery = current_query
+        userQuery = current_query()
     )
     return(dbGetQuery(pool, sql))
 }
@@ -49,9 +47,9 @@ getCountyBoundaries <- function(pool, state_countdf, current_query) {
 }
 
 getBoundaries <- function(pool, current_query) {
-    state_countdf <- reactive({getstate_count(pool, current_query())})
+    state_countdf <- reactive({getstate_count(pool, current_query)})
     return(list(
         stateBoundaries <- reactive({getStateBoundaries(pool, state_countdf)}),
-        countyBoundaries <- reactive({getCountyBoundaries(pool, state_countdf, current_query())})
+        countyBoundaries <- reactive({getCountyBoundaries(pool, state_countdf, current_query)})
     ))
 }

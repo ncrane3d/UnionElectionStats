@@ -1,6 +1,6 @@
 get_slider_sql <- function() {
-  sliderSQL <- "SELECT unionelections.petition, unionelections.election_type, unionelections.eligible, unionelections.votes_for, unionelections.votes_against, unionelections.votes_total, unionelections.filed_date, unionelections.year_filed, unionelections.month_filed, unionelections.day_filed, unionelections.election_date, unionelections.year_election, unionelections.month_election, unionelections.day_election, unionelections.closed_date, unionelections.year_closed, unionelections.month_closed, unionelections.day_closed, unionelections.city, unionelections.state, unionelections.county, unionelections.FIPS, unionelections.longitude, unionelections.latitude, unionelections.employer, unionelections.SIC, unionelections.unit_type, populationdata.rural
-      FROM read_csv('https://unionelectionstats.s3.us-east-2.amazonaws.com/Elections_Data_Cleaned_V0.csv', types = {{'year_closed':'INTEGER','votes_for':'DOUBLE'}}, ignore_errors=true) AS unionelections 
+  sliderSQL <- "SELECT unionelections.petition, unionelections.election_type, unionelections.eligible, unionelections.votes_for, unionelections.votes_against, unionelections.votes_total, unionelections.filed_date, unionelections.year_filed, unionelections.month_filed, unionelections.day_filed, unionelections.election_date, unionelections.year_election, unionelections.month_election, unionelections.day_election, unionelections.closed_date, unionelections.year_closed, unionelections.month_closed, unionelections.day_closed, unionelections.city, unionelections.state, unionelections.county, unionelections.FIPS, unionelections.longitude, unionelections.latitude, unionelections.employer, unionelections.SIC, unionelections.unit_type, populationdata.rural 
+      FROM read_csv('resources/Data/Elections_Data_Cleaned_V0.csv', types = {{'year_closed':'INTEGER','votes_for':'DOUBLE'}}, ignore_errors=true) AS unionelections 
       LEFT JOIN read_csv_auto('resources/Data/Population_Data_2020.csv', ignore_errors=true) AS populationdata ON TRY_CAST(unionelections.FIPS AS int) = populationdata.FIPS 
       WHERE unionelections.year_closed >= {lowerBoundYear} 
       AND unionelections.year_closed <= {upperBoundYear} 
@@ -56,7 +56,7 @@ get_slider_sql <- function() {
     } else if (input$county == "All Urban Counties") {
       countySQL <- "AND rural = FALSE "
     } else {
-      countySQL <- paste0("AND unionelections.fips = '", input$county, "' ")
+      countySQL <- paste0("AND unionelections.FIPS = '", input$county, "' ")
     }
   }
 
@@ -64,7 +64,8 @@ get_slider_sql <- function() {
     if (input$state == "All") {
       stateSQL <- ""
     } else {
-      stateSQL <- glue("AND unionelections.state = '{state}' ", state = input$state)
+      #stateSQL <- glue("AND unionelections.state = '{state}' ", state = input$state)
+      stateSQL <- paste0("AND unionelections.state = '", input$state, "' ")
     }
   }
 
@@ -74,8 +75,7 @@ get_slider_sql <- function() {
       get_petition_sql(),
       get_industry_sql(),
       get_state_sql(),
-      get_county_sql(),
-      "LIMIT 500 "
+      get_county_sql()
     )
     return(glue(
       sql,
