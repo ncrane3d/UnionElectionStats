@@ -36,7 +36,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 shape <- boundaries()[[1]]$geometry[index]
             } else { #Clicked shape is a county
                 index <- which(boundaries()[[2]]$FIPS == click$id)
-                shape <- boundaries()[[2]]()$geometry[index]
+                shape <- boundaries()[[2]]$geometry[index]
             }
             #Get bounds of clicked shape
             bounds = st_bbox(shape)
