@@ -1,12 +1,12 @@
 get_slider_sql <- function() {
     sliderSQL <- "
-    SELECT unionelections.*, populationdata.rural, (CAST(votes_for AS float) / (votes_for + votes_against)) * 100  AS votePercentage
+    SELECT unionelections.petition, unionelections.election_type, unionelections.eligible, unionelections.votes_for, unionelections.votes_against, unionelections.votes_total, unionelections.filed_date, unionelections.election_date, unionelections.closed_date, unionelections.year_closed, unionelections.city, unionelections.state, unionelections.county, unionelections.FIPS, unionelections.longitude, unionelections.latitude, unionelections.employer, unionelections.sic, unionelections.unit_type, populationdata.rural, (CAST(votes_for AS float) / NULLIF(votes_total, 0)) * 100  AS votePercentage
     FROM unionelections 
-    LEFT JOIN populationdata ON unionelections.fips = populationdata.fips 
-    WHERE yrclosed >= ?lowerBoundYear 
-    AND yrclosed <= ?upperBoundYear 
-    AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 >= ?lowerBoundFavor 
-    AND (CAST(votes_for AS float) / (votes_for + votes_against)) * 100 <= ?upperBoundFavor "
+    LEFT JOIN populationdata ON CAST(unionelections.fips AS int) = populationdata.fips 
+    WHERE year_closed >= ?lowerBoundYear 
+    AND year_closed <= ?upperBoundYear 
+    AND (CAST(votes_for AS float) / NULLIF(votes_total, 0)) * 100 >= ?lowerBoundFavor 
+    AND (CAST(votes_for AS float) / NULLIF(votes_total, 0)) * 100 <= ?upperBoundFavor "
   }
 
   get_petition_sql <- function() {
@@ -25,25 +25,25 @@ get_slider_sql <- function() {
     if (input$industry == "All") {
       industrySQL <- ""
     } else if (input$industry == "Agriculture, Forestry and Fishing") {
-      industrySQL <- paste0("AND sic2 IN (1, 2, 7, 8, 9) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (1, 2, 7, 8, 9) ")
     } else if (input$industry == "Mining") {
-      industrySQL <- paste0("AND sic2 IN (10, 12, 13, 14) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (10, 12, 13, 14) ")
     } else if (input$industry == "Construction") {
-      industrySQL <- paste0("AND sic2 IN (15, 16, 17) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (15, 16, 17) ")
     } else if (input$industry == "Manufacturing") {
-      industrySQL <- paste0("AND sic2 IN (20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39) ")
     } else if (input$industry == "Transportation and Utilities") {
-      industrySQL <- paste0("AND sic2 IN (40, 41, 42, 43, 44, 45, 46, 47, 48, 49) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (40, 41, 42, 43, 44, 45, 46, 47, 48, 49) ")
     } else if (input$industry == "Wholesale") {
-      industrySQL <- paste0("AND sic2 IN (50, 51) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (50, 51) ")
     } else if (input$industry == "Retail") {
-      industrySQL <- paste0("AND sic2 IN (52, 53, 54, 55, 56, 57, 58, 59) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (52, 53, 54, 55, 56, 57, 58, 59) ")
     } else if (input$industry == "FIRE") {
-      industrySQL <- paste0("AND sic2 IN (60, 61, 62, 63, 64, 65, 67) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (60, 61, 62, 63, 64, 65, 67) ")
     } else if (input$industry == "Services") {
-      industrySQL <- paste0("AND sic2 IN (70, 72, 73, 75, 76, 78, 79, 80, 81, 82, 83, 84, 86, 87, 88, 89) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (70, 72, 73, 75, 76, 78, 79, 80, 81, 82, 83, 84, 86, 87, 88, 89) ")
     } else if (input$industry == "Public Administration") {
-      industrySQL <- paste0("AND sic2 IN (91, 92, 93, 94, 95, 96, 97, 99) ")
+      industrySQL <- paste0("AND CAST(sic AS int) IN (91, 92, 93, 94, 95, 96, 97, 99) ")
     } else {
       industrySQL <- ""
     }
@@ -67,4 +67,23 @@ get_slider_sql <- function() {
     } else {
       stateSQL <- paste0("AND unionelections.state = '", input$state, "' ")
     }
+  }
+
+  getCurrentData <- function() {
+    sql <- paste0(
+      get_slider_sql(),
+      get_petition_sql(),
+      get_industry_sql(),
+      get_state_sql(),
+      get_county_sql(),
+      "LIMIT 500"
+    )
+    return(sqlInterpolate(
+      pool,
+      sql,
+      lowerBoundYear = input$timeframe[1],
+      upperBoundYear = input$timeframe[2],
+      lowerBoundFavor = input$percentageFavor[1],
+      upperBoundFavor = input$percentageFavor[2]
+    ))
   }

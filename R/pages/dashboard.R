@@ -4,7 +4,6 @@ dashboard <- function() {
         align = "left",
         div(
             width = "100vw",
-            height = "85vh",
             left = "0px",
             right = "10vw",
             card_header(
@@ -18,10 +17,10 @@ dashboard <- function() {
             layout_sidebar(
                 sidebar = sidebar(
                     selectInput(
-                        "state", 
-                        "State", 
+                        "state",
+                        "State",
                         c(
-                            "All", 
+                            "All",
                             "Alabama" = "AL",
                             "Alaska" = "AK",
                             "Arizona" = "AZ",
@@ -74,17 +73,17 @@ dashboard <- function() {
                             "Wisconsin" = "WI",
                             "Wyoming" = "WY"
                         )
-                    ) %>% 
+                    ) %>%
                         tagAppendAttributes(class = "artificial-gap"),
                     tooltip(
                         selectInput(
                             "county",
-                            "County", 
+                            "County",
                             c(
                                 "No State Selected"
                             )
-                        ) %>% 
-                        tagAppendAttributes(class = "tooltip-adjustment"), 
+                        ) %>%
+                            tagAppendAttributes(class = "tooltip-adjustment"),
                         "By 2020 FIPS Codes.",
                         placement = "right"
                     ),
@@ -105,11 +104,11 @@ dashboard <- function() {
                                 "Services",
                                 "Public Administration"
                             )
-                        ) %>% 
-                        tagAppendAttributes(class = "tooltip-adjustment"), 
-                        "By SIC Code. No data after 2010.",
+                        ) %>%
+                            tagAppendAttributes(class = "tooltip-adjustment"),
+                        "By sic Code. No data after 2010.",
                         placement = "right"
-                    ),                    
+                    ),
                     checkboxGroupInput(
                         "electionType",
                         "Petition Type",
@@ -119,7 +118,7 @@ dashboard <- function() {
                             "Emp. Petition (RM)" = "RM"
                         ),
                         selected = list("RC", "RD", "RM")
-                    ) %>% 
+                    ) %>%
                         tagAppendAttributes(class = "artificial-gap"),
                     sliderInput(
                         "timeframe",
@@ -128,7 +127,7 @@ dashboard <- function() {
                         min = 1960,
                         max = 2025,
                         value = c(1960, 2025)
-                    ) %>% 
+                    ) %>%
                         tagAppendAttributes(class = "artificial-gap"),
                     sliderInput(
                         "percentageFavor",
@@ -139,17 +138,16 @@ dashboard <- function() {
                     ),
                     tooltip(
                         checkboxInput(
-                            "winnersChecked", 
-                            "Winning Elections Only", 
+                            "winnersChecked",
+                            "Winning Elections Only",
                             value = FALSE
                         ),
                         "Sets slider to hundredths place.",
                         placement = "right"
                     )
                 ),
-                height = "85vh",
                 layout_columns(
-                    card(leafletOutput("map")),
+                    card(leafletOutput("map"), height = "75vh"),
                     card(
                         card_header("Custom Visualization"),
                         layout_columns(
@@ -182,14 +180,19 @@ dashboard <- function() {
                         card(plotOutput("customVisualization"))
                     )
                 ),
-                layout_column_wrap(
-                    width = 1/3,
-                    card(card_header("Industries"), fill = TRUE, plotOutput("industryPreset")),
-                    card(card_header("Unit Types"), fill = TRUE, plotOutput("unitTypePreset")),
-                    card(card_header("Regions"), fill = TRUE, plotOutput("regionalPreset")),
-                    card(card_header("Election Types"), fill = TRUE, plotOutput("elecTypePreset")),
-                    card(card_header("Heatmap"), fill = TRUE, plotOutput("heatmapPreset")),
-                    card(card_header("Lines"), fill = TRUE, plotOutput("linePreset"))
+                accordion(
+                    accordion_panel(
+                        title="test",
+                        layout_column_wrap(
+                            width = 1/2,
+                            card(card_header("Industries"), height="30vh", fill = TRUE, girafeOutput("industryPreset")),
+                            card(card_header("Unit Types"), height="30vh", fill = TRUE, plotOutput("unitTypePreset")),
+                            card(card_header("Regions"), height="30vh", fill = TRUE, girafeOutput("regionalPreset")),
+                            card(card_header("Election Types"), height="30vh", fill = TRUE, plotOutput("elecTypePreset")),
+                            card(card_header("Heatmap"), height="30vh", fill = TRUE, plotOutput("heatmapPreset")),
+                            card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("linePreset"))
+                        )
+                    )
                 )
             )
         )
