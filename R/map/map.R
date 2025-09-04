@@ -1,6 +1,3 @@
-stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
-countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
-
 source('./R/map/map_data_initialization.R', local = TRUE)
 
 getPalette <- function(column) {
