@@ -51,11 +51,48 @@ getCountyBoundaries <- function(pool, state_countdf, current_query) {
     )
     return(countyBoundaries)
 }
+testfunc <- function(current_data_slice) {
+        stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
+        countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
+        currentdata <- current_data_slice()
+        print("CURRENT DATA")
+        print(head(currentdata))
+        state_fips <- with(currentdata, substr(fips, 1, nchar(fips) - 3))
+        print("STATEFIPS")
+        print(head(state_fips))
+        state_freq <- data.frame(table(state_fips)) %>% rename(state_count = Freq)
+        county_freq <- data.frame(table(currentdata$fips)) %>% rename( fips = Var1, county_count = Freq)
+        print("TRANSPOSE")
+        print(head(county_freq))
+        print("TRANSPOSE STATE")
+        print(head(state_freq))
+        print(head(countyBoundaries))
+        countyBoundaries <- full_join(
+        countyBoundaries,
+        county_freq,
+        by = c("FIPS" = "fips")
+        )
+        print("COUNTY COUNT SUCCESS")
+        countyBoundaries <- full_join(
+            countyBoundaries,
+            state_freq,
+            by = c("STATE" = "state_fips")
+        )
+        print("COUNTY STATE SUCCESS")
+        stateBoundaries <- full_join(
+            stateBoundaries,
+            state_freq,
+            by = c("state" = "state_fips")
+        )
+        countyBoundaries$normalized_vote <- with(
+        countyBoundaries,
+        (county_count / state_count)
+    )
+        print("COUNTY BOUNDS")
+        print(head(countyBoundaries))
+        return(list(stateBoundaries, countyBoundaries))
+    }
 
-getBoundaries <- function(pool, current_query) {
-    state_countdf <- reactive({getstate_count(pool, current_query)})
-    return(list(
-        stateBoundaries <- reactive({getStateBoundaries(pool, state_countdf)}),
-        countyBoundaries <- reactive({getCountyBoundaries(pool, state_countdf, current_query)})
-    ))
+getBoundaries <- function(pool, current_query, current_data_slice) {
+    return(reactive({testfunc(current_data_slice)}))
 }
