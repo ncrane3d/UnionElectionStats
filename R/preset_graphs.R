@@ -16,7 +16,7 @@ getIndustryData <- function(){
     industry_data$sic[current_data_slice()$sic >= 40 & current_data_slice()$sic < 50] <- "Communications,\nElectric, Gas,\nand Sanitary\nServices"
     industry_data$sic[current_data_slice()$sic >= 50 & current_data_slice()$sic < 52] <- "Wholesale Trade"
     industry_data$sic[current_data_slice()$sic >= 52 & current_data_slice()$sic < 60] <- "Retail Trade"
-    industry_data$sic[current_data_slice()$sic >= 60 & current_data_slice()$sic < 68] <- "FIRE"
+    industry_data$sic[current_data_slice()$sic >= 60 & current_data_slice()$sic < 68] <- "Finance, Insurance,\nand Real Estate"
     industry_data$sic[current_data_slice()$sic >= 68 & current_data_slice()$sic < 90] <- "Services"
     industry_data$sic[current_data_slice()$sic >= 90 & current_data_slice()$sic < 100] <- "Public\nAdministration"
     industry_data$ac[current_data_slice()$sic < 10] <- "AFF"

@@ -182,7 +182,7 @@ dashboard <- function() {
                 ),
                 accordion(
                     accordion_panel(
-                        title="test",
+                        title="Presets",
                         layout_column_wrap(
                             width = 1/2,
                             card(card_header("Industries"), height="30vh", fill = TRUE, girafeOutput("industryPreset")),
