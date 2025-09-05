@@ -13,6 +13,7 @@
 #' @import lubridate
 #' @import duckdb
 #' @import glue
+#' @import leafgl
 #' @noRd
 
 source('./R/map/map.R', local = TRUE)

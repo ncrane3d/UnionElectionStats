@@ -16,10 +16,10 @@ map <- function(input, output, pool, current_data_slice, current_query) {
         #Error handling for when there are no points to render on map
     getCircleMarkerData <- function(){
         if (nrow(current_data_slice()) > 1){
-            return(current_data_slice())
+            return(st_as_sf(current_data_slice(), coords = c("longitude", "latitude"), crs = 4326))
         } else {
             #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
-            return(data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1)))
+            return(st_as_sf((data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1))), coords = c("lon", "lat"), crs = 4326))
         }
     }
     #Zoom on click of territory shape
@@ -46,7 +46,7 @@ map <- function(input, output, pool, current_data_slice, current_query) {
     countyPalette <- getPalette(boundaries()[2]$normalized_vote)
     req(boundaries)
     leafletProxy("map") %>%
-    clearMarkerClusters() %>%
+    removeGlPoints("electionPopup") %>%
     addPolygons(
                 data = boundaries()[[1]],
                 weight = 1,
@@ -69,31 +69,20 @@ map <- function(input, output, pool, current_data_slice, current_query) {
                 options= leafletOptions(pane="shapes"),
             ) |>
             #Individual election markers
-            addCircleMarkers(
+            addGlPoints(
                 data = getCircleMarkerData(),
-                color = "white",
-                stroke = FALSE,
-                fillOpacity = 0.75,
                 group = "counties",
-                clusterOptions = markerClusterOptions(
-                    #Expands overlapping markers out into a starburst on max zoom
-                    spiderfyOnMaxZoom = TRUE,
-                    showCoverageOnHover = FALSE
-                ),
-                options= leafletOptions(pane="markers"),
-                #Popup on click of individual elections that displays basic info
-                label = ~ sprintf(
+                options = leafletOptions(pane="markers"),
+                layerId = "electionPopup",
+                color = "white",
+                radius = 5,
+                opacity = 0.75,
+                popup = ~sprintf(
                     "Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
                     employer,
                     year_closed,
-                    round(
-                        ((votes_for /
-                            (votes_total)) *
-                            100),
-                        digits = 2
-                    )
-                ) %>%
-                    lapply(htmltools::HTML)
+                    round((votes_for / votes_total) * 100, 2)
+                )
             )
   })
   #Basemap
