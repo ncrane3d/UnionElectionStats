@@ -1,6 +1,3 @@
-stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
-countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
-
 source('./R/map/map_data_initialization.R', local = TRUE)
 
 getPalette <- function(column) {
@@ -9,16 +6,14 @@ getPalette <- function(column) {
 
 map <- function(input, output, pool, current_data_slice, current_query) {
     territoryOpacity <- 0.5
-    boundaries <- getBoundaries(pool, current_query)
-    statePalette <- getPalette(boundaries[1]$state_count)
-    countyPalette <- getPalette(boundaries[2]$normalized_vote)
+    boundaries <- getBoundaries(pool, current_query, current_data_slice)
     mapHighlight <- highlightOptions(
         color = "white",
         weight = 2,
         opacity = 1,
         bringToFront = FALSE
     )
-    #Error handling for when there are no points to render on map
+        #Error handling for when there are no points to render on map
     getCircleMarkerData <- function(){
         if (nrow(current_data_slice()) > 1){
             return(current_data_slice())
@@ -33,12 +28,12 @@ map <- function(input, output, pool, current_data_slice, current_query) {
         if(!is.null(click)){
             if(nchar(click$id) < 3) { #Clicked shape is a state
                 #Get index of row of clicked shape in geojson
-                index <- which(boundaries[[1]]()$state == click$id)
+                index <- which(boundaries()[[1]]$state == click$id)
                 #Get geometry of clicked shape
-                shape <- boundaries[[1]]()$geometry[index]
+                shape <- boundaries()[[1]]$geometry[index]
             } else { #Clicked shape is a county
-                index <- which(boundaries[[2]]()$FIPS == click$id)
-                shape <- boundaries[[2]]()$geometry[index]
+                index <- which(boundaries()[[2]]$FIPS == click$id)
+                shape <- boundaries()[[2]]$geometry[index]
             }
             #Get bounds of clicked shape
             bounds = st_bbox(shape)
@@ -47,27 +42,29 @@ map <- function(input, output, pool, current_data_slice, current_query) {
         }
     })
   observe({
+    statePalette <- getPalette(boundaries()[1]$state_count)
+    countyPalette <- getPalette(boundaries()[2]$normalized_vote)
     req(boundaries)
     leafletProxy("map") %>%
     clearMarkerClusters() %>%
     addPolygons(
-                data = boundaries[[1]](),
+                data = boundaries()[[1]],
                 weight = 1,
                 fillOpacity = territoryOpacity,
                 color = ~ statePalette(state_count),
                 group = "states",
-                layerId=~boundaries[[1]]()$state,
+                layerId=~boundaries()[[1]]$state,
                 highlightOptions = mapHighlight,
                 options= leafletOptions(pane="shapes"),
             ) |>
             #County border layer
             addPolygons(
-                data = boundaries[[2]](),
+                data = boundaries()[[2]],
                 weight = 1,
                 fillOpacity = territoryOpacity,
                 color = ~ countyPalette(normalized_vote),
                 group = "counties",
-                layerId=~boundaries[[2]]()$FIPS,
+                layerId=~boundaries()[[2]]$FIPS,
                 highlightOptions = mapHighlight,
                 options= leafletOptions(pane="shapes"),
             ) |>
