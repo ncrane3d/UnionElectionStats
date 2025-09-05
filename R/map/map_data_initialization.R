@@ -5,13 +5,13 @@ testfunc <- function(current_data_slice) {
         stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
         countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
         currentdata <- current_data_slice()
-        state_fips <- with(currentdata, substr(fips, 1, nchar(fips) - 3))
+        state_fips <- with(currentdata, substr(FIPS, 1, nchar(FIPS) - 3))
         state_freq <- data.frame(table(state_fips)) %>% rename(state_count = Freq)
-        county_freq <- data.frame(table(currentdata$fips)) %>% rename( fips = Var1, county_count = Freq)
+        county_freq <- data.frame(table(currentdata$FIPS)) %>% rename( FIPS = Var1, county_count = Freq)
         countyBoundaries <- full_join(
         countyBoundaries,
         county_freq,
-        by = c("FIPS" = "fips")
+        by = c("FIPS" = "FIPS")
         )
         countyBoundaries <- full_join(
             countyBoundaries,
