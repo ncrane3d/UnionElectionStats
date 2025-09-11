@@ -193,7 +193,9 @@ dashboard <- function() {
                             card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("linePreset"))
                         )
                     )
-                )
+                ) %>% tagAppendAttributes(
+                    id = "presets-accordion"
+                    )
             )
         )
     )

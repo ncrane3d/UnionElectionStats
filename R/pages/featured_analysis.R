@@ -8,26 +8,28 @@ featuredAnalysis <- function() {
     nav_panel(
         title = "Featured Analysis",
         align = "right",
-        accordion(
-            paperPanel(
-                "Example Paper",
-                authors,
-                loremIpsum
-            ),
-            paperPanel(
-                "Example Paper",
-                authors,
-                loremIpsum
-            ),
-            paperPanel(
-                "Example Paper",
-                authors,
-                loremIpsum
-            ),
-            paperPanel(
-                "Example Paper",
-                authors,
-                loremIpsum
+        div( id="featured-analyses",
+            accordion(
+                paperPanel(
+                    "Example Paper",
+                    authors,
+                    loremIpsum
+                ),
+                paperPanel(
+                    "Example Paper",
+                    authors,
+                    loremIpsum
+                ),
+                paperPanel(
+                    "Example Paper",
+                    authors,
+                    loremIpsum
+                ),
+                paperPanel(
+                    "Example Paper",
+                    authors,
+                    loremIpsum
+                )
             )
         )
     )
