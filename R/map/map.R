@@ -4,104 +4,97 @@ getPalette <- function(column) {
     colorNumeric(c("red", "blue"), column)
 }
 
-map <- function(input, output, pool, current_data_slice, current_query) {
-    territoryOpacity <- 0.5
-    boundaries <- getBoundaries(pool, current_query, current_data_slice)
-    mapHighlight <- highlightOptions(
-        color = "white",
-        weight = 2,
-        opacity = 1,
-        bringToFront = FALSE
-    )
-        #Error handling for when there are no points to render on map
-    getCircleMarkerData <- function(){
-        if (nrow(current_data_slice()) > 1){
-            return(st_as_sf(current_data_slice(), coords = c("longitude", "latitude"), crs = 4326))
-        } else {
-            #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
-            return(st_as_sf((data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1))), coords = c("lon", "lat"), crs = 4326))
-        }
+territoryOpacity <- 0.5
+boundaries <- getBoundaries(pool, current_query, current_data_slice)
+mapHighlight <- highlightOptions(
+    color = "white",
+    weight = 2,
+    opacity = 1,
+    bringToFront = FALSE
+)
+
+#Error handling for when there are no points to render on map
+getCircleMarkerData <- function(){
+    if (nrow(current_data_slice()) > 1){
+        return(st_as_sf(current_data_slice(), coords = c("longitude", "latitude"), crs = 4326))
+    } else {
+        #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
+        return(st_as_sf((data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1))), coords = c("lon", "lat"), crs = 4326))
     }
-    #Zoom on click of territory shape
-    observeEvent( input$map_shape_click, {
-        click <- input$map_shape_click
-        if(!is.null(click)){
-            if(nchar(click$id) < 3) { #Clicked shape is a state
-                #Get index of row of clicked shape in geojson
-                index <- which(boundaries()[[1]]$state == click$id)
-                #Get geometry of clicked shape
-                shape <- boundaries()[[1]]$geometry[index]
-            } else { #Clicked shape is a county
-                index <- which(boundaries()[[2]]$FIPS == click$id)
-                shape <- boundaries()[[2]]$geometry[index]
-            }
+}
+
+#Zoom on click of territory shape
+observeEvent( input$map_shape_click, {
+    click <- input$map_shape_click
+    if(!is.null(click)){
+        if(nchar(click$id) < 3) { #Clicked shape is a state
+            #Get index of row of clicked shape in geojson
+            index <- which(boundaries()[[1]]$state == click$id)
+            #Get geometry of clicked shape
+            shape <- boundaries()[[1]]$geometry[index]
             #Get bounds of clicked shape
             bounds = st_bbox(shape)
             #Fit bounds of map to clicked shape
             leafletProxy("map") %>% fitBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
-        }
-    })
-  observe({
-    statePalette <- getPalette(boundaries()[1]$state_count)
-    countyPalette <- getPalette(boundaries()[2]$normalized_vote)
+        } #else { #Clicked shape is a county
+        #     index <- which(boundaries()[[2]]$FIPS == click$id)
+        #     shape <- boundaries()[[2]]$geometry[index]
+        # }
+    }
+})
+
+#State Layer
+observe({
     req(boundaries)
+    statePalette <- getPalette(boundaries()[1]$state_count)
+    leafletProxy("map") %>%
+    addPolygons(
+        data = boundaries()[[1]],
+        weight = 1,
+        fillOpacity = territoryOpacity,
+        color = ~ statePalette(state_count),
+        group = "states",
+        layerId=~boundaries()[[1]]$state,
+        highlightOptions = mapHighlight,
+        options= leafletOptions(pane="shapes"),
+    )
+})
+
+#County Layer
+observe({
+    req(boundaries)
+    countyPalette <- getPalette(boundaries()[2]$normalized_vote)
+    leafletProxy("map") %>%
+    addPolygons(
+        data = boundaries()[[2]],
+        weight = 1,
+        fillOpacity = territoryOpacity,
+        #fillColor = "white",
+        color = ~ countyPalette(normalized_vote),
+        group = "counties",
+        layerId=~boundaries()[[2]]$FIPS,
+        #highlightOptions = mapHighlight,
+        options= leafletOptions(pane="shapes"),
+    )
+
+})
+
+#Election Points
+observe({
     leafletProxy("map") %>%
     removeGlPoints("electionPopup") %>%
-    addPolygons(
-                data = boundaries()[[1]],
-                weight = 1,
-                fillOpacity = territoryOpacity,
-                color = ~ statePalette(state_count),
-                group = "states",
-                layerId=~boundaries()[[1]]$state,
-                highlightOptions = mapHighlight,
-                options= leafletOptions(pane="shapes"),
-            ) |>
-            #County border layer
-            addPolygons(
-                data = boundaries()[[2]],
-                weight = 1,
-                fillOpacity = territoryOpacity,
-                color = ~ countyPalette(normalized_vote),
-                group = "counties",
-                layerId=~boundaries()[[2]]$FIPS,
-                highlightOptions = mapHighlight,
-                options= leafletOptions(pane="shapes"),
-            ) |>
-            #Individual election markers
-            addGlPoints(
-                data = getCircleMarkerData(),
-                group = "counties",
-                options = leafletOptions(pane="markers"),
-                layerId = "electionPopup",
-                color = "white",
-                radius = 5,
-                opacity = 0.75,
-                popup = ~sprintf(
-                    "Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
-                    employer,
-                    year_closed,
-                    round((votes_for / votes_total) * 100, 2)
-                )
-            )
-  })
-  #Basemap
-    return(renderLeaflet({
-        leaflet(options = leafletOptions(minZoom = 3)) |>
-            addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
-            addMapPane(name="shapes", zIndex=410) %>%
-            addMapPane(name="labels", zIndex=415) %>%
-            addMapPane(name="markers", zIndex=420) %>%
-            addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
-            #Zoom based conditional rendering for layers
-            groupOptions("counties", zoomLevels = 5:20) |>
-            groupOptions("states", zoomLevels = 0:4) |>
-            #Map panning bounds
-            setMaxBounds(
-                lat1 = 72.89817,
-                lng1 = -179.912096,
-                lat2 = 1,
-                lng2 = -54.892994
-            )
-    }))
-}
+    addGlPoints(
+        data = getCircleMarkerData(),
+        group = "counties",
+        options = leafletOptions(pane="markers"),
+        layerId = "electionPopup",
+        color = "black",
+        radius = 5,
+        popup = ~sprintf(
+            "Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
+            employer,
+            year_closed,
+            round((votes_for / votes_total) * 100, 2)
+        )
+    )
+})

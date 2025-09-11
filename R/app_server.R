@@ -15,13 +15,12 @@
 #' @import glue
 #' @import leafgl
 #' @noRd
-
-source('./R/map/map.R', local = TRUE)
 #'
 
 app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
+  source('./R/map/map.R', local = TRUE)
 
   pool = dbConnect(duckdb())
   DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
@@ -29,7 +28,24 @@ app_server <- function(input, output, session) {
   current_query <- reactive({getCurrentData()})
   current_data_slice <- reactive({dbGetQuery(pool, current_query())})
 
-  output$map <- map(input, output, pool, current_data_slice, current_query)
+  output$map <- renderLeaflet({
+    leaflet(options = leafletOptions(minZoom = 3)) |>
+    addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
+    addMapPane(name="shapes", zIndex=410) %>%
+    addMapPane(name="labels", zIndex=415) %>%
+    addMapPane(name="markers", zIndex=409) %>%
+    addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
+    #Zoom based conditional rendering for layers
+    groupOptions("counties", zoomLevels = 5:20) |>
+    groupOptions("states", zoomLevels = 0:4) |>
+    #Map panning bounds
+    setMaxBounds(
+        lat1 = 72.89817,
+        lng1 = -179.912096,
+        lat2 = 1,
+        lng2 = -54.892994
+    )
+  })
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
