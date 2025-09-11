@@ -36,7 +36,7 @@ app_ui <- function(request) {
         ".centered-card {  width: 80%; margin: auto; overflow: hidden; }",
         ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
         ".scrollable-panel {overflow: hidden !important; }",
-        ".sidebar {position: sticky; }",
+        ".sidebar {position: sticky; top: 10vh;}",
         ".contactcard {margin-top: 8vh;}",
         ".contactbg {max-width: 100%; height: auto; margin : -25px !important; position: absolute;}",
         ".contact_us_container {width:60%; margin: auto; }",

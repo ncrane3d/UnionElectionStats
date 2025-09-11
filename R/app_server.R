@@ -17,6 +17,7 @@
 #' @import htmltools
 #' @import htmlwidgets
 #' @import ggiraph
+#' @import plotly
 #' @noRd
 
 #'

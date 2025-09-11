@@ -62,12 +62,10 @@ totalVotes <- function(){
   }
 
   customHistogramVariableHandler <- function() {
-    ggplot(current_data_slice(), aes(x = customHistogramVariableHandler()))
     if (input$customAxes == "Petition Type") {
-      print(head(current_data_slice()$petition))
-      return(ggplot(data.frame(current_data_slice()$petition), aes(x=current_data_slice()$petition)) + geom_bar())
+      return(ggplot(data.frame(current_data_slice()$petition), aes(x=current_data_slice()$petition, fill = current_data_slice()$petition)) + geom_bar()) + scale_fill_viridis_d()
     } else if (input$customAxes == "Election Type") {
-      return(ggplot(data.frame(current_data_slice()$election_type), aes(x=current_data_slice()$election_type)) + geom_bar())
+      return(ggplot(data.frame(current_data_slice()$election_type), aes(x=current_data_slice()$election_type, fill = current_data_slice()$election_type)) + geom_bar() + scale_fill_viridis_d())
     } else if (input$customAxes == "Votes For/Against Union") {
       return(ggplot(current_data_slice()) + geom_histogram(aes(x = current_data_slice()$votes_for, color = "For"), alpha = 0.5, bins = 30, show_guide=TRUE) + geom_histogram(aes(x = current_data_slice()$votes_against, color ="Against"), alpha = 0.5, bins = 30, show_guide=TRUE) + scale_colour_manual("", breaks= c("For", "Against"), values = c("For"="purple", "Against"="black")) + xlab(" "))
     } else if (input$customAxes == "Total Votes") {
@@ -79,5 +77,5 @@ totalVotes <- function(){
     } else {
       return()
     }
-    return(ggplot(current_data_slice(), aes(x = xAxis)) + geom_histogram(bins = 30))
+    return(ggplot(current_data_slice(), aes(x = xAxis, fill = xAxis)) + geom_histogram(bins = 30) + scale_fill_viridis_d())
   }
