@@ -5,7 +5,7 @@ plains = c("ND", "SD", "MN", "NE", "IA", "KS", "MO")
 great_lakes = c("WI", "MI", "IL", "IN", "OH")
 mideast = c("NY", "PA", "NJ", "DE", "MD")
 new_england = c("ME", "NH", "VT", "MA", "RI", "CT")
-southeast = c("KY", "AR", "IN", "WV", "TN", "VA", "DC", "NC", "SC", "GA", "AL", "MS", "LA", "FL")
+southeast = c("KY", "AR", "IN", "WV", "TN", "VA", "DC", "NC", "SC", "GA", "AL", "MS", "LA", "FL", "GU")
 
 getIndustryData <- function(){
     industry_data = current_data_slice()
@@ -69,7 +69,7 @@ getElectionTypeGraph <- function(){
     election_type_data$election_type[election_type_data$election_type == "R"] <- "Regional Director\nOrdered"
     election_type_data$election_type[election_type_data$election_type == "E"] <- "Expedited"
     election_type_data$election_type[election_type_data$election_type == "B"] <- "Board Ordered"
-    return(ggplot(election_type_data, aes(x = year_closed, color = election_type, group = election_type)) + geom_freqpoly_interactive(aes(tooltip="test", data_id="test")) + plotTheme())
+    return(ggplot(election_type_data, aes(x = year_closed, color = election_type, group = election_type)) + geom_freqpoly_interactive(aes(tooltip="test", data_id="test")) + scale_colour_viridis_d() + labs(x = "Year Closed", y = "Frequency") + plotTheme())
 }
 
 getHeatmap <- function(){
@@ -77,34 +77,34 @@ getHeatmap <- function(){
     heatmap_data$filing_to_elec <- with(heatmap_data, as.numeric(difftime(election_date, filed_date, units="days"))/30)
     heatmap_data$elec_to_close <- with(heatmap_data, as.numeric(difftime(closed_date, election_date, units="days"))/30)
     print(head(heatmap_data))
-    return(ggplot(heatmap_data, aes(x=filing_to_elec, y = elec_to_close)) + geom_bin2d() + ylim(c(0, max(heatmap_data$elec_to_close))) + xlim(c(0, max(heatmap_data$filing_to_elec))) + scale_fill_viridis_b() + plotTheme())
+    return(ggplot(heatmap_data, aes(x=filing_to_elec, y = elec_to_close)) + geom_bin2d() + ylim(c(0, max(heatmap_data$filing_to_elec))) + xlim(c(0, max(heatmap_data$elec_to_close))) + labs(x = "Filing to Election (Months)", y = "Election to Close (Months)") + scale_fill_viridis_b(direction = -1) + plotTheme())
 }
 
 getLineGraph <- function(){
     industry_data = getIndustryData()
     if (input$customAxes == "Elections") {
       return(ggplot(current_data_slice(), aes(x = year_closed, color = election_type, group = election_type)) +
-    geom_line(stat="bin", binwidth=1)) + scale_colour_viridis_d()
+    geom_line(stat="bin", binwidth=1)+ scale_colour_viridis_d() + plotTheme())
     } else if (input$customAxes == "Eligible Employees") {
-      return(ggplot(current_data_slice(), aes(x= year_closed, y = current_data_slice()$eligible, color = election_type, group = election_type)) + geom_line_interactive() + scale_colour_viridis_d_interactive(guide = "none") + limitToMaxEligible())
+      return(ggplot(current_data_slice(), aes(x= year_closed, y = current_data_slice()$eligible, color = election_type, group = election_type)) + geom_line_interactive() + scale_colour_viridis_d_interactive(guide = "none") + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Total Votes") {
-      return(ggplot(current_data_slice(), aes(x= year_closed, y = totalVotes(), color = election_type, group = election_type)) + geom_line_interactive() + limitToMaxEligible())
+      return(ggplot(current_data_slice(), aes(x= year_closed, y = totalVotes(), color = election_type, group = election_type)) + geom_line_interactive() + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Eligible per Election") {
-      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$eligible, color = election_type, group = election_type)) + stat_summary(fun.y="mean", geom="line", alpha=0.5, show_guide=TRUE) + stat_summary(fun.y="median", geom="line", alpha=0.5, show_guide=TRUE) + limitToMaxEligible())
+      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$eligible, color = election_type, group = election_type)) + stat_summary(fun.y="mean", geom="line", alpha=0.5, show_guide=TRUE) + stat_summary(fun.y="median", geom="line", alpha=0.5, show_guide=TRUE) + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Avg. Votes per Election") {
-      return(ggplot(current_data_slice(), aes(x = year_closed, y = totalVotes(), color = election_type, group = election_type)) + statLine() + limitToMaxEligible())
+      return(ggplot(current_data_slice(), aes(x = year_closed, y = totalVotes(), color = election_type, group = election_type)) + statLine() + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Avg. Votes For Union") {
-      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$votes_for, color = election_type, group = election_type)) + statLine() + limitToMaxEligible())
+      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$votes_for, color = election_type, group = election_type)) + statLine() + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Avg. Votes Against Union") {
-      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$votes_against, color = election_type, group = election_type)) + statLine() + limitToMaxEligible())
+      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$votes_against, color = election_type, group = election_type)) + statLine() + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Avg. Union Vote Share") {
-      return(ggplot(current_data_slice(), aes(x = year_closed, y = unionVoteShare(), color = election_type, group = election_type)) + statLine())
+      return(ggplot(current_data_slice(), aes(x = year_closed, y = unionVoteShare(), color = election_type, group = election_type)) + statLine() + plotTheme())
     } else if (input$customAxes == "Avg. Participation Rate") {
-      return(ggplot(current_data_slice(), aes(x = year_closed, y = participationRate(), color = election_type, group = election_type)) + statLine())
+      return(ggplot(current_data_slice(), aes(x = year_closed, y = participationRate(), color = election_type, group = election_type)) + statLine() + plotTheme())
     } else {
       return()
     }
     return(ggplot(current_data_slice(), aes(x = year_closed, y = yAxis, color = election_type, group = election_type)) +
-    geom_line())
+    geom_line() + plotTheme())
 }
 
