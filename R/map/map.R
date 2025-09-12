@@ -1,7 +1,7 @@
 source('./R/map/map_data_initialization.R', local = TRUE)
 
 getPalette <- function(column) {
-    colorNumeric(c("red", "blue"), column)
+    colorNumeric(viridis(10), column, reverse = TRUE)
 }
 
 territoryOpacity <- 0.5
@@ -43,6 +43,10 @@ observeEvent( input$map_shape_click, {
     }
 })
 
+observeEvent( input$map_glify_mouseover, {
+
+})
+
 #State Layer
 observe({
     req(boundaries)
@@ -68,13 +72,25 @@ observe({
     addPolygons(
         data = boundaries()[[2]],
         weight = 1,
-        fillOpacity = territoryOpacity,
+        fillOpacity = .25,
         #fillColor = "white",
         color = ~ countyPalette(normalized_vote),
         group = "counties",
         layerId=~boundaries()[[2]]$FIPS,
-        #highlightOptions = mapHighlight,
         options= leafletOptions(pane="shapes"),
+        label = ~paste("County Name:", NAME, "FIPS:", FIPS), 
+        #label = lapply(~paste("Name:", NAME, "<br>FIPS:", FIPS), htmltools::HTML),
+        highlightOptions = highlightOptions(
+          color = "grey",
+          weight = 2,
+          bringToFront = TRUE
+        ),
+        labelOptions = labelOptions(
+          direction = "auto",
+          textOnly = FALSE
+          #offset = c(0, -15)
+
+        )
     )
 
 })
@@ -82,14 +98,18 @@ observe({
 #Election Points
 observe({
     leafletProxy("map") %>%
+    #Possible layer overflow fixes
+    #groupOptions("counties", zoomLevels = 5:20) %>%
+    #req(input$map_zoom >= 5)
     removeGlPoints("electionPopup") %>%
     addGlPoints(
         data = getCircleMarkerData(),
         group = "counties",
-        options = leafletOptions(pane="markers"),
+        pane = "markers",
         layerId = "electionPopup",
         color = "black",
         radius = 5,
+        opacity =.75,
         popup = ~sprintf(
             "Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
             employer,

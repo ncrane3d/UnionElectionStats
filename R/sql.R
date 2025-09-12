@@ -24,25 +24,25 @@ get_slider_sql <- function() {
     if (input$industry == "All") {
       industrySQL <- ""
     } else if (input$industry == "Agriculture, Forestry and Fishing") {
-      industrySQL <- paste0("AND sic IN (1, 2, 7, 8, 9) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (1, 2, 7, 8, 9) ")
     } else if (input$industry == "Mining") {
-      industrySQL <- paste0("AND sic IN (10, 12, 13, 14) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (10, 12, 13, 14) ")
     } else if (input$industry == "Construction") {
-      industrySQL <- paste0("AND sic IN (15, 16, 17) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (15, 16, 17) ")
     } else if (input$industry == "Manufacturing") {
-      industrySQL <- paste0("AND sic IN (20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39) ")
     } else if (input$industry == "Transportation and Utilities") {
-      industrySQL <- paste0("AND sic IN (40, 41, 42, 43, 44, 45, 46, 47, 48, 49) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (40, 41, 42, 43, 44, 45, 46, 47, 48, 49) ")
     } else if (input$industry == "Wholesale") {
-      industrySQL <- paste0("AND sic IN (50, 51) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (50, 51) ")
     } else if (input$industry == "Retail") {
-      industrySQL <- paste0("AND sic IN (52, 53, 54, 55, 56, 57, 58, 59) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (52, 53, 54, 55, 56, 57, 58, 59) ")
     } else if (input$industry == "FIRE") {
-      industrySQL <- paste0("AND sic IN (60, 61, 62, 63, 64, 65, 67) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (60, 61, 62, 63, 64, 65, 67) ")
     } else if (input$industry == "Services") {
-      industrySQL <- paste0("AND sic IN (70, 72, 73, 75, 76, 78, 79, 80, 81, 82, 83, 84, 86, 87, 88, 89) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (70, 72, 73, 75, 76, 78, 79, 80, 81, 82, 83, 84, 86, 87, 88, 89) ")
     } else if (input$industry == "Public Administration") {
-      industrySQL <- paste0("AND sic IN (91, 92, 93, 94, 95, 96, 97, 99) ")
+      industrySQL <- paste0("AND TRY_CAST(sic as INTEGER) IN (91, 92, 93, 94, 95, 96, 97, 99) ")
     } else {
       industrySQL <- ""
     }

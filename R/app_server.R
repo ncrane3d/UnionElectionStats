@@ -14,6 +14,7 @@
 #' @import duckdb
 #' @import glue
 #' @import leafgl
+#' @import viridis
 #' @noRd
 #'
 
