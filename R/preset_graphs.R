@@ -56,7 +56,7 @@ getRegionalBreakdown <- function(){
     regional_data$state[regional_data$state %in% new_england] <- "New England"
     regional_data$state[regional_data$state %in% southeast] <- "Southeast"
     gg <- ggplot(data.frame(regional_data$state), aes(x=regional_data$state, fill = regional_data$state)) + geom_bar_interactive(aes(tooltip= regional_data$state, data_id=regional_data$state), hover_nearest = TRUE) + scale_fill_viridis_d_interactive(guide= "none") + labs(x = "Region", y = "Frequency") + plotMargin()
-    return(girafe_options(girafe(ggobj = gg), opts_sizing(rescale = TRUE, width = 1), opts_toolbar(position="top", saveaspng = FALSE, hidden=c("selection", "zoom", "misc"))))
+    return(girafe_options(girafe(ggobj = gg), opts_sizing(rescale = TRUE, width = 1), sizingPolicy(defaultWidth = "100%", defaultHeight = "100%"), opts_toolbar(position="top", saveaspng = FALSE, hidden=c("selection", "zoom", "misc"))))
 }
 getUnitTypeGraph <- function(){
     return(ggplot(data.frame(current_data_slice()$unit), aes(x=current_data_slice()$unit, fill= current_data_slice()$unit)) + geom_bar() + scale_fill_viridis_d() + labs(x = "Unit Type", y = "Frequency") + plotTheme() + theme(legend.position="none"))
