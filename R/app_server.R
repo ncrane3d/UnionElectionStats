@@ -34,7 +34,7 @@ app_server <- function(input, output, session) {
     addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
     addMapPane(name="shapes", zIndex=410) %>%
     addMapPane(name="labels", zIndex=415) %>%
-    addMapPane(name="markers", zIndex=409) %>%
+    addMapPane(name="markers", zIndex=420) %>%
     addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
     #Zoom based conditional rendering for layers
     groupOptions("counties", zoomLevels = 5:20) |>

@@ -72,25 +72,19 @@ observe({
     addPolygons(
         data = boundaries()[[2]],
         weight = 1,
-        fillOpacity = .25,
+        fillOpacity = .75,
         #fillColor = "white",
         color = ~ countyPalette(normalized_vote),
         group = "counties",
         layerId=~boundaries()[[2]]$FIPS,
         options= leafletOptions(pane="shapes"),
-        label = ~paste("County Name:", NAME, "FIPS:", FIPS), 
-        #label = lapply(~paste("Name:", NAME, "<br>FIPS:", FIPS), htmltools::HTML),
-        highlightOptions = highlightOptions(
-          color = "grey",
-          weight = 2,
-          bringToFront = TRUE
+        #popup = ~paste("Name:", NAME, " (", FIPS, ")"), 
+        popup = ~sprintf(
+            "Name: %s (%s)",
+            NAME,
+            FIPS
         ),
-        labelOptions = labelOptions(
-          direction = "auto",
-          textOnly = FALSE
-          #offset = c(0, -15)
-
-        )
+        highlightOptions = mapHighlight
     )
 
 })
@@ -107,14 +101,27 @@ observe({
         group = "counties",
         pane = "markers",
         layerId = "electionPopup",
-        color = "black",
+        #color = "#440154",
+        fillColor = "#440154",
         radius = 5,
-        opacity =.75,
+        opacity =.5,
         popup = ~sprintf(
-            "Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
+            "Case Number: %s<br/>Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
+            case_number,
             employer,
             year_closed,
             round((votes_for / votes_total) * 100, 2)
         )
     )
+})
+
+observe({
+    leafletProxy("map") %>%
+    addLegend("bottomleft", 
+    pal = viridis(10), 
+    values = boundaries()[1]$state_count,
+    title = "Election Density by Deciles",
+    #labFormat = labelFormat(prefix = "$"),
+    opacity = 1
+  )
 })
