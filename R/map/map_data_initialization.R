@@ -1,3 +1,8 @@
+# stateBoundariesInitial <- sf::read_sf("./inst/app/www/states.json")
+# stateBoundaries <- ms_simplify(stateBoundariesInitial) 
+# countyBoundariesInitial <- sf::read_sf("./inst/app/www/counties.json")
+# countyBoundaries <- ms_simplify(countyBoundariesInitial)
+
 stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
 countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
 

@@ -15,6 +15,7 @@
 #' @import glue
 #' @import leafgl
 #' @import viridis
+#' @import rmapshaper
 #' @noRd
 #'
 
@@ -27,7 +28,23 @@ app_server <- function(input, output, session) {
   DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
 
   current_query <- reactive({getCurrentData()})
-  current_data_slice <- reactive({dbGetQuery(pool, current_query())})
+  current_data_slice <- reactive({
+    dbGetQuery(pool, current_query()) #%>%
+    # mutate(
+    #   # Create grouping key for nearby points
+    #   lon_group = round(longitude, 5),
+    #   lat_group = round(latitude, 5)
+    # ) %>%
+    # group_by(lon_group, lat_group) %>%
+    # mutate(
+    #   n = n(),
+    #   jittered = n > 1,
+    #   jittered_lon = if (n() > 1) jitter(longitude, amount = 1e-5) else longitude,
+    #   jittered_lat = if (n() > 1) jitter(latitude, amount = 1e-5) else latitude
+    # ) %>%
+    # ungroup() %>%
+    # select(-n, -lon_group, -lat_group)
+  })
 
   output$map <- renderLeaflet({
     leaflet(options = leafletOptions(minZoom = 3)) |>
@@ -37,6 +54,7 @@ app_server <- function(input, output, session) {
     addMapPane(name="markers", zIndex=420) %>%
     addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
     #Zoom based conditional rendering for layers
+    groupOptions("points", zoomLevels = 7:20) |>
     groupOptions("counties", zoomLevels = 5:20) |>
     groupOptions("states", zoomLevels = 0:4) |>
     #Map panning bounds

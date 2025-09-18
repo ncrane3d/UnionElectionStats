@@ -1,7 +1,8 @@
 source('./R/map/map_data_initialization.R', local = TRUE)
 
 getPalette <- function(column) {
-    colorNumeric(viridis(10), column, reverse = TRUE)
+    #colorNumeric(viridis(10), column, reverse = TRUE)
+    colorQuantile(viridis(10), domain = column, n = 10, reverse = TRUE)
 }
 
 territoryOpacity <- 0.5
@@ -17,6 +18,7 @@ mapHighlight <- highlightOptions(
 getCircleMarkerData <- function(){
     if (nrow(current_data_slice()) > 1){
         return(st_as_sf(current_data_slice(), coords = c("longitude", "latitude"), crs = 4326))
+        #return(st_as_sf(current_data_slice(), coords = c("jittered_lon", "jittered_lat"), crs = 4326))
     } else {
         #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
         return(st_as_sf((data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1))), coords = c("lon", "lat"), crs = 4326))
@@ -36,16 +38,10 @@ observeEvent( input$map_shape_click, {
             bounds = st_bbox(shape)
             #Fit bounds of map to clicked shape
             leafletProxy("map") %>% fitBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
-        } #else { #Clicked shape is a county
-        #     index <- which(boundaries()[[2]]$FIPS == click$id)
-        #     shape <- boundaries()[[2]]$geometry[index]
-        # }
+        } 
     }
 })
 
-observeEvent( input$map_glify_mouseover, {
-
-})
 
 #State Layer
 observe({
@@ -67,18 +63,16 @@ observe({
 #County Layer
 observe({
     req(boundaries)
-    countyPalette <- getPalette(boundaries()[2]$normalized_vote)
+    countyPalette <- getPalette(boundaries()[2]$county_count)
     leafletProxy("map") %>%
     addPolygons(
         data = boundaries()[[2]],
         weight = 1,
         fillOpacity = .75,
-        #fillColor = "white",
         color = ~ countyPalette(normalized_vote),
         group = "counties",
         layerId=~boundaries()[[2]]$FIPS,
-        options= leafletOptions(pane="shapes"),
-        #popup = ~paste("Name:", NAME, " (", FIPS, ")"), 
+        options = pathOptions(pane = "shapes"),
         popup = ~sprintf(
             "Name: %s (%s)",
             NAME,
@@ -98,30 +92,90 @@ observe({
     removeGlPoints("electionPopup") %>%
     addGlPoints(
         data = getCircleMarkerData(),
-        group = "counties",
+        group = "points",
         pane = "markers",
         layerId = "electionPopup",
-        #color = "#440154",
         fillColor = "#440154",
-        radius = 5,
-        opacity =.5,
+        #fillColor = ~ifelse(jittered, "red", "blue"),
+        radius = 7,
+        opacity =.65,
         popup = ~sprintf(
-            "Case Number: %s<br/>Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s",
+            "Case Number: %s<br/>Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s<br/>County: %s (%s)",
             case_number,
             employer,
             year_closed,
-            round((votes_for / votes_total) * 100, 2)
+            round((votes_for / votes_total) * 100, 2),
+            county,
+            FIPS
         )
     )
 })
 
 observe({
-    leafletProxy("map") %>%
-    addLegend("bottomleft", 
-    pal = viridis(10), 
-    values = boundaries()[1]$state_count,
-    title = "Election Density by Deciles",
-    #labFormat = labelFormat(prefix = "$"),
-    opacity = 1
-  )
+    req(input$map_zoom)
+    if (input$map_zoom < 5) {
+        breaks <- quantile(boundaries()[[1]]$state_count, probs = seq(0, 1, .1), na.rm = TRUE)
+        labels <- character(10)  
+        for (i in 1:10) {
+            labels[i] <- paste0(breaks[i], " – ", breaks[i + 1])
+        }
+
+        leafletProxy("map") %>%
+        clearControls() %>%
+        addLegend("bottomleft", 
+            colors = rev(viridis(10)), 
+            labels = labels,
+            title = "Election Frequency",
+            opacity = 1
+        )   
+    } else {
+        breaks <- quantile(boundaries()[[2]]$county_count, probs = seq(0, 1, .1), na.rm = TRUE)
+        labels <- character(10) 
+        for (i in 1:10) {
+            labels[i] <- paste0(breaks[i], " – ", breaks[i + 1])
+        }
+
+        leafletProxy("map") %>%
+        clearControls() %>%
+        addLegend("bottomleft", 
+            colors = rev(viridis(10)), 
+            labels = labels,
+            title = "Election Frequency",
+            opacity = 1
+        )
+    }
 })
+
+#Possible Fix WIP
+# observeEvent(input$map_click, {
+#     click <- input$map_click
+
+#     clicked_point <- st_as_sf(
+#         data.frame(lon = click$lng, lat = click$lat),
+#         coords = c("lon", "lat"),
+#         crs = st_crs(boundaries()[[2]])
+#     )
+
+#     clicked_point_proj <- st_transform(clicked_point, 3857)
+#     gl_points_proj <-st_transform(getCircleMarkerData(), 3857)
+
+#     if (any(st_is_within_distance(clicked_point_proj, gl_points_proj, dist = 10000)[[1]])) {
+#         return()
+#     }
+
+#     match <- st_within(clicked_point, st_make_valid(boundaries()[[2]]))
+
+#     if (lengths(match) > 0 && length(match[[1]]) > 0) {
+#         matched_polygon <- boundaries()[[2]][match[[1]], ]
+#         popup_content <- paste0("Name: ", boundaries()[[2]][match[[1]], ]$NAME, " (", boundaries()[[2]][match[[1]], ]$FIPS, ")")
+
+#         leafletProxy("map") %>%
+#         clearPopups() %>%
+#         addPopups(
+#             lng = click$lng,
+#             lat = click$lat,
+#             popup = popup_content,
+#             options = popupOptions(closeButton = TRUE)
+#         )
+#     }
+# })
