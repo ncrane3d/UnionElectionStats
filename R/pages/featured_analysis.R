@@ -9,38 +9,7 @@ featuredAnalysis <- function() {
         title = "Featured Analysis",
         align = "right",
         accordion(
-            paperPanel(
-                "Example Paper",
-                authors,
-                loremIpsum
-            ),
-            paperPanel(
-                "Example Paper",
-                authors,
-                loremIpsum
-            ),
-            paperPanel(
-                "Example Paper",
-                authors,
-                loremIpsum
-            ),
-            paperPanel(
-                "Example Paper",
-                authors,
-                loremIpsum
-            )
+            uiOutput("insertFeaturedAnalysisFromCSV")
         )
-    )
-}
-
-paperPanel <- function(paperName, authors, abstract) {
-    accordion_panel(
-        title = paperName,
-        div(
-            align = "left",
-            div(strong("Authors: "), p(paste(authors, collapse = ", "))),
-            div(strong("Abstract: "), p(abstract))
-        ) %>%
-            tagAppendAttributes(id = "accordion-analysis")
     )
 }
