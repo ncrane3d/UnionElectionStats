@@ -34,8 +34,9 @@ getIndustryData <- function(){
 
 getIndustryBreakdown <- function(){
     industry_data = getIndustryData()
-    gg <- ggplot(data.frame(industry_data$ac), aes(x=industry_data$ac, fill = industry_data$ac)) + geom_bar_interactive(aes(tooltip= industry_data$sic, data_id=industry_data$sic), hover_nearest = TRUE) + scale_fill_viridis_d_interactive( guide= "none") + labs(x = "Industry", y = "Frequency") + plotMargin()
-    return(girafe_options(girafe(ggobj = gg), opts_sizing(rescale = TRUE, width = 1), opts_toolbar(position="top", saveaspng = FALSE, hidden=c("selection", "zoom", "misc"))))
+    #gg <- ggplot(data.frame(industry_data$ac), aes(x=industry_data$ac, fill = industry_data$ac)) + geom_bar_interactive(aes(tooltip= industry_data$sic, data_id=industry_data$sic), hover_nearest = TRUE) + scale_fill_viridis_d_interactive( guide= "none") + labs(x = "Industry", y = "Frequency") + plotMargin()
+    #return(girafe_options(girafe(ggobj = gg), opts_sizing(rescale = TRUE, width = 1), opts_toolbar(position="top", saveaspng = FALSE, hidden=c("selection", "zoom", "misc"))))
+    return (ggplot(data.frame(industry_data$ac), aes(x=industry_data$ac, fill = industry_data$ac)) + geom_bar() + scale_fill_viridis_d() + labs(x = "Industry", y = "Frequency") + plotTheme() + plotMargin())
 }
 
 getRegionalBreakdown <- function(){
@@ -55,8 +56,9 @@ getRegionalBreakdown <- function(){
     regional_data$state[regional_data$state %in% mideast] <- "Mideast"
     regional_data$state[regional_data$state %in% new_england] <- "New England"
     regional_data$state[regional_data$state %in% southeast] <- "Southeast"
-    gg <- ggplot(data.frame(regional_data$state), aes(x=regional_data$state, fill = regional_data$state)) + geom_bar_interactive(aes(tooltip= regional_data$state, data_id=regional_data$state), hover_nearest = TRUE) + scale_fill_viridis_d_interactive(guide= "none") + labs(x = "Region", y = "Frequency") + plotMargin()
-    return(girafe_options(girafe(ggobj = gg), opts_sizing(rescale = TRUE, width = 1), sizingPolicy(defaultWidth = "100%", defaultHeight = "100%"), opts_toolbar(position="top", saveaspng = FALSE, hidden=c("selection", "zoom", "misc"))))
+    #gg <- ggplot(data.frame(regional_data$state), aes(x=regional_data$state, fill = regional_data$state)) + geom_bar_interactive(aes(tooltip= regional_data$state, data_id=regional_data$state), hover_nearest = TRUE) + scale_fill_viridis_d_interactive(guide= "none") + labs(x = "Region", y = "Frequency") + plotMargin()
+    #return(girafe_options(girafe(ggobj = gg), opts_sizing(rescale = TRUE, width = 1), sizingPolicy(defaultWidth = "100%", defaultHeight = "100%"), opts_toolbar(position="top", saveaspng = FALSE, hidden=c("selection", "zoom", "misc"))))
+    return (ggplot(data.frame(regional_data$state), aes(x=regional_data$state, fill = regional_data$state)) + geom_bar() + scale_fill_viridis_d() + labs(x = "Region", y = "Frequency") + plotTheme() + plotMargin())
 }
 getUnitTypeGraph <- function(){
     return(ggplot(data.frame(current_data_slice()$unit), aes(x=current_data_slice()$unit, fill= current_data_slice()$unit)) + geom_bar() + scale_fill_viridis_d() + labs(x = "Unit Type", y = "Frequency") + plotTheme() + theme(legend.position="none"))
@@ -76,7 +78,7 @@ getHeatmap <- function(){
     heatmap_data = current_data_slice()
     heatmap_data$filing_to_elec <- with(heatmap_data, as.numeric(difftime(election_date, filed_date, units="days"))/30)
     heatmap_data$elec_to_close <- with(heatmap_data, as.numeric(difftime(closed_date, election_date, units="days"))/30)
-    print(head(heatmap_data))
+    #print(head(heatmap_data))
     return(ggplot(heatmap_data, aes(x=filing_to_elec, y = elec_to_close)) + geom_bin2d() + ylim(c(0, max(heatmap_data$filing_to_elec))) + xlim(c(0, max(heatmap_data$elec_to_close))) + labs(x = "Filing to Election (Months)", y = "Election to Close (Months)") + scale_fill_viridis_b(direction = -1) + plotTheme())
 }
 
@@ -90,7 +92,7 @@ getLineGraph <- function(){
     } else if (input$customAxes == "Total Votes") {
       return(ggplot(current_data_slice(), aes(x= year_closed, y = totalVotes(), color = election_type, group = election_type)) + geom_line_interactive() + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Eligible per Election") {
-      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$eligible, color = election_type, group = election_type)) + stat_summary(fun.y="mean", geom="line", alpha=0.5, show_guide=TRUE) + stat_summary(fun.y="median", geom="line", alpha=0.5, show_guide=TRUE) + limitToMaxEligible() + plotTheme())
+      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$eligible, color = election_type, group = election_type)) + stat_summary(fun.y="mean", geom="line", alpha=0.5, show.legend=TRUE) + stat_summary(fun.y="median", geom="line", alpha=0.5, show.legend=TRUE) + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Avg. Votes per Election") {
       return(ggplot(current_data_slice(), aes(x = year_closed, y = totalVotes(), color = election_type, group = election_type)) + statLine() + limitToMaxEligible() + plotTheme())
     } else if (input$customAxes == "Avg. Votes For Union") {

@@ -10,13 +10,11 @@
 #' @import ggplot2
 #' @import dplyr
 #' @import gcookbook
-#' @import hrbrthemes
 #' @import ggiraph
 #' @import sf
 #' @import dplyr
 #' @import htmltools
 #' @import htmlwidgets
-#' @import ggiraph
 #' @import plotly
 #' @noRd
 
@@ -119,11 +117,11 @@ output$elecTypePreset <- renderPlot({
   getElectionTypeGraph()
 })
 
-output$regionalPreset <- renderGirafe({
+output$regionalPreset <- renderPlot({
   getRegionalBreakdown()
 })
 
-output$industryPreset <- renderGirafe({
+output$industryPreset <- renderPlot({
   getIndustryBreakdown()
 })
 

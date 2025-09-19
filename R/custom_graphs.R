@@ -18,7 +18,7 @@ totalVotes <- function(){
       alpha = 1
     }
     if (missing(show_guide)){
-      show_guide = FALSE
+      show.legend = FALSE
     }
     return(stat_summary(fun.y = func, geom="line", color = color, alpha = alpha))
   }
@@ -26,7 +26,8 @@ totalVotes <- function(){
     return(theme(plot.background = element_rect(fill="#FCF9F6", color = "#FCF9F6"), plot.margin = unit(c(0.5,0,0,0), "cm")))
   }
   plotTheme <- function() {
-    return(theme_ipsum_rc() + plotMargin())
+    #return(theme_ipsum_rc() + plotMargin())
+    return(theme_minimal(base_family = "roboto_condensed") + plotMargin())
   }
 
 
@@ -43,7 +44,7 @@ totalVotes <- function(){
     } else if (input$customAxes == "Total Votes") {
       return(ggplot(current_data_slice(), aes(x= year_closed, y = totalVotes())) + geom_line() + limitToMaxEligible())
     } else if (input$customAxes == "Eligible per Election") {
-      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$eligible)) + stat_summary(aes(color="Mean"), fun.y="mean", geom="line", alpha=0.5, show_guide=TRUE) + stat_summary(aes(color="Median"), fun.y="median", geom="line", alpha=0.5, show_guide=TRUE) + limitToMaxEligible() + scale_color_manual(values = c("Mean" = "black", "Median" = "purple"), labels = c("Mean Eligible", "Median Eligible")))
+      return(ggplot(current_data_slice(), aes(x = year_closed, y = current_data_slice()$eligible)) + stat_summary(aes(color="Mean"), fun.y="mean", geom="line", alpha=0.5, show.legend=TRUE) + stat_summary(aes(color="Median"), fun.y="median", geom="line", alpha=0.5, show.legend=TRUE) + limitToMaxEligible() + scale_color_manual(values = c("Mean" = "black", "Median" = "purple"), labels = c("Mean Eligible", "Median Eligible")))
     } else if (input$customAxes == "Avg. Votes per Election") {
       return(ggplot(current_data_slice(), aes(x = year_closed, y = totalVotes())) + statLine() + limitToMaxEligible())
     } else if (input$customAxes == "Avg. Votes For Union") {
@@ -67,7 +68,7 @@ totalVotes <- function(){
     } else if (input$customAxes == "Election Type") {
       return(ggplot(data.frame(current_data_slice()$election_type), aes(x=current_data_slice()$election_type, fill = current_data_slice()$election_type)) + geom_bar() + scale_fill_viridis_d() + theme(legend.position="none"))
     } else if (input$customAxes == "Votes For/Against Union") {
-      return(ggplot(current_data_slice()) + geom_histogram(aes(x = current_data_slice()$votes_for, color = "For"), alpha = 0.5, bins = 30, show_guide=TRUE) + geom_histogram(aes(x = current_data_slice()$votes_against, color ="Against"), alpha = 0.5, bins = 30, show_guide=TRUE) + scale_colour_manual("", breaks= c("For", "Against"), values = c("For"="purple", "Against"="black")) + xlab(" "))
+      return(ggplot(current_data_slice()) + geom_histogram(aes(x = current_data_slice()$votes_for, color = "For"), alpha = 0.5, bins = 30, show.legend=TRUE) + geom_histogram(aes(x = current_data_slice()$votes_against, color ="Against"), alpha = 0.5, bins = 30, show.legend=TRUE) + scale_colour_manual("", breaks= c("For", "Against"), values = c("For"="purple", "Against"="black")) + xlab(" "))
     } else if (input$customAxes == "Total Votes") {
       xAxis <- totalVotes()
     } else if (input$customAxes == "Union Vote Share") {
