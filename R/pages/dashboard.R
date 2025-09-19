@@ -4,7 +4,6 @@ dashboard <- function() {
         align = "left",
         div(
             width = "100vw",
-            height = "85vh",
             left = "0px",
             right = "10vw",
             card_header(
@@ -171,28 +170,56 @@ dashboard <- function() {
                         placement = "right"
                     )
                 ),
-                height = "85vh",
                 layout_columns(
-                    card(leafletOutput("map")),
+                    card(leafletOutput("map"), height = "75vh"),
                     card(
                         card_header("Custom Visualization"),
-                        card(),
-                        selectInput(
-                            "select",
-                            "Graph type:",
-                            list(
-                                "Pi Chart" = "PI",
-                                "Line Graph" = "LINE",
-                                "Histogram" = "HIST"
+                        layout_columns(
+                            width = 1/2,
+                            selectInput(
+                                "customGraphType",
+                                "Graph type:",
+                                list(
+                                    "Line Graph" = "LINE",
+                                    "Histogram" = "HIST"
+                                )
+                            ),
+                            selectInput(
+                                "customAxes",
+                                "Select Axes:",
+                                c(
+                                    "Elections",
+                                    "Eligible Employees",
+                                    "Total Votes",
+                                    "Eligible per Election",
+                                    "Avg. Votes per Election",
+                                    "Avg. Votes For Union",
+                                    "Avg. Votes Against Union",
+                                    "Avg. Union Vote Share",
+                                    "Avg. Participation Rate"
+                                )
                             )
-                        )
+                        ) %>% 
+                        tagAppendAttributes(class = "custom-visualization-margin"),
+                        card(plotOutput("customVisualization"))
                     )
                 ),
-                layout_columns(
-                    card(card_header("Preset Graph 1"), fill = TRUE),
-                    card(card_header("Preset Graph 2"), fill = TRUE),
-                    card(card_header("Preset Graph 3"), fill = TRUE)
-                ),
+                accordion(
+                    accordion_panel(
+                        title="Presets",
+                        layout_column_wrap(
+                            width = 1/2,
+                            card(card_header("Industries"), height="30vh", fill = TRUE, plotOutput("industryPreset")),
+                            card(card_header("Unit Types"), height="30vh", fill = TRUE, plotOutput("unitTypePreset")),
+                            card(card_header("Regions"), height="30vh", fill = TRUE, plotOutput("regionalPreset")),
+                            card(card_header("Election Types"), height="30vh", fill = TRUE, plotOutput("elecTypePreset")),
+                            card(card_header("Heatmap"), height="30vh", fill = TRUE, plotOutput("heatmapPreset")),
+                            card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("linePreset"))
+                        )
+                    )
+                ) %>% tagAppendAttributes(
+                    id = "presets-accordion"
+                    ),
                 card(
                     card_header("Responsible Data Use"),
                     "As the saying goes, “figures never lie, but liars sure figure.”  Please use these 

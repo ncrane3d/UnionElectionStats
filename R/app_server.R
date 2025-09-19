@@ -18,13 +18,26 @@
 #' @import leafgl
 #' @import viridis
 #' @import rmapshaper
+#' @import tidyverse
+#' @import ggplot2
+#' @import dplyr
+#' @import gcookbook
+#' @import ggiraph
+#' @import sf
+#' @import dplyr
+#' @import htmltools
+#' @import htmlwidgets
+#' @import plotly
 #' @noRd
+
 #'
 
 app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
   source('./R/map/map.R', local = TRUE)
+  source('./R/custom_graphs.R', local = TRUE)
+  source('./R/preset_graphs.R', local = TRUE)
 
   pool = dbConnect(duckdb())
   DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
@@ -81,7 +94,6 @@ app_server <- function(input, output, session) {
     )
     stateCounties <- dbGetQuery(pool, query)
   })
-
   observeEvent(input$state, {
     if (input$state == 0) {
       countyDataframeToText <- c(
@@ -127,6 +139,72 @@ app_server <- function(input, output, session) {
         value = c(0, 100)
       )
     }
+  })
+
+  output$customVisualization <- renderPlot ({
+    if (input$customGraphType == "LINE") {
+      req(customLineGraphVariableHandler())
+      customLineGraphVariableHandler() + labs(x = "Year Election Closed", y = input$customAxes) + plotTheme()
+    } else if (input$customGraphType == "HIST") {
+      req(customHistogramVariableHandler())
+      customHistogramVariableHandler() + labs(x = input$customAxes, y = "Frequency") + plotTheme()
+    }
+  })
+
+output$unitTypePreset <- renderPlot ({
+  getUnitTypeGraph()
+})
+
+output$elecTypePreset <- renderPlot({
+  getElectionTypeGraph()
+})
+
+output$regionalPreset <- renderPlot({
+  getRegionalBreakdown()
+})
+
+output$industryPreset <- renderPlot({
+  getIndustryBreakdown()
+})
+
+output$elecTypePreset <- renderPlot({
+  getElectionTypeGraph()
+})
+
+output$linePreset <- renderPlot({
+  getLineGraph()
+})
+
+output$heatmapPreset <- renderPlot({
+  getHeatmap()
+})
+
+observeEvent(input$customGraphType, {
+    if (input$customGraphType == "LINE") {
+      lineGraphChoices <- c(
+        "Elections",
+        "Eligible Employees",
+        "Total Votes",
+        "Eligible per Election",
+        "Avg. Votes per Election",
+        "Avg. Votes For Union",
+        "Avg. Votes Against Union",
+        "Avg. Union Vote Share",
+        "Avg. Participation Rate"
+      )
+      axisLabel <- "Select Y Axis"
+    } else if (input$customGraphType == "HIST") {
+      lineGraphChoices <- c(
+        "Petition Type",
+        "Election Type",
+        "Votes For/Against Union", 
+        "Total Votes",
+        "Union Vote Share",
+        "Participation Rate"
+      )
+      axisLabel <- "Select X Axis"
+    }
+    updateSelectInput(inputId = "customAxes", label = axisLabel, choices = lineGraphChoices)
   })
 
   observe({
