@@ -1,61 +1,40 @@
+# stateBoundariesInitial <- sf::read_sf("./inst/app/www/states.json")
+# stateBoundaries <- ms_simplify(stateBoundariesInitial) 
+# countyBoundariesInitial <- sf::read_sf("./inst/app/www/counties.json")
+# countyBoundaries <- ms_simplify(countyBoundariesInitial)
+
 stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
 countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
 
-getstate_count <- function(pool, current_query) {
-    sql <- 'SELECT SUBSTRING(cast (FIPS as varchar),1,LENGTH(cast (FIPS as varchar)) - 3), COUNT(*) AS state_count
-FROM (?userquery)
-GROUP BY SUBSTRING(cast (FIPS as varchar),1,LENGTH(cast (FIPS as varchar)) - 3);'
-    query <- sqlInterpolate(
-        pool,
-        sql,
-        userquery = current_query()
-    )
-    return(dbGetQuery(pool, query))
-}
-getcounty_count <- function(pool, current_query) {
-    sql <- 'SELECT cast (FIPS as varchar), COUNT(*) AS county_count
-FROM (?userquery)
-GROUP BY cast (FIPS as varchar);'
-    query <- sqlInterpolate(
-        pool,
-        sql,
-        userquery = current_query()
-    )
-    return(dbGetQuery(pool, query))
-}
-
-getStateBoundaries <- function(pool, state_countdf) {
-    stateBoundaries <- full_join(
-        stateBoundaries,
-        state_countdf(),
-        by = c("state" = "substring")
-    )
-    return(stateBoundaries)
-}
-
-getCountyBoundaries <- function(pool, state_countdf, current_query) {
-    county_countdf <- getcounty_count(pool, current_query)
-    countyBoundaries <- full_join(
+testfunc <- function(current_data_slice) {
+        stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
+        countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
+        currentdata <- current_data_slice()
+        state_fips <- with(currentdata, substr(FIPS, 1, nchar(FIPS) - 3))
+        state_freq <- data.frame(table(state_fips)) %>% rename(state_count = Freq)
+        county_freq <- data.frame(table(currentdata$FIPS)) %>% rename( FIPS = Var1, county_count = Freq)
+        countyBoundaries <- full_join(
         countyBoundaries,
-        county_countdf,
-        by = c("FIPS" = "fips")
-    )
-    countyBoundaries <- full_join(
-        countyBoundaries,
-        state_countdf(),
-        by = c("STATE" = "substring")
-    )
-    countyBoundaries$normalized_vote <- with(
+        county_freq,
+        by = c("FIPS" = "FIPS")
+        )
+        countyBoundaries <- full_join(
+            countyBoundaries,
+            state_freq,
+            by = c("STATE" = "state_fips")
+        )
+        stateBoundaries <- full_join(
+            stateBoundaries,
+            state_freq,
+            by = c("state" = "state_fips")
+        )
+        countyBoundaries$normalized_vote <- with(
         countyBoundaries,
         (county_count / state_count)
-    )
-    return(countyBoundaries)
-}
+        )
+        return(list(stateBoundaries, countyBoundaries))
+    }
 
-getBoundaries <- function(pool, current_query) {
-    state_countdf <- reactive({getstate_count(pool, current_query)})
-    return(list(
-        stateBoundaries <- reactive({getStateBoundaries(pool, state_countdf)}),
-        countyBoundaries <- reactive({getCountyBoundaries(pool, state_countdf, current_query)})
-    ))
+getBoundaries <- function(pool, current_query, current_data_slice) {
+    return(reactive({testfunc(current_data_slice)}))
 }
