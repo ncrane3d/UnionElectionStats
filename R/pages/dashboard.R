@@ -204,22 +204,18 @@ dashboard <- function() {
                         card(plotOutput("customVisualization"))
                     )
                 ),
-                accordion(
-                    accordion_panel(
-                        title="Presets",
-                        layout_column_wrap(
-                            width = 1/2,
-                            card(card_header("Industries"), height="30vh", fill = TRUE, plotOutput("industryPreset")),
-                            card(card_header("Unit Types"), height="30vh", fill = TRUE, plotOutput("unitTypePreset")),
-                            card(card_header("Regions"), height="30vh", fill = TRUE, plotOutput("regionalPreset")),
-                            card(card_header("Election Types"), height="30vh", fill = TRUE, plotOutput("elecTypePreset")),
-                            card(card_header("Heatmap"), height="30vh", fill = TRUE, plotOutput("heatmapPreset")),
-                            card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("linePreset"))
-                        )
+                card(
+                    card_header("Presets"),
+                    layout_column_wrap(
+                        width = 1/2,
+                        card(card_header("Industries"), height="30vh", fill = TRUE, plotOutput("industryPreset")),
+                        card(card_header("Unit Types"), height="30vh", fill = TRUE, plotOutput("unitTypePreset")),
+                        card(card_header("Regions"), height="30vh", fill = TRUE, plotOutput("regionalPreset")),
+                        card(card_header("Election Types"), height="30vh", fill = TRUE, plotOutput("elecTypePreset")),
+                        card(card_header("Heatmap"), height="30vh", fill = TRUE, plotOutput("heatmapPreset")),
+                        card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("linePreset"))
                     )
-                ) %>% tagAppendAttributes(
-                    id = "presets-accordion"
-                    ),
+                ),
                 card(
                     card_header("Responsible Data Use"),
                     "As the saying goes, “figures never lie, but liars sure figure.”  Please use these 

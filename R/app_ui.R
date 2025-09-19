@@ -55,7 +55,7 @@ app_ui <- function(request) {
         "div h6 {margin-bottom: 0px; margin-top: 8px; }",
         # Below is styling for all accordions, as seen on featured analysis page
         ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
-        "#presets-accordion {width: 100% !important; }",
+        #"#presets-accordion {width: 100% !important; }",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;}",
         ".accordion-title {font-weight: bold;}",
         ".accordion-item { margin-bottom: 18px; margin-top: 2px; border-top-width: 1px !important; }",

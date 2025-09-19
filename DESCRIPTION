@@ -19,16 +19,37 @@ License: What license is it under?
 Imports: 
     attempt,
     config,
+    DBI,
     DT,
+    RPostgres,
+    bslib,
+    dplyr,
+    duckdb,
+    gcookbook,
+    ggiraph,
+    ggplot2,
     glue,
     golem,
     htmltools,
-    shiny
+    htmlwidgets,
+    leafgl,
+    leaflet,
+    lubridate,
+    magrittr,
+    plotly,
+    pool,
+    rmapshaper,
+    sendmailR,
+    sf,
+    shinipsum,
+    shiny,
+    shinyFeedback,
+    tidyverse,
+    viridis
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Suggests: 
-    spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Language: en-US
