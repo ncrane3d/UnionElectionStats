@@ -85,10 +85,9 @@ observe({
 
 #Election Points
 observe({
+    #Initial overflowing fix attempt
+    #req(input$map_zoom >= 7)
     leafletProxy("map") %>%
-    #Possible layer overflow fixes
-    #groupOptions("counties", zoomLevels = 5:20) %>%
-    #req(input$map_zoom >= 5)
     removeGlPoints("electionPopup") %>%
     addGlPoints(
         data = getCircleMarkerData(),

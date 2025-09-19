@@ -36,6 +36,8 @@ app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
   source('./R/map/map.R', local = TRUE)
+  source('./R/custom_graphs.R', local = TRUE)
+  source('./R/preset_graphs.R', local = TRUE)
 
   pool = dbConnect(duckdb())
   DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
@@ -77,8 +79,6 @@ app_server <- function(input, output, session) {
         lat2 = 1,
         lng2 = -54.892994
     )
-  source('./R/custom_graphs.R', local = TRUE)
-  source('./R/preset_graphs.R', local = TRUE)
   })
 
   current_county_selection <- reactive({
@@ -206,9 +206,6 @@ observeEvent(input$customGraphType, {
     }
     updateSelectInput(inputId = "customAxes", label = axisLabel, choices = lineGraphChoices)
   })
-
-  #About Me Images TODO: Replace with actual images
-  output$pfp_left <- renderImage(
 
   observe({
     req("./resources/csv/featured-analysis.csv")

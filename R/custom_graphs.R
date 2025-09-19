@@ -23,7 +23,8 @@ totalVotes <- function(){
     return(stat_summary(fun.y = func, geom="line", color = color, alpha = alpha))
   }
   plotMargin <- function() {
-    return(theme(plot.background = element_rect(fill="#FCF9F6", color = "#FCF9F6"), plot.margin = unit(c(0.5,0,0,0), "cm")))
+    #return(theme(plot.background = element_rect(fill="#FCF9F6", color = "#FCF9F6"), plot.margin = unit(c(0.5,0,0,0), "cm")))
+    return(theme(plot.background = element_rect(fill = "#FCF9F6", color = "#FCF9F6")))
   }
   plotTheme <- function() {
     #return(theme_ipsum_rc() + plotMargin())

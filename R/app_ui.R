@@ -54,13 +54,13 @@ app_ui <- function(request) {
         ".modal-title { margin: auto; font-size: 32px !important; }",
         "div h6 {margin-bottom: 0px; margin-top: 8px; }",
         # Below is styling for all accordions, as seen on featured analysis page
-        ".accordion { width: 100%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
+        ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
+        "#presets-accordion {width: 100% !important; }",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;}",
         ".accordion-title {font-weight: bold;}",
         ".accordion-item { margin-bottom: 18px; margin-top: 2px; border-top-width: 1px !important; }",
         ".accordion-body p { margin-bottom: 0px; text-align:left; padding: 16px; font-weight: normal;}",
         ".accordion-button:hover {background-color:rgb(189, 185, 188); }",
-        "#featured-analyses {padding-right: 10%; padding-left: 10%;}",
         ".accordion-figure { max-width: 80%; height: auto !important; }",
         #Below is styling for text accordions, as seen on the download page
         "#accordion-download { margin: 0px; }",

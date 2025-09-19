@@ -9,32 +9,32 @@ southeast = c("KY", "AR", "IN", "WV", "TN", "VA", "DC", "NC", "SC", "GA", "AL", 
 
 getIndustryData <- function(){
     industry_data = current_data_slice()
-    industry_data$sic[current_data_slice()$sic < 10] <- "Agriculture, Forestry, & Fishing"
-    industry_data$sic[current_data_slice()$sic >= 10 & current_data_slice()$sic < 15] <- "Mining"
-    industry_data$sic[current_data_slice()$sic >= 15 & current_data_slice()$sic < 20] <- "Construction" 
-    industry_data$sic[current_data_slice()$sic >= 20 & current_data_slice()$sic < 40] <- "Manufacturing"
-    industry_data$sic[current_data_slice()$sic >= 40 & current_data_slice()$sic < 50] <- "Communications,\nElectric, Gas,\nand Sanitary\nServices"
-    industry_data$sic[current_data_slice()$sic >= 50 & current_data_slice()$sic < 52] <- "Wholesale Trade"
-    industry_data$sic[current_data_slice()$sic >= 52 & current_data_slice()$sic < 60] <- "Retail Trade"
-    industry_data$sic[current_data_slice()$sic >= 60 & current_data_slice()$sic < 68] <- "Finance, Insurance,\nand Real Estate"
-    industry_data$sic[current_data_slice()$sic >= 68 & current_data_slice()$sic < 90] <- "Services"
-    industry_data$sic[current_data_slice()$sic >= 90 & current_data_slice()$sic < 100] <- "Public\nAdministration"
-    industry_data$ac[current_data_slice()$sic < 10] <- "AFF"
-    industry_data$ac[current_data_slice()$sic >= 10 & current_data_slice()$sic < 15] <- "Mining"
-    industry_data$ac[current_data_slice()$sic >= 15 & current_data_slice()$sic < 20] <- "Construction" 
-    industry_data$ac[current_data_slice()$sic >= 20 & current_data_slice()$sic < 40] <- "Manufacturing"
-    industry_data$ac[current_data_slice()$sic >= 40 & current_data_slice()$sic < 50] <- "CEGSS"
-    industry_data$ac[current_data_slice()$sic >= 50 & current_data_slice()$sic < 52] <- "Wholesale Trade"
-    industry_data$ac[current_data_slice()$sic >= 52 & current_data_slice()$sic < 60] <- "Retail Trade"
-    industry_data$ac[current_data_slice()$sic >= 60 & current_data_slice()$sic < 68] <- "FIRE"
-    industry_data$ac[current_data_slice()$sic >= 68 & current_data_slice()$sic < 90] <- "Services"
-    industry_data$ac[current_data_slice()$sic >= 90 & current_data_slice()$sic < 100] <- "PA"
+    industry_data$SIC[current_data_slice()$SIC < 10] <- "Agriculture, Forestry, & Fishing"
+    industry_data$SIC[current_data_slice()$SIC >= 10 & current_data_slice()$SIC < 15] <- "Mining"
+    industry_data$SIC[current_data_slice()$SIC >= 15 & current_data_slice()$SIC < 20] <- "Construction" 
+    industry_data$SIC[current_data_slice()$SIC >= 20 & current_data_slice()$SIC < 40] <- "Manufacturing"
+    industry_data$SIC[current_data_slice()$SIC >= 40 & current_data_slice()$SIC < 50] <- "Communications,\nElectric, Gas,\nand Sanitary\nServices"
+    industry_data$SIC[current_data_slice()$SIC >= 50 & current_data_slice()$SIC < 52] <- "Wholesale Trade"
+    industry_data$SIC[current_data_slice()$SIC >= 52 & current_data_slice()$SIC < 60] <- "Retail Trade"
+    industry_data$SIC[current_data_slice()$SIC >= 60 & current_data_slice()$SIC < 68] <- "Finance, Insurance,\nand Real Estate"
+    industry_data$SIC[current_data_slice()$SIC >= 68 & current_data_slice()$SIC < 90] <- "Services"
+    industry_data$SIC[current_data_slice()$SIC >= 90 & current_data_slice()$SIC < 100] <- "Public\nAdministration"
+    industry_data$ac[current_data_slice()$SIC < 10] <- "AFF"
+    industry_data$ac[current_data_slice()$SIC >= 10 & current_data_slice()$SIC < 15] <- "Mining"
+    industry_data$ac[current_data_slice()$SIC >= 15 & current_data_slice()$SIC < 20] <- "Construction" 
+    industry_data$ac[current_data_slice()$SIC >= 20 & current_data_slice()$SIC < 40] <- "Manufacturing"
+    industry_data$ac[current_data_slice()$SIC >= 40 & current_data_slice()$SIC < 50] <- "CEGSS"
+    industry_data$ac[current_data_slice()$SIC >= 50 & current_data_slice()$SIC < 52] <- "Wholesale Trade"
+    industry_data$ac[current_data_slice()$SIC >= 52 & current_data_slice()$SIC < 60] <- "Retail Trade"
+    industry_data$ac[current_data_slice()$SIC >= 60 & current_data_slice()$SIC < 68] <- "FIRE"
+    industry_data$ac[current_data_slice()$SIC >= 68 & current_data_slice()$SIC < 90] <- "Services"
+    industry_data$ac[current_data_slice()$SIC >= 90 & current_data_slice()$SIC < 100] <- "PA"
     return(industry_data)
 }
 
 getIndustryBreakdown <- function(){
     industry_data = getIndustryData()
-    #gg <- ggplot(data.frame(industry_data$ac), aes(x=industry_data$ac, fill = industry_data$ac)) + geom_bar_interactive(aes(tooltip= industry_data$sic, data_id=industry_data$sic), hover_nearest = TRUE) + scale_fill_viridis_d_interactive( guide= "none") + labs(x = "Industry", y = "Frequency") + plotMargin()
+    #gg <- ggplot(data.frame(industry_data$ac), aes(x=industry_data$ac, fill = industry_data$ac)) + geom_bar_interactive(aes(tooltip= industry_data$SIC, data_id=industry_data$SIC), hover_nearest = TRUE) + scale_fill_viridis_d_interactive( guide= "none") + labs(x = "Industry", y = "Frequency") + plotMargin()
     #return(girafe_options(girafe(ggobj = gg), opts_sizing(rescale = TRUE, width = 1), opts_toolbar(position="top", saveaspng = FALSE, hidden=c("selection", "zoom", "misc"))))
     return (ggplot(data.frame(industry_data$ac), aes(x=industry_data$ac, fill = industry_data$ac)) + geom_bar() + scale_fill_viridis_d() + labs(x = "Industry", y = "Frequency") + plotTheme() + plotMargin())
 }
@@ -75,11 +75,31 @@ getElectionTypeGraph <- function(){
 }
 
 getHeatmap <- function(){
-    heatmap_data = current_data_slice()
-    heatmap_data$filing_to_elec <- with(heatmap_data, as.numeric(difftime(election_date, filed_date, units="days"))/30)
-    heatmap_data$elec_to_close <- with(heatmap_data, as.numeric(difftime(closed_date, election_date, units="days"))/30)
-    #print(head(heatmap_data))
-    return(ggplot(heatmap_data, aes(x=filing_to_elec, y = elec_to_close)) + geom_bin2d() + ylim(c(0, max(heatmap_data$filing_to_elec))) + xlim(c(0, max(heatmap_data$elec_to_close))) + labs(x = "Filing to Election (Months)", y = "Election to Close (Months)") + scale_fill_viridis_b(direction = -1) + plotTheme())
+  heatmap_data <- current_data_slice()
+
+  # Replace empty strings with NA and parse dates
+  for(col in c("filed_date", "election_date", "closed_date")) {
+    heatmap_data[[col]][heatmap_data[[col]] == ""] <- NA
+    heatmap_data[[col]] <- suppressWarnings(ymd(heatmap_data[[col]]))
+  }
+
+  heatmap_data$filing_to_elec <- with(heatmap_data,
+    ifelse(!is.na(filed_date) & !is.na(election_date),
+           as.numeric(difftime(election_date, filed_date, units = "days")) / 30, NA_real_))
+  heatmap_data$elec_to_close <- with(heatmap_data,
+    ifelse(!is.na(election_date) & !is.na(closed_date),
+           as.numeric(difftime(closed_date, election_date, units = "days")) / 30, NA_real_))
+
+  return(
+  ggplot(na.omit(heatmap_data[, c("filing_to_elec", "elec_to_close")]),
+         aes(x = filing_to_elec, y = elec_to_close)) +
+    geom_bin2d() +
+    xlim(0, max(heatmap_data$filing_to_elec, na.rm = TRUE)) +
+    ylim(0, max(heatmap_data$elec_to_close, na.rm = TRUE)) +
+    labs(x = "Filing to Election (Months)", y = "Election to Close (Months)") +
+    scale_fill_viridis_b(direction = -1) +
+    plotTheme()
+  )
 }
 
 getLineGraph <- function(){
