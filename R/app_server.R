@@ -34,17 +34,19 @@
 
 app_server <- function(input, output, session) {
   # Your application server logic
-  source('./R/sql.R', local = TRUE)
+  #source('./R/sql.R', local = TRUE)
   source('./R/map/map.R', local = TRUE)
   source('./R/custom_graphs.R', local = TRUE)
   source('./R/preset_graphs.R', local = TRUE)
 
+  currentDataSelection <- sqlModule("sql", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
+
   pool = dbConnect(duckdb())
   DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
 
-  current_query <- reactive({getCurrentData()})
+  #current_query <- reactive({currentDataSelection})
   current_data_slice <- reactive({
-    dbGetQuery(pool, current_query()) #%>%
+    dbGetQuery(pool, currentDataSelection()) #%>%
     # mutate(
     #   # Create grouping key for nearby points
     #   lon_group = round(longitude, 5),
