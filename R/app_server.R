@@ -36,7 +36,7 @@ app_server <- function(input, output, session) {
   # Your application server logic
   #source('./R/sql.R', local = TRUE)
   #source('./R/map/map.R', local = TRUE)
-  source('./R/custom_graphs.R', local = TRUE)
+  #source('./R/custom_graphs.R', local = TRUE)
   source('./R/preset_graphs.R', local = TRUE)
 
   currentDataSelection <- sqlModule("sql", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
@@ -63,27 +63,8 @@ app_server <- function(input, output, session) {
     # select(-n, -lon_group, -lat_group)
   })
 
-  output$map <- renderLeaflet({
-    leaflet(options = leafletOptions(minZoom = 3)) |>
-    addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
-    addMapPane(name="shapes", zIndex=410) %>%
-    addMapPane(name="labels", zIndex=415) %>%
-    addMapPane(name="markers", zIndex=420) %>%
-    addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
-    #Zoom based conditional rendering for layers
-    groupOptions("points", zoomLevels = 7:20) |>
-    groupOptions("counties", zoomLevels = 5:20) |>
-    groupOptions("states", zoomLevels = 0:4) |>
-    #Map panning bounds
-    setMaxBounds(
-        lat1 = 72.89817,
-        lng1 = -179.912096,
-        lat2 = 1,
-        lng2 = -54.892994
-    )
-  })
-
   mapModule("mapBuilder", current_data_slice)
+  customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes))
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
@@ -144,44 +125,6 @@ app_server <- function(input, output, session) {
       )
     }
   })
-
-  output$customVisualization <- renderPlot ({
-    if (input$customGraphType == "LINE") {
-      req(customLineGraphVariableHandler())
-      customLineGraphVariableHandler() + labs(x = "Year Election Closed", y = input$customAxes) + plotTheme()
-    } else if (input$customGraphType == "HIST") {
-      req(customHistogramVariableHandler())
-      customHistogramVariableHandler() + labs(x = input$customAxes, y = "Frequency") + plotTheme()
-    }
-  })
-
-output$unitTypePreset <- renderPlot ({
-  getUnitTypeGraph()
-})
-
-output$elecTypePreset <- renderPlot({
-  getElectionTypeGraph()
-})
-
-output$regionalPreset <- renderPlot({
-  getRegionalBreakdown()
-})
-
-output$industryPreset <- renderPlot({
-  getIndustryBreakdown()
-})
-
-output$elecTypePreset <- renderPlot({
-  getElectionTypeGraph()
-})
-
-output$linePreset <- renderPlot({
-  getLineGraph()
-})
-
-output$heatmapPreset <- renderPlot({
-  getHeatmap()
-})
 
 observeEvent(input$customGraphType, {
     if (input$customGraphType == "LINE") {

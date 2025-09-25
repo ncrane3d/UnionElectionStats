@@ -171,7 +171,7 @@ dashboard <- function() {
                     )
                 ),
                 layout_columns(
-                    card(leafletOutput("map"), height = "75vh"),
+                    card(leafletOutput("mapBuilder-map"), height = "75vh"),
                     card(
                         card_header("Custom Visualization"),
                         layout_columns(
@@ -201,7 +201,7 @@ dashboard <- function() {
                             )
                         ) %>% 
                         tagAppendAttributes(class = "custom-visualization-margin"),
-                        card(plotOutput("customVisualization"))
+                        card(plotOutput("customGraphBuilder-customVisualization"))
                     )
                 ),
                 card(

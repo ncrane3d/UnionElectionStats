@@ -2,6 +2,26 @@ mapModule <- function(id, current_data_slice) {
   moduleServer(
     id,
     function(input, output, session) { 
+        output$map <- renderLeaflet({
+            leaflet(options = leafletOptions(minZoom = 3)) |>
+            addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
+            addMapPane(name="shapes", zIndex=410) %>%
+            addMapPane(name="labels", zIndex=415) %>%
+            addMapPane(name="markers", zIndex=420) %>%
+            addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
+            #Zoom based conditional rendering for layers
+            groupOptions("points", zoomLevels = 7:20) |>
+            groupOptions("counties", zoomLevels = 5:20) |>
+            groupOptions("states", zoomLevels = 0:4) |>
+            #Map panning bounds
+            setMaxBounds(
+                lat1 = 72.89817,
+                lng1 = -179.912096,
+                lat2 = 1,
+                lng2 = -54.892994
+            )
+        })
+
         boundaryCalculator <- function(current_data_slice) {
             stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
             countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
@@ -50,9 +70,6 @@ mapModule <- function(id, current_data_slice) {
         )
 
         #Error handling for when there are no points to render on map
-        observe({
-            print(head(current_data_slice()))
-        })
         getCircleMarkerData <- function(){
             if (nrow(current_data_slice()) > 1){
                 return(st_as_sf(current_data_slice(), coords = c("longitude", "latitude"), crs = 4326))
