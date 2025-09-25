@@ -208,12 +208,12 @@ dashboard <- function() {
                     card_header("Presets"),
                     layout_column_wrap(
                         width = 1/2,
-                        card(card_header("Industries"), height="30vh", fill = TRUE, plotOutput("industryPreset")),
-                        card(card_header("Unit Types"), height="30vh", fill = TRUE, plotOutput("unitTypePreset")),
-                        card(card_header("Regions"), height="30vh", fill = TRUE, plotOutput("regionalPreset")),
-                        card(card_header("Election Types"), height="30vh", fill = TRUE, plotOutput("elecTypePreset")),
-                        card(card_header("Heatmap"), height="30vh", fill = TRUE, plotOutput("heatmapPreset")),
-                        card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("linePreset"))
+                        card(card_header("Industries"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-industryPreset")),
+                        card(card_header("Unit Types"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-unitTypePreset")),
+                        card(card_header("Regions"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-regionalPreset")),
+                        card(card_header("Election Types"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-elecTypePreset")),
+                        card(card_header("Heatmap"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-heatmapPreset")),
+                        card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-linePreset"))
                     )
                 ),
                 card(
