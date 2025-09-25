@@ -1,4 +1,5 @@
-contact <- function() {
+contact <- function(id) {
+    ns <- NS(id)
     nav_panel(
         title = "Contact Us",
         align = "left",

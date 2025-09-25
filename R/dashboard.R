@@ -1,4 +1,5 @@
-dashboard <- function() {
+dashboard <- function(id) {
+    ns <- NS(id)
     nav_panel(
         title = "Home",
         align = "left",
