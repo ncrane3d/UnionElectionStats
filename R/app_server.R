@@ -35,7 +35,7 @@
 app_server <- function(input, output, session) {
   # Your application server logic
   #source('./R/sql.R', local = TRUE)
-  source('./R/map/map.R', local = TRUE)
+  #source('./R/map/map.R', local = TRUE)
   source('./R/custom_graphs.R', local = TRUE)
   source('./R/preset_graphs.R', local = TRUE)
 
@@ -82,6 +82,8 @@ app_server <- function(input, output, session) {
         lng2 = -54.892994
     )
   })
+
+  mapModule("mapBuilder", current_data_slice)
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
