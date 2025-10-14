@@ -28,6 +28,7 @@
 #' @import htmltools
 #' @import htmlwidgets
 #' @import plotly
+#' @import data.table
 #' @noRd
 
 #'
@@ -38,6 +39,14 @@ app_server <- function(input, output, session) {
   source('./R/map/map.R', local = TRUE)
   source('./R/custom_graphs.R', local = TRUE)
   source('./R/preset_graphs.R', local = TRUE)
+
+  observe({
+    electionData <- fread("resources/Data/Elections_Data_Cleaned_V0.csv")
+    populationData <- fread("resources/Data/Population_Data_2020.csv")
+    electionData[populationData, on = 'FIPS', Rural := i.Rural][]
+    electionDataSubset <- electionData[petition %in% input$electionType]
+    print(electionDataSubset)  
+  })
 
   pool = dbConnect(duckdb())
   DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
@@ -61,25 +70,25 @@ app_server <- function(input, output, session) {
     # select(-n, -lon_group, -lat_group)
   })
 
-  output$map <- renderLeaflet({
-    leaflet(options = leafletOptions(minZoom = 3)) |>
-    addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
-    addMapPane(name="shapes", zIndex=410) %>%
-    addMapPane(name="labels", zIndex=415) %>%
-    addMapPane(name="markers", zIndex=420) %>%
-    addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
-    #Zoom based conditional rendering for layers
-    groupOptions("points", zoomLevels = 7:20) |>
-    groupOptions("counties", zoomLevels = 5:20) |>
-    groupOptions("states", zoomLevels = 0:4) |>
-    #Map panning bounds
-    setMaxBounds(
-        lat1 = 72.89817,
-        lng1 = -179.912096,
-        lat2 = 1,
-        lng2 = -54.892994
-    )
-  })
+  # output$map <- renderLeaflet({
+  #   leaflet(options = leafletOptions(minZoom = 3)) |>
+  #   addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
+  #   addMapPane(name="shapes", zIndex=410) %>%
+  #   addMapPane(name="labels", zIndex=415) %>%
+  #   addMapPane(name="markers", zIndex=420) %>%
+  #   addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
+  #   #Zoom based conditional rendering for layers
+  #   groupOptions("points", zoomLevels = 7:20) |>
+  #   groupOptions("counties", zoomLevels = 5:20) |>
+  #   groupOptions("states", zoomLevels = 0:4) |>
+  #   #Map panning bounds
+  #   setMaxBounds(
+  #       lat1 = 72.89817,
+  #       lng1 = -179.912096,
+  #       lat2 = 1,
+  #       lng2 = -54.892994
+  #   )
+  # })
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
