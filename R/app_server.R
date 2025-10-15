@@ -36,16 +36,13 @@
 app_server <- function(input, output, session) {
   # Your application server logic
   source('./R/sql.R', local = TRUE)
-  source('./R/map/map.R', local = TRUE)
+  #source('./R/map/map.R', local = TRUE)
   source('./R/custom_graphs.R', local = TRUE)
   source('./R/preset_graphs.R', local = TRUE)
 
+  currentDataSelection <- filteringModule("filter", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
   observe({
-    electionData <- fread("resources/Data/Elections_Data_Cleaned_V0.csv")
-    populationData <- fread("resources/Data/Population_Data_2020.csv")
-    electionData[populationData, on = 'FIPS', Rural := i.Rural][]
-    electionDataSubset <- electionData[petition %in% input$electionType]
-    print(electionDataSubset)  
+    print(head(currentDataSelection()))
   })
 
   pool = dbConnect(duckdb())
