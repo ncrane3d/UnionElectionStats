@@ -35,22 +35,15 @@
 
 app_server <- function(input, output, session) {
   # Your application server logic
-  source('./R/sql.R', local = TRUE)
-  #source('./R/map/map.R', local = TRUE)
-  source('./R/custom_graphs.R', local = TRUE)
-  source('./R/preset_graphs.R', local = TRUE)
 
-  currentDataSelection <- filteringModule("filter", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
-  observe({
-    print(head(currentDataSelection()))
-  })
+  currentDataSelection <- sqlModule("sql", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
 
   pool = dbConnect(duckdb())
   DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
 
-  current_query <- reactive({getCurrentData()})
+  #current_query <- reactive({currentDataSelection})
   current_data_slice <- reactive({
-    dbGetQuery(pool, current_query()) #%>%
+    dbGetQuery(pool, currentDataSelection()) #%>%
     # mutate(
     #   # Create grouping key for nearby points
     #   lon_group = round(longitude, 5),
@@ -67,25 +60,9 @@ app_server <- function(input, output, session) {
     # select(-n, -lon_group, -lat_group)
   })
 
-  # output$map <- renderLeaflet({
-  #   leaflet(options = leafletOptions(minZoom = 3)) |>
-  #   addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
-  #   addMapPane(name="shapes", zIndex=410) %>%
-  #   addMapPane(name="labels", zIndex=415) %>%
-  #   addMapPane(name="markers", zIndex=420) %>%
-  #   addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
-  #   #Zoom based conditional rendering for layers
-  #   groupOptions("points", zoomLevels = 7:20) |>
-  #   groupOptions("counties", zoomLevels = 5:20) |>
-  #   groupOptions("states", zoomLevels = 0:4) |>
-  #   #Map panning bounds
-  #   setMaxBounds(
-  #       lat1 = 72.89817,
-  #       lng1 = -179.912096,
-  #       lat2 = 1,
-  #       lng2 = -54.892994
-  #   )
-  # })
+  mapModule("mapBuilder", current_data_slice)
+  customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
+  presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
@@ -100,6 +77,7 @@ app_server <- function(input, output, session) {
     )
     stateCounties <- dbGetQuery(pool, query)
   })
+  
   observeEvent(input$state, {
     if (input$state == 0) {
       countyDataframeToText <- c(
@@ -147,44 +125,6 @@ app_server <- function(input, output, session) {
     }
   })
 
-  output$customVisualization <- renderPlot ({
-    if (input$customGraphType == "LINE") {
-      req(customLineGraphVariableHandler())
-      customLineGraphVariableHandler() + labs(x = "Year Election Closed", y = input$customAxes) + plotTheme()
-    } else if (input$customGraphType == "HIST") {
-      req(customHistogramVariableHandler())
-      customHistogramVariableHandler() + labs(x = input$customAxes, y = "Frequency") + plotTheme()
-    }
-  })
-
-output$unitTypePreset <- renderPlot ({
-  getUnitTypeGraph()
-})
-
-output$elecTypePreset <- renderPlot({
-  getElectionTypeGraph()
-})
-
-output$regionalPreset <- renderPlot({
-  getRegionalBreakdown()
-})
-
-output$industryPreset <- renderPlot({
-  getIndustryBreakdown()
-})
-
-output$elecTypePreset <- renderPlot({
-  getElectionTypeGraph()
-})
-
-output$linePreset <- renderPlot({
-  getLineGraph()
-})
-
-output$heatmapPreset <- renderPlot({
-  getHeatmap()
-})
-
 observeEvent(input$customGraphType, {
     if (input$customGraphType == "LINE") {
       lineGraphChoices <- c(
@@ -212,6 +152,48 @@ observeEvent(input$customGraphType, {
     }
     updateSelectInput(inputId = "customAxes", label = axisLabel, choices = lineGraphChoices)
   })
+
+  plotMargin <- function() {
+    #return(theme(plot.background = element_rect(fill="#FCF9F6", color = "#FCF9F6"), plot.margin = unit(c(0.5,0,0,0), "cm")))
+    return(theme(plot.background = element_rect(fill = "#FCF9F6", color = "#FCF9F6")))
+  }
+  
+  plotTheme <- function() {
+    #return(theme_ipsum_rc() + plotMargin())
+    return(theme_minimal(base_family = "roboto_condensed") + plotMargin())
+  }
+
+  limitToMaxEligible <- function(){
+    return(ylim(c(0, max(current_data_slice()$eligible))))
+  }
+
+  totalVotes <- function(){
+    return(with(current_data_slice(), votes_for + votes_against))
+  }
+
+  unionVoteShare <- function() {
+    return(with(current_data_slice(), (100 * votes_for/(votes_for + votes_against))))
+  }
+
+  participationRate <- function() {
+    return(with(current_data_slice(), (100 * (votes_for + votes_against)/eligible)))
+  }
+
+  statLine <- function(func, color, alpha, show_guide) {
+    if (missing(func)){
+      func = "mean"
+    }
+    if (missing(color)){
+      color = "black"
+    }
+    if (missing(alpha)) {
+      alpha = 1
+    }
+    if (missing(show_guide)){
+      show.legend = FALSE
+    }
+    return(stat_summary(fun.y = func, geom="line", color = color, alpha = alpha))
+  }
 
   observe({
     req("./resources/csv/featured-analysis.csv")

@@ -1,4 +1,5 @@
-about <- function() {
+about <- function(id) {
+    ns <- NS(id)
     loremIpsum <- "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat."
     nav_panel(
         title = "About",
