@@ -72,7 +72,9 @@ mapModule <- function(id, current_data_slice) {
         #Error handling for when there are no points to render on map
         getCircleMarkerData <- function(){
             if (nrow(current_data_slice()) > 1){
-                return(st_as_sf(current_data_slice(), coords = c("longitude", "latitude"), crs = 4326))
+                #unsure if this has performance implications
+                coord_filtered_slice <- current_data_slice()[!is.na(current_data_slice()$longitude) & !is.na(current_data_slice()$latitude), ]
+                return(st_as_sf(coord_filtered_slice, coords = c("longitude", "latitude"), crs = 4326))
                 #return(st_as_sf(current_data_slice(), coords = c("jittered_lon", "jittered_lat"), crs = 4326))
             } else {
                 #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user

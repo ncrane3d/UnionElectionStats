@@ -36,30 +36,10 @@
 app_server <- function(input, output, session) {
   # Your application server logic
 
-  currentDataSelection <- sqlModule("sql", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
-
-  pool = dbConnect(duckdb())
-  DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
-
-  #current_query <- reactive({currentDataSelection})
-  current_data_slice <- reactive({
-    dbGetQuery(pool, currentDataSelection()) #%>%
-    # mutate(
-    #   # Create grouping key for nearby points
-    #   lon_group = round(longitude, 5),
-    #   lat_group = round(latitude, 5)
-    # ) %>%
-    # group_by(lon_group, lat_group) %>%
-    # mutate(
-    #   n = n(),
-    #   jittered = n > 1,
-    #   jittered_lon = if (n() > 1) jitter(longitude, amount = 1e-5) else longitude,
-    #   jittered_lat = if (n() > 1) jitter(latitude, amount = 1e-5) else latitude
-    # ) %>%
-    # ungroup() %>%
-    # select(-n, -lon_group, -lat_group)
-  })
-
+  current_data_slice <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
+  # observe({
+  #   print(nrow(current_data_slice()))
+  # })
   mapModule("mapBuilder", current_data_slice)
   customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
   presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
