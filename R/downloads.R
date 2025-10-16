@@ -1,4 +1,5 @@
-downloads <- function() {
+downloads <- function(id) {
+    ns <- NS(id)
     height <- "87vh"
     nav_panel(
         title = "Downloads",

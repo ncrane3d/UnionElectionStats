@@ -11,13 +11,6 @@
 #'
 #' @noRd
 app_ui <- function(request) {
-  #Importing local files
-  source('./R/pages/dashboard.R', local = TRUE)
-  source('./R/pages/about.R', local = TRUE)
-  source('./R/pages/downloads.R', local = TRUE)
-  source('./R/pages/featured_analysis.R', local = TRUE)
-  source('./R/pages/contact_us.R', local = TRUE)
-
   #Set up site theme
   theme <- bs_theme(
     bg = "#93AFC2", #Light blue background
@@ -80,11 +73,11 @@ app_ui <- function(request) {
       navbar_options = list(bg = "#283044"),
       title = "Union Election Stats",
       nav_spacer(),
-      dashboard(),
-      about(),
-      downloads(),
-      featuredAnalysis(),
-      contact(),
+      dashboard("dashboard"),
+      about("about"),
+      downloads("downloads"),
+      featuredAnalysis("featuredAnalysis"),
+      contact("contact"),
     )
   )
 }
