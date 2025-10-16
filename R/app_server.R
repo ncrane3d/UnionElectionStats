@@ -3,9 +3,6 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @import DBI
-#' @import RPostgres
-#' @import pool
 #' @import sendmailR
 #' @import shinyFeedback
 #' @import sf
@@ -13,7 +10,6 @@
 #' @import htmltools
 #' @import htmlwidgets
 #' @import lubridate
-#' @import duckdb
 #' @import glue
 #' @import leafgl
 #' @import viridis
