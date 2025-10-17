@@ -107,6 +107,7 @@ mapModule <- function(id, current_data_slice) {
                 data = boundaries()[[1]],
                 weight = 1,
                 fillOpacity = territoryOpacity,
+                #FIXME: Make deciles unique
                 color = ~ statePalette(state_count),
                 group = "states",
                 layerId=~boundaries()[[1]]$state,
@@ -124,6 +125,7 @@ mapModule <- function(id, current_data_slice) {
                 data = boundaries()[[2]],
                 weight = 1,
                 fillOpacity = .75,
+                #FIXME: Make deciles unique
                 color = ~ countyPalette(normalized_vote),
                 group = "counties",
                 layerId=~boundaries()[[2]]$FIPS,
