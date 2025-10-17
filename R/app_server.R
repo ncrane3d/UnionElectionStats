@@ -4,8 +4,6 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import DBI
-#' @import RPostgres
-#' @import pool
 #' @import sendmailR
 #' @import shinyFeedback
 #' @import sf
