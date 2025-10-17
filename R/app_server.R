@@ -33,25 +33,13 @@ app_server <- function(input, output, session) {
   # Your application server logic
 
   current_data_slice <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
-  # observe({
-  #   print(nrow(current_data_slice()))
-  # })
   mapModule("mapBuilder", current_data_slice)
   customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
   presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
-    sql <- "
-      SELECT County, FIPS
-      FROM read_csv_auto('resources/Data/Population_Data_2020.csv', ignore_errors=true) 
-      WHERE State = {selectedState}"
-
-    query <- glue(
-      sql,
-      selectedState = sQuote(state_choices[input$state])
-    )
-    stateCounties <- dbGetQuery(pool, query)
+    stateCounties <- unique(current_data_slice()[current_data_slice()$state == input$state, c("county", "FIPS")])
   })
   
   observeEvent(input$state, {
