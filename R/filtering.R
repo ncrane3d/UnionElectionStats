@@ -1,4 +1,4 @@
-filteringModule <- function(id, electionTypeInput, industryTypeInput, selectedCountyInput, selectedStateInput, timeframeLowerBoundInput, timeframeUpperBoundInput, percentageFavorLowerBoundInput, percentageFavorUpperBoundInput) {  
+filteringModule <- function(id, electionTypeInput, industryTypeInput, selectedCountyInput, selectedStateInput, timeframeLowerBoundInput, timeframeUpperBoundInput, percentageFavorLowerBoundInput, percentageFavorUpperBoundInput, populationData, electionData) {  
   moduleServer(
     id,
     function(input, output, session) {  
@@ -39,15 +39,9 @@ filteringModule <- function(id, electionTypeInput, industryTypeInput, selectedCo
           percentageFavorLowerBound <- percentageFavorLowerBoundInput()
           percentageFavorUpperBound <- percentageFavorUpperBoundInput()
 
-          #Datatable preparation
-          electionData <- fread("resources/Data/Elections_Data_Cleaned_V0.csv")
-          populationData <- fread("resources/Data/Population_Data_2020.csv")
-          electionData[populationData, on = 'FIPS', Rural := i.Rural][]
-          electionData[, vote_percentage := (votes_for / votes_total) * 100]
-
           #Datatable filtering
           if (selectedState != "All") {
-            if (selectedCounty == "All") {
+            if (selectedCounty == "All" | selectedCounty == "No State Selected") { #Using | selectedCounty == "No State Selected" is a shortcut for the county input not always updating before this code executes, fix this
               electionDataSubset <- electionData[
                 petition %in% electionType & 
                 year_closed >= timeframeLowerBound & 

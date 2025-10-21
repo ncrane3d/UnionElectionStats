@@ -32,20 +32,27 @@
 app_server <- function(input, output, session) {
   # Your application server logic
 
-  current_data_slice <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
+  #Datatable preparation
+  electionData <- fread("resources/Data/Elections_Data_Cleaned_V0.csv")
+  populationData <- fread("resources/Data/Population_Data_2020.csv")
+  electionData[populationData, on = 'FIPS', Rural := i.Rural][]
+  electionData[, vote_percentage := (votes_for / votes_total) * 100]
+
+  current_data_slice <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
   mapModule("mapBuilder", current_data_slice)
   customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
   presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
-    stateCounties <- unique(current_data_slice()[current_data_slice()$state == input$state, c("county", "FIPS")])
+    stateCounties <- unique(current_data_slice()[current_data_slice()$state == input$state & !is.na(current_data_slice()$FIPS), c("county", "FIPS")])
+    stateCounties <- stateCounties[order(stateCounties$county), ]
   })
   
   observeEvent(input$state, {
     if (input$state == 0) {
       countyDataframeToText <- c(
-        "All",
+        "No State Selected",
         "All Rural Counties",
         "All Urban Counties"
       )
@@ -56,7 +63,7 @@ app_server <- function(input, output, session) {
         "All Urban Counties",
         setNames(
           current_county_selection()$FIPS,
-          current_county_selection()$County
+          current_county_selection()$county
         )
       )
     }

@@ -56,12 +56,12 @@ mapModule <- function(id, current_data_slice) {
         }
 
         getPalette <- function(column) {
-            #colorNumeric(viridis(10), column, reverse = TRUE)
             colorQuantile(viridis(10), domain = column, n = 10, reverse = TRUE)
         }
 
         territoryOpacity <- 0.5
         boundaries <- getBoundaries(pool, current_query, current_data_slice)
+
         mapHighlight <- highlightOptions(
             color = "white",
             weight = 2,
