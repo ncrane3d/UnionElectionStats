@@ -39,52 +39,29 @@ filteringModule <- function(id, electionTypeInput, industryTypeInput, selectedCo
           percentageFavorLowerBound <- percentageFavorLowerBoundInput()
           percentageFavorUpperBound <- percentageFavorUpperBoundInput()
 
-          #Datatable filtering
-          if (selectedState != "All") {
-            if (selectedCounty == "All" | selectedCounty == "No State Selected") { #Using | selectedCounty == "No State Selected" is a shortcut for the county input not always updating before this code executes, fix this
-              electionDataSubset <- electionData[
-                petition %in% electionType & 
-                year_closed >= timeframeLowerBound & 
-                year_closed <= timeframeUpperBound &
-                vote_percentage >= percentageFavorLowerBound &
-                vote_percentage <= percentageFavorUpperBound &
-                SIC %in% get_industry_sic_range() &
-                state == selectedState
-              ]
-            } else if (selectedCounty == "All Rural Counties") {
-              electionDataSubset <- electionData[
-                petition %in% electionType & 
-                year_closed >= timeframeLowerBound & 
-                year_closed <= timeframeUpperBound &
-                vote_percentage >= percentageFavorLowerBound &
-                vote_percentage <= percentageFavorUpperBound &
-                SIC %in% get_industry_sic_range() &
-                state == selectedState &
-                Rural == 1
-              ]
-            } else if (selectedCounty == "All Urban Counties") {
-              electionDataSubset <- electionData[
-                petition %in% electionType & 
-                year_closed >= timeframeLowerBound & 
-                year_closed <= timeframeUpperBound &
-                vote_percentage >= percentageFavorLowerBound &
-                vote_percentage <= percentageFavorUpperBound &
-                SIC %in% get_industry_sic_range() &
-                state == selectedState &
-                Rural == 0
-              ]
-            } else {
-              electionDataSubset <- electionData[
-                petition %in% electionType & 
-                year_closed >= timeframeLowerBound & 
-                year_closed <= timeframeUpperBound &
-                vote_percentage >= percentageFavorLowerBound &
-                vote_percentage <= percentageFavorUpperBound &
-                SIC %in% get_industry_sic_range() &
-                state == selectedState &
-                FIPS == selectedCounty
-              ]
-            }
+          #Datatable filtering non-regional
+            if (selectedCounty == "All Rural Counties") {
+            electionDataSubset <- electionData[
+              petition %in% electionType & 
+              year_closed >= timeframeLowerBound & 
+              year_closed <= timeframeUpperBound &
+              vote_percentage >= percentageFavorLowerBound &
+              vote_percentage <= percentageFavorUpperBound &
+              SIC %in% get_industry_sic_range() &
+              state == selectedState &
+              Rural == 1
+            ]
+          } else if (selectedCounty == "All Urban Counties") {
+            electionDataSubset <- electionData[
+              petition %in% electionType & 
+              year_closed >= timeframeLowerBound & 
+              year_closed <= timeframeUpperBound &
+              vote_percentage >= percentageFavorLowerBound &
+              vote_percentage <= percentageFavorUpperBound &
+              SIC %in% get_industry_sic_range() &
+              state == selectedState &
+              Rural == 0
+            ] 
           } else {
             electionDataSubset <- electionData[
               petition %in% electionType & 
@@ -95,7 +72,8 @@ filteringModule <- function(id, electionTypeInput, industryTypeInput, selectedCo
               SIC %in% get_industry_sic_range() 
             ]
           }
-          setDF(electionDataSubset)
+          # #Take the slice before the regional filtering
+          # setDF(electionDataSubset)
       }))
     }
   )

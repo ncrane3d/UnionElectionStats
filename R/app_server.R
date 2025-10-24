@@ -38,8 +38,29 @@ app_server <- function(input, output, session) {
   electionData[populationData, on = 'FIPS', Rural := i.Rural][]
   electionData[, vote_percentage := (votes_for / votes_total) * 100]
 
-  current_data_slice <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
-  mapModule("mapBuilder", current_data_slice)
+  #Conducts initial filter, without state/county
+  electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
+  slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
+
+  #Conduct regional filtering and take appropiate slice
+  current_data_slice <- reactive({
+    if (input$state != "All") {
+      if (input$county == "All" | input$county == "No State Selected") {
+        electionDataRegional <- electionDataSubset()[
+          state == input$state
+        ]
+      } else {
+        electionDataRegional <- electionDataSubset()[
+          state == input$state &
+          FIPS == input$county
+        ]
+      }
+    } else {
+      electionDataRegional <- electionDataSubset()
+    }
+    setDF(electionDataRegional)
+  })
+  mapModule("mapBuilder", current_data_slice, slice_ignoring_regional_filtering)
   customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
   presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
 
@@ -50,13 +71,15 @@ app_server <- function(input, output, session) {
   })
   
   observeEvent(input$state, {
-    if (input$state == 0) {
+    if (input$state == 0 | input$state == "All") {
+      default <- "No State Selected"
       countyDataframeToText <- c(
         "No State Selected",
         "All Rural Counties",
         "All Urban Counties"
       )
     } else {
+      default <- "All"
       countyDataframeToText <- c(
         "All",
         "All Rural Counties",
@@ -67,7 +90,7 @@ app_server <- function(input, output, session) {
         )
       )
     }
-    updateSelectInput(inputId = "county", choices = countyDataframeToText)
+    updateSelectInput(inputId = "county", choices = countyDataframeToText, selected = default)
   })
 
   observeEvent(input$percentageFavor, {
