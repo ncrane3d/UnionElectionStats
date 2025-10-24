@@ -62,7 +62,8 @@ app_server <- function(input, output, session) {
   })
   mapModule("mapBuilder", current_data_slice, slice_ignoring_regional_filtering)
   customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
-  presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
+  # Uncomment this block to enable the preset graph module
+  # presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
 
   current_county_selection <- reactive({
     req(state_choices[input$state])

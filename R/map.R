@@ -51,45 +51,23 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
             return(list(stateBoundaries, countyBoundaries))
         }
 
-        inclusiveBoundaryCalculator <- function(slice_ignoring_regional_filtering) {
-            stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
-            countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
-            currentdata <- slice_ignoring_regional_filtering()
-            state_fips <- with(currentdata, substr(FIPS, 1, nchar(FIPS) - 3))
-            state_freq <- data.frame(table(state_fips)) %>% rename(state_count = Freq)
-            county_freq <- data.frame(table(currentdata$FIPS)) %>% rename( FIPS = Var1, county_count = Freq)
-            countyBoundaries <- full_join(
-                countyBoundaries,
-                county_freq,
-                by = c("FIPS" = "FIPS")
-            )
-            countyBoundaries <- full_join(
-                countyBoundaries,
-                state_freq,
-                by = c("STATE" = "state_fips")
-            )
-            stateBoundaries <- full_join(
-                stateBoundaries,
-                state_freq,
-                by = c("state" = "state_fips")
-            )
-            countyBoundaries$normalized_vote <- with(
-                countyBoundaries,
-                (county_count / state_count)
-            )
-            return(list(stateBoundaries, countyBoundaries))
-        }
-
         getBoundaries <- function(current_data_slice) {
             return(reactive({boundaryCalculator(current_data_slice)}))
         }
 
-        getBoundaries <- function(slice_ignoring_regional_filtering) {
-            return(reactive({boundaryCalculator(slice_ignoring_regional_filtering)}))
-        }
+        getPalette <- function(column, n_bins = 10) {
+            probs <- seq(0, 1, length.out = n_bins + 1)
+            breaks <- quantile(column, probs = probs, na.rm = TRUE)
 
-        getPalette <- function(column) {
-            colorQuantile(viridis(10), domain = column, n = 10, reverse = TRUE)
+            breaks <- unique(breaks)
+            if (length(breaks) < 2) {
+                #Case for no breaks
+                breaks <- c(min(column, na.rm = TRUE), max(column, na.rm = TRUE))
+            }
+            colorBin(palette = viridis(length(breaks) - 1),
+                    domain = column,
+                    bins = breaks,
+                    reverse = TRUE)
         }
 
         territoryOpacity <- 0.5
@@ -136,7 +114,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
             req(boundaries(), inclusiveBoundaries())
             df <- boundaries()[[1]]
             dfi <- inclusiveBoundaries()[[1]]
-            statePalette <- getPalette(dfi$state_count)
+            statePalette <- getPalette(dfi$state_count, 10)
             leafletProxy("map") %>%
             addPolygons(
                 data = df,
@@ -154,8 +132,8 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
         observe({
             req(boundaries(), inclusiveBoundaries())
             df <- boundaries()[[2]]
-            dfi <- inclusiveBoundaries()[[2]]
-            countyPalette <- getPalette(dfi$county_count)
+            dfi <- na.omit(inclusiveBoundaries()[[2]])
+            countyPalette <- getPalette(dfi$county_count, 10)
             leafletProxy("map") %>%
             addPolygons(
                 data = df,
@@ -175,60 +153,73 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
         })
 
         #Election Points
-        observe({
-            #Initial overflowing fix attempt
-            #req(input$map_zoom >= 7)
-            leafletProxy("map") %>%
-            removeGlPoints("electionPopup") %>%
-            addGlPoints(
-                data = getCircleMarkerData(),
-                group = "points",
-                pane = "markers",
-                layerId = "electionPopup",
-                fillColor = "#440154",
-                #fillColor = ~ifelse(jittered, "red", "blue"),
-                radius = 7,
-                opacity =.65,
-                popup = ~sprintf(
-                    "Case Number: %s<br/>Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s<br/>County: %s (%s)",
-                    case_number,
-                    employer,
-                    year_closed,
-                    round((votes_for / votes_total) * 100, 2),
-                    county,
-                    FIPS
-                )
-            )
-        })
+        #Uncomment this block to reintroduce points to the map
+        # observe({
+        #     #Initial overflowing fix attempt
+        #     #req(input$map_zoom >= 7)
+        #     leafletProxy("map") %>%
+        #     removeGlPoints("electionPopup") %>%
+        #     addGlPoints(
+        #         data = getCircleMarkerData(),
+        #         group = "points",
+        #         pane = "markers",
+        #         layerId = "electionPopup",
+        #         fillColor = "#440154",
+        #         #fillColor = ~ifelse(jittered, "red", "blue"),
+        #         radius = 7,
+        #         opacity =.65,
+        #         popup = ~sprintf(
+        #             "Case Number: %s<br/>Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s<br/>County: %s (%s)",
+        #             case_number,
+        #             employer,
+        #             year_closed,
+        #             round((votes_for / votes_total) * 100, 2),
+        #             county,
+        #             FIPS
+        #         )
+        #     )
+        # })
 
         observe({
             req(input$map_zoom)
             if (input$map_zoom < 5) {
-                breaks <- quantile(inclusiveBoundaries()[[1]]$state_count, probs = seq(0, 1, .1), na.rm = TRUE)
-                labels <- character(10)  
-                for (i in 1:10) {
+                probs <- seq(0, 1, length.out = 11)
+                breaks <- quantile(inclusiveBoundaries()[[1]]$state_count, probs = probs, na.rm = TRUE)
+                breaks <- unique(breaks)
+                if (length(breaks) < 2) {
+                    breaks <- c(min(inclusiveBoundaries()[[1]]$state_count, na.rm = TRUE),
+                                max(inclusiveBoundaries()[[1]]$state_count, na.rm = TRUE))
+                }
+                labels <- character(length(breaks) - 1)  
+                for (i in seq_along(labels)) {
                     labels[i] <- paste0(breaks[i], " – ", breaks[i + 1])
                 }
 
                 leafletProxy("map") %>%
                 clearControls() %>%
                 addLegend("bottomleft", 
-                    colors = rev(viridis(10)), 
+                    colors = rev(viridis(length(breaks) - 1)), 
                     labels = labels,
                     title = "Election Frequency",
                     opacity = 1
                 )   
             } else {
-                breaks <- quantile(inclusiveBoundaries()[[2]]$county_count, probs = seq(0, 1, .1), na.rm = TRUE)
-                labels <- character(10) 
-                for (i in 1:10) {
+                probs <- seq(0, 1, length.out = 11)
+                breaks <- quantile(inclusiveBoundaries()[[2]]$county_count, probs = probs, na.rm = TRUE)
+                breaks <- unique(breaks)
+                if (length(breaks) < 2) {
+                    breaks <- c(min(inclusiveBoundaries()[[2]]$county_count, na.rm = TRUE),
+                                max(inclusiveBoundaries()[[2]]$county_count, na.rm = TRUE))
+                }
+                labels <- character(length(breaks) - 1) 
+                for (i in seq_along(labels)) {
                     labels[i] <- paste0(breaks[i], " – ", breaks[i + 1])
                 }
 
                 leafletProxy("map") %>%
                 clearControls() %>%
                 addLegend("bottomleft", 
-                    colors = rev(viridis(10)), 
+                    colors = rev(viridis(length(breaks) - 1)), 
                     labels = labels,
                     title = "Election Frequency",
                     opacity = 1
