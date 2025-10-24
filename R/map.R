@@ -1,4 +1,4 @@
-mapModule <- function(id, current_data_slice) {  
+mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering) {  
   moduleServer(
     id,
     function(input, output, session) { 
@@ -51,17 +51,50 @@ mapModule <- function(id, current_data_slice) {
             return(list(stateBoundaries, countyBoundaries))
         }
 
-        getBoundaries <- function(pool, current_query, current_data_slice) {
+        inclusiveBoundaryCalculator <- function(slice_ignoring_regional_filtering) {
+            stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
+            countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
+            currentdata <- slice_ignoring_regional_filtering()
+            state_fips <- with(currentdata, substr(FIPS, 1, nchar(FIPS) - 3))
+            state_freq <- data.frame(table(state_fips)) %>% rename(state_count = Freq)
+            county_freq <- data.frame(table(currentdata$FIPS)) %>% rename( FIPS = Var1, county_count = Freq)
+            countyBoundaries <- full_join(
+                countyBoundaries,
+                county_freq,
+                by = c("FIPS" = "FIPS")
+            )
+            countyBoundaries <- full_join(
+                countyBoundaries,
+                state_freq,
+                by = c("STATE" = "state_fips")
+            )
+            stateBoundaries <- full_join(
+                stateBoundaries,
+                state_freq,
+                by = c("state" = "state_fips")
+            )
+            countyBoundaries$normalized_vote <- with(
+                countyBoundaries,
+                (county_count / state_count)
+            )
+            return(list(stateBoundaries, countyBoundaries))
+        }
+
+        getBoundaries <- function(current_data_slice) {
             return(reactive({boundaryCalculator(current_data_slice)}))
         }
 
+        getBoundaries <- function(slice_ignoring_regional_filtering) {
+            return(reactive({boundaryCalculator(slice_ignoring_regional_filtering)}))
+        }
+
         getPalette <- function(column) {
-            #colorNumeric(viridis(10), column, reverse = TRUE)
             colorQuantile(viridis(10), domain = column, n = 10, reverse = TRUE)
         }
 
         territoryOpacity <- 0.5
-        boundaries <- getBoundaries(pool, current_query, current_data_slice)
+        boundaries <- getBoundaries(current_data_slice)
+        inclusiveBoundaries <- getBoundaries(slice_ignoring_regional_filtering)
         mapHighlight <- highlightOptions(
             color = "white",
             weight = 2,
@@ -72,8 +105,8 @@ mapModule <- function(id, current_data_slice) {
         #Error handling for when there are no points to render on map
         getCircleMarkerData <- function(){
             if (nrow(current_data_slice()) > 1){
-                return(st_as_sf(current_data_slice(), coords = c("longitude", "latitude"), crs = 4326))
-                #return(st_as_sf(current_data_slice(), coords = c("jittered_lon", "jittered_lat"), crs = 4326))
+                coord_filtered_slice <- current_data_slice()[!is.na(current_data_slice()$longitude) & !is.na(current_data_slice()$latitude), ]
+                return(st_as_sf(coord_filtered_slice, coords = c("longitude", "latitude"), crs = 4326))
             } else {
                 #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
                 return(st_as_sf((data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1))), coords = c("lon", "lat"), crs = 4326))
@@ -100,16 +133,18 @@ mapModule <- function(id, current_data_slice) {
 
         #State Layer
         observe({
-            req(boundaries)
-            statePalette <- getPalette(boundaries()[1]$state_count)
+            req(boundaries(), inclusiveBoundaries())
+            df <- boundaries()[[1]]
+            dfi <- inclusiveBoundaries()[[1]]
+            statePalette <- getPalette(dfi$state_count)
             leafletProxy("map") %>%
             addPolygons(
-                data = boundaries()[[1]],
+                data = df,
                 weight = 1,
                 fillOpacity = territoryOpacity,
                 color = ~ statePalette(state_count),
                 group = "states",
-                layerId=~boundaries()[[1]]$state,
+                layerId= ~ state,
                 highlightOptions = mapHighlight,
                 options= leafletOptions(pane="shapes"),
             )
@@ -117,16 +152,18 @@ mapModule <- function(id, current_data_slice) {
 
         #County Layer
         observe({
-            req(boundaries)
-            countyPalette <- getPalette(boundaries()[2]$county_count)
+            req(boundaries(), inclusiveBoundaries())
+            df <- boundaries()[[2]]
+            dfi <- inclusiveBoundaries()[[2]]
+            countyPalette <- getPalette(dfi$county_count)
             leafletProxy("map") %>%
             addPolygons(
-                data = boundaries()[[2]],
+                data = df,
                 weight = 1,
                 fillOpacity = .75,
-                color = ~ countyPalette(normalized_vote),
+                color = ~ countyPalette(county_count),
                 group = "counties",
-                layerId=~boundaries()[[2]]$FIPS,
+                layerId= ~ FIPS,
                 options = pathOptions(pane = "shapes"),
                 popup = ~sprintf(
                     "Name: %s (%s)",
@@ -167,7 +204,7 @@ mapModule <- function(id, current_data_slice) {
         observe({
             req(input$map_zoom)
             if (input$map_zoom < 5) {
-                breaks <- quantile(boundaries()[[1]]$state_count, probs = seq(0, 1, .1), na.rm = TRUE)
+                breaks <- quantile(inclusiveBoundaries()[[1]]$state_count, probs = seq(0, 1, .1), na.rm = TRUE)
                 labels <- character(10)  
                 for (i in 1:10) {
                     labels[i] <- paste0(breaks[i], " – ", breaks[i + 1])
@@ -182,7 +219,7 @@ mapModule <- function(id, current_data_slice) {
                     opacity = 1
                 )   
             } else {
-                breaks <- quantile(boundaries()[[2]]$county_count, probs = seq(0, 1, .1), na.rm = TRUE)
+                breaks <- quantile(inclusiveBoundaries()[[2]]$county_count, probs = seq(0, 1, .1), na.rm = TRUE)
                 labels <- character(10) 
                 for (i in 1:10) {
                     labels[i] <- paste0(breaks[i], " – ", breaks[i + 1])

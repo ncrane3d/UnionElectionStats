@@ -3,9 +3,6 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @import DBI
-#' @import RPostgres
-#' @import pool
 #' @import sendmailR
 #' @import shinyFeedback
 #' @import sf
@@ -13,7 +10,6 @@
 #' @import htmltools
 #' @import htmlwidgets
 #' @import lubridate
-#' @import duckdb
 #' @import glue
 #' @import leafgl
 #' @import viridis
@@ -28,6 +24,7 @@
 #' @import htmltools
 #' @import htmlwidgets
 #' @import plotly
+#' @import data.table
 #' @noRd
 
 #'
@@ -35,67 +32,65 @@
 app_server <- function(input, output, session) {
   # Your application server logic
 
-  currentDataSelection <- sqlModule("sql", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
+  #Datatable preparation
+  electionData <- fread("resources/Data/Elections_Data_Cleaned_V0.csv")
+  populationData <- fread("resources/Data/Population_Data_2020.csv")
+  electionData[populationData, on = 'FIPS', Rural := i.Rural][]
+  electionData[, vote_percentage := (votes_for / votes_total) * 100]
 
-  pool = dbConnect(duckdb())
-  DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
+  #Conducts initial filter, without state/county
+  electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
+  slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
 
-  #current_query <- reactive({currentDataSelection})
+  #Conduct regional filtering and take appropiate slice
   current_data_slice <- reactive({
-    dbGetQuery(pool, currentDataSelection()) #%>%
-    # mutate(
-    #   # Create grouping key for nearby points
-    #   lon_group = round(longitude, 5),
-    #   lat_group = round(latitude, 5)
-    # ) %>%
-    # group_by(lon_group, lat_group) %>%
-    # mutate(
-    #   n = n(),
-    #   jittered = n > 1,
-    #   jittered_lon = if (n() > 1) jitter(longitude, amount = 1e-5) else longitude,
-    #   jittered_lat = if (n() > 1) jitter(latitude, amount = 1e-5) else latitude
-    # ) %>%
-    # ungroup() %>%
-    # select(-n, -lon_group, -lat_group)
+    if (input$state != "All") {
+      if (input$county == "All" | input$county == "No State Selected") {
+        electionDataRegional <- electionDataSubset()[
+          state == input$state
+        ]
+      } else {
+        electionDataRegional <- electionDataSubset()[
+          state == input$state &
+          FIPS == input$county
+        ]
+      }
+    } else {
+      electionDataRegional <- electionDataSubset()
+    }
+    setDF(electionDataRegional)
   })
-
-  mapModule("mapBuilder", current_data_slice)
+  mapModule("mapBuilder", current_data_slice, slice_ignoring_regional_filtering)
   customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
   presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
-    sql <- "
-      SELECT County, FIPS
-      FROM read_csv_auto('resources/Data/Population_Data_2020.csv', ignore_errors=true) 
-      WHERE State = {selectedState}"
-
-    query <- glue(
-      sql,
-      selectedState = sQuote(state_choices[input$state])
-    )
-    stateCounties <- dbGetQuery(pool, query)
+    stateCounties <- unique(current_data_slice()[current_data_slice()$state == input$state & !is.na(current_data_slice()$FIPS), c("county", "FIPS")])
+    stateCounties <- stateCounties[order(stateCounties$county), ]
   })
   
   observeEvent(input$state, {
-    if (input$state == 0) {
+    if (input$state == 0 | input$state == "All") {
+      default <- "No State Selected"
       countyDataframeToText <- c(
-        "All",
+        "No State Selected",
         "All Rural Counties",
         "All Urban Counties"
       )
     } else {
+      default <- "All"
       countyDataframeToText <- c(
         "All",
         "All Rural Counties",
         "All Urban Counties",
         setNames(
           current_county_selection()$FIPS,
-          current_county_selection()$County
+          current_county_selection()$county
         )
       )
     }
-    updateSelectInput(inputId = "county", choices = countyDataframeToText)
+    updateSelectInput(inputId = "county", choices = countyDataframeToText, selected = default)
   })
 
   observeEvent(input$percentageFavor, {
