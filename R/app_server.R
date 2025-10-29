@@ -18,7 +18,6 @@
 #' @import ggplot2
 #' @import dplyr
 #' @import gcookbook
-#' @import ggiraph
 #' @import sf
 #' @import dplyr
 #' @import htmltools
