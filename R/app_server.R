@@ -25,19 +25,12 @@
 #' @import htmlwidgets
 #' @import plotly
 #' @import data.table
+#' @import pryr
 #' @noRd
 
 #'
 
 app_server <- function(input, output, session) {
-  # Your application server logic
-
-  #Datatable preparation
-  electionData <- fread("resources/Data/Elections_Data_Cleaned_V0.csv")
-  populationData <- fread("resources/Data/Population_Data_2020.csv")
-  electionData[populationData, on = 'FIPS', Rural := i.Rural][]
-  electionData[, vote_percentage := (votes_for / votes_total) * 100]
-
   #Conducts initial filter, without state/county
   electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
   slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
@@ -425,4 +418,21 @@ observeEvent(input$customGraphType, {
     "WI" = "Wisconsin",
     "WY" = "Wyoming"
   )
+
+  session$onSessionEnded(function() {
+    #message("Session ended. Cleaning up...")
+    print("Memory Before")
+    print(pryr::mem_used())
+    # Remove leaflet layers explicitly
+    try(leafletProxy("map") %>% clearShapes() %>% clearMarkers() %>% clearControls(), silent = TRUE)
+    
+    # Clear stored reactive data
+    slice_ignoring_regional_filtering <- NULL
+    current_data_slice <- NULL
+
+    # Run garbage collection
+    gc(full = TRUE)
+    print("Memory After")
+    print(pryr::mem_used())
+  })
 }

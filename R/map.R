@@ -23,8 +23,6 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
         })
 
         boundaryCalculator <- function(current_data_slice) {
-            stateBoundaries <- sf::read_sf("./inst/app/www/states.json")
-            countyBoundaries <- sf::read_sf("./inst/app/www/counties.json")
             currentdata <- current_data_slice()
             state_fips <- with(currentdata, substr(FIPS, 1, nchar(FIPS) - 3))
             state_freq <- data.frame(table(state_fips)) %>% rename(state_count = Freq)
