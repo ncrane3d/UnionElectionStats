@@ -13,7 +13,6 @@
 #' @import glue
 #' @import leafgl
 #' @import viridis
-#' @import rmapshaper
 #' @import tidyverse
 #' @import ggplot2
 #' @import dplyr
@@ -184,8 +183,8 @@ observeEvent(input$customGraphType, {
   }
 
   observe({
-    req("./resources/csv/featured-analysis.csv")
-    faCSV <- read.csv("./resources/csv/featured-analysis.csv")
+    req("./inst/app/www/resources/csv/featured-analysis.csv")
+    faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
     for (i in 1:nrow(faCSV)) {
       local({
@@ -199,8 +198,8 @@ observeEvent(input$customGraphType, {
   })  
 
   output$insertFeaturedAnalysisFromCSV <- renderUI ({
-    req("./resources/csv/featured-analysis.csv")
-    faCSV <- read.csv("./resources/csv/featured-analysis.csv")
+    req("./inst/app/www/resources/csv/featured-analysis.csv")
+    faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
     formattedPapers <- tagList()
     for (i in 1:nrow(faCSV)) {
@@ -302,7 +301,7 @@ observeEvent(input$customGraphType, {
   output$jonne <- renderImage(
     {
       list(
-        src = "./resources/images/jonne_kamphorst.jpg",
+        src = "./inst/app/www/resources/images/jonne_kamphorst.jpg",
         height = "auto",
         width = "100%"
       )
@@ -313,7 +312,7 @@ observeEvent(input$customGraphType, {
   output$zachary <- renderImage(
     {
       list(
-        src = "./resources/images/zachary_schaller.png",
+        src = "./inst/app/www/resources/images/zachary_schaller.png",
         height = "auto",
         width = "100%"
       )
@@ -324,7 +323,7 @@ observeEvent(input$customGraphType, {
   output$sam <- renderImage(
     {
       list(
-        src = "./resources/images/samuel_young.jpg",
+        src = "./inst/app/www/resources/images/samuel_young.jpg",
         height = "auto",
         width = "100%"
       )
@@ -335,7 +334,7 @@ observeEvent(input$customGraphType, {
   output$contact_bg <- renderImage(
     {
       list(
-        src = "./resources/images/rally.jpg",
+        src = "./inst/app/www/resources/images/rally.jpg",
         height = "auto",
         width = "100%"
       )
@@ -346,7 +345,7 @@ observeEvent(input$customGraphType, {
   output$lucy <- renderImage(
     {
       list(
-        src = "./resources/images/lucy_lewark.png",
+        src = "./inst/app/www/resources/images/lucy_lewark.png",
         height = "auto",
         width = "100%"
       )
@@ -357,7 +356,7 @@ observeEvent(input$customGraphType, {
   output$nathan <- renderImage(
     {
       list(
-        src = "./resources/images/nathan_crane.jpg",
+        src = "./inst/app/www/resources/images/nathan_crane.jpg",
         height = "auto",
         width = "100%"
       )
