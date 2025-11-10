@@ -25,6 +25,7 @@
 #' @import plotly
 #' @import data.table
 #' @import pryr
+#' @import memoise
 #' @noRd
 
 #'
