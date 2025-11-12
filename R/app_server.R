@@ -24,8 +24,6 @@
 #' @import htmlwidgets
 #' @import plotly
 #' @import data.table
-#' @import pryr
-#' @import memoise
 #' @noRd
 
 #'
@@ -353,20 +351,15 @@ observeEvent(input$customGraphType, {
     "WY" = "Wyoming"
   )
 
-  # session$onSessionEnded(function() {
-  #   #message("Session ended. Cleaning up...")
-  #   print("Memory Before")
-  #   print(pryr::mem_used())
-  #   # Remove leaflet layers explicitly
-  #   try(leafletProxy("map") %>% clearShapes() %>% clearMarkers() %>% clearControls(), silent = TRUE)
+  session$onSessionEnded(function() {
+    # Remove leaflet layers explicitly
+    try(leafletProxy("map") %>% clearShapes() %>% clearMarkers() %>% clearControls(), silent = TRUE)
     
-  #   # Clear stored reactive data
-  #   slice_ignoring_regional_filtering <- NULL
-  #   current_data_slice <- NULL
+    # Clear stored reactive data
+    slice_ignoring_regional_filtering <- NULL
+    current_data_slice <- NULL
 
-  #   # Run garbage collection
-  #   gc(full = TRUE)
-  #   print("Memory After")
-  #   print(pryr::mem_used())
-  # })
+    # Run garbage collection
+    gc(full = TRUE)
+  })
 }
