@@ -13,7 +13,6 @@
 #' @import glue
 #' @import leafgl
 #' @import viridis
-#' @import rmapshaper
 #' @import tidyverse
 #' @import ggplot2
 #' @import dplyr
@@ -29,14 +28,6 @@
 #'
 
 app_server <- function(input, output, session) {
-  # Your application server logic
-
-  #Datatable preparation
-  electionData <- fread("resources/Data/Elections_Data_Cleaned_V0.csv")
-  populationData <- fread("resources/Data/Population_Data_2020.csv")
-  electionData[populationData, on = 'FIPS', Rural := i.Rural][]
-  electionData[, vote_percentage := (votes_for / votes_total) * 100]
-
   #Conducts initial filter, without state/county
   electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
   slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
@@ -190,8 +181,8 @@ observeEvent(input$customGraphType, {
   }
 
   observe({
-    req("./resources/csv/featured-analysis.csv")
-    faCSV <- read.csv("./resources/csv/featured-analysis.csv")
+    req("./inst/app/www/resources/csv/featured-analysis.csv")
+    faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
     for (i in 1:nrow(faCSV)) {
       local({
@@ -205,8 +196,8 @@ observeEvent(input$customGraphType, {
   })  
 
   output$insertFeaturedAnalysisFromCSV <- renderUI ({
-    req("./resources/csv/featured-analysis.csv")
-    faCSV <- read.csv("./resources/csv/featured-analysis.csv")
+    req("./inst/app/www/resources/csv/featured-analysis.csv")
+    faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
     formattedPapers <- tagList()
     for (i in 1:nrow(faCSV)) {
@@ -304,72 +295,6 @@ observeEvent(input$customGraphType, {
         updateTextAreaInput(inputId = "message", value = "")
       }
   })
-  
-  output$jonne <- renderImage(
-    {
-      list(
-        src = "./resources/images/jonne_kamphorst.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$zachary <- renderImage(
-    {
-      list(
-        src = "./resources/images/zachary_schaller.png",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$sam <- renderImage(
-    {
-      list(
-        src = "./resources/images/samuel_young.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-  #Contact Us Background
-  output$contact_bg <- renderImage(
-    {
-      list(
-        src = "./resources/images/rally.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$lucy <- renderImage(
-    {
-      list(
-        src = "./resources/images/lucy_lewark.png",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$nathan <- renderImage(
-    {
-      list(
-        src = "./resources/images/nathan_crane.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
 
   state_choices <- c(
     "AL" = "Alabama",
@@ -424,4 +349,16 @@ observeEvent(input$customGraphType, {
     "WI" = "Wisconsin",
     "WY" = "Wyoming"
   )
+
+  session$onSessionEnded(function() {
+    # Remove leaflet layers explicitly
+    try(leafletProxy("map") %>% clearShapes() %>% clearMarkers() %>% clearControls(), silent = TRUE)
+    
+    # Clear stored reactive data
+    slice_ignoring_regional_filtering <- NULL
+    current_data_slice <- NULL
+
+    # Run garbage collection
+    gc(full = TRUE)
+  })
 }
