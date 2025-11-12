@@ -31,6 +31,7 @@ app_ui <- function(request) {
         ".dashboardheader bslib-layout-columns { margin-bottom: 0 !important; }",
         ".scrollable-panel {overflow: hidden !important; }",
         ".sidebar {position: sticky; top: 10vh;}",
+        #".contact_us_background {background-image:url(www/picket_line.png);background-repeat:no-repeat;background-size:cover;background-position:center bottom;min-height:100vh;}",
         ".contact_us_container {width:100%; margin: auto; height: auto; }",
         ".contact_us_container #picketsign {width:60%; margin: auto; }",
         ".contact_us_container div { margin-bottom: 0px!important; }",

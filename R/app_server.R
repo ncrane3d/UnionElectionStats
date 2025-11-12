@@ -298,72 +298,6 @@ observeEvent(input$customGraphType, {
         updateTextAreaInput(inputId = "message", value = "")
       }
   })
-  
-  output$jonne <- renderImage(
-    {
-      list(
-        src = "./inst/app/www/resources/images/jonne_kamphorst.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$zachary <- renderImage(
-    {
-      list(
-        src = "./inst/app/www/resources/images/zachary_schaller.png",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$sam <- renderImage(
-    {
-      list(
-        src = "./inst/app/www/resources/images/samuel_young.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-  #Contact Us Background
-  output$contact_bg <- renderImage(
-    {
-      list(
-        src = "./inst/app/www/resources/images/rally.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$lucy <- renderImage(
-    {
-      list(
-        src = "./inst/app/www/resources/images/lucy_lewark.png",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$nathan <- renderImage(
-    {
-      list(
-        src = "./inst/app/www/resources/images/nathan_crane.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
 
   state_choices <- c(
     "AL" = "Alabama",
@@ -419,20 +353,20 @@ observeEvent(input$customGraphType, {
     "WY" = "Wyoming"
   )
 
-  session$onSessionEnded(function() {
-    #message("Session ended. Cleaning up...")
-    print("Memory Before")
-    print(pryr::mem_used())
-    # Remove leaflet layers explicitly
-    try(leafletProxy("map") %>% clearShapes() %>% clearMarkers() %>% clearControls(), silent = TRUE)
+  # session$onSessionEnded(function() {
+  #   #message("Session ended. Cleaning up...")
+  #   print("Memory Before")
+  #   print(pryr::mem_used())
+  #   # Remove leaflet layers explicitly
+  #   try(leafletProxy("map") %>% clearShapes() %>% clearMarkers() %>% clearControls(), silent = TRUE)
     
-    # Clear stored reactive data
-    slice_ignoring_regional_filtering <- NULL
-    current_data_slice <- NULL
+  #   # Clear stored reactive data
+  #   slice_ignoring_regional_filtering <- NULL
+  #   current_data_slice <- NULL
 
-    # Run garbage collection
-    gc(full = TRUE)
-    print("Memory After")
-    print(pryr::mem_used())
-  })
+  #   # Run garbage collection
+  #   gc(full = TRUE)
+  #   print("Memory After")
+  #   print(pryr::mem_used())
+  # })
 }
