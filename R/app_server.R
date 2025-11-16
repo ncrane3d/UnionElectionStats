@@ -39,7 +39,11 @@ app_server <- function(input, output, session) {
         electionDataRegional <- electionDataSubset()[
           state == input$state
         ]
-      } else {
+      } else if (input$county == "All Urban Counties" | input$county == "All Rural Counties") {
+         electionDataRegional <- electionDataSubset()[
+          state == input$state 
+        ]
+      }else {
         electionDataRegional <- electionDataSubset()[
           state == input$state &
           FIPS == input$county

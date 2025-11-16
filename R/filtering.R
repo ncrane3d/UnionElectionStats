@@ -48,7 +48,6 @@ filteringModule <- function(id, electionTypeInput, industryTypeInput, selectedCo
               vote_percentage >= percentageFavorLowerBound &
               vote_percentage <= percentageFavorUpperBound &
               SIC %in% get_industry_sic_range() &
-              state == selectedState &
               Rural == 1
             ]
           } else if (selectedCounty == "All Urban Counties") {
@@ -59,7 +58,6 @@ filteringModule <- function(id, electionTypeInput, industryTypeInput, selectedCo
               vote_percentage >= percentageFavorLowerBound &
               vote_percentage <= percentageFavorUpperBound &
               SIC %in% get_industry_sic_range() &
-              state == selectedState &
               Rural == 0
             ] 
           } else {

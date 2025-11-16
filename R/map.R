@@ -24,6 +24,18 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
 
         boundaryCalculator <- function(current_data_slice) {
             currentdata <- current_data_slice()
+            #Return empty polygons if the slice is empty
+            if (nrow(currentdata) == 0) {
+                countyBoundaries_empty <- countyBoundaries %>%
+                    mutate(
+                        county_count = NA
+                    )
+                stateBoundaries_empty <- stateBoundaries %>%
+                    mutate(
+                        state_count = NA
+                    )
+                return(list(stateBoundaries_empty, countyBoundaries_empty))
+            }
             state_fips <- with(currentdata, substr(FIPS, 1, nchar(FIPS) - 3))
             state_freq <- data.frame(table(state_fips)) %>% rename(state_count = Freq)
             county_freq <- data.frame(table(currentdata$FIPS)) %>% rename( FIPS = Var1, county_count = Freq)
@@ -78,16 +90,17 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
             bringToFront = FALSE
         )
 
+        #Removed with election points, will need to refactor to add back in
         #Error handling for when there are no points to render on map
-        getCircleMarkerData <- function(){
-            if (nrow(current_data_slice()) > 1){
-                coord_filtered_slice <- current_data_slice()[!is.na(current_data_slice()$longitude) & !is.na(current_data_slice()$latitude), ]
-                return(st_as_sf(coord_filtered_slice, coords = c("longitude", "latitude"), crs = 4326))
-            } else {
-                #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
-                return(st_as_sf((data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1))), coords = c("lon", "lat"), crs = 4326))
-            }
-        }
+        # getCircleMarkerData <- function(){
+        #     if (nrow(current_data_slice()) > 1){
+        #         coord_filtered_slice <- current_data_slice()[!is.na(current_data_slice()$longitude) & !is.na(current_data_slice()$latitude), ]
+        #         return(st_as_sf(coord_filtered_slice, coords = c("longitude", "latitude"), crs = 4326))
+        #     } else {
+        #         #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
+        #         return(st_as_sf((data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1))), coords = c("lon", "lat"), crs = 4326))
+        #     }
+        # }
 
         #Zoom on click of territory shape
         observeEvent( input$map_shape_click, {
@@ -180,7 +193,10 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
 
         observe({
             req(input$map_zoom)
-            if (input$map_zoom < 5) {
+            if (nrow(current_data_slice()) == 0) {
+                leafletProxy("map") %>%
+                clearControls()
+            } else if (input$map_zoom < 5) {
                 probs <- seq(0, 1, length.out = 11)
                 breaks <- quantile(inclusiveBoundaries()[[1]]$state_count, probs = probs, na.rm = TRUE)
                 breaks <- unique(breaks)
