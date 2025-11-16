@@ -28,11 +28,11 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
             if (nrow(currentdata) == 0) {
                 countyBoundaries_empty <- countyBoundaries %>%
                     mutate(
-                        county_count = 0,
+                        county_count = NA
                     )
                 stateBoundaries_empty <- stateBoundaries %>%
                     mutate(
-                        state_count = 0
+                        state_count = NA
                     )
                 return(list(stateBoundaries_empty, countyBoundaries_empty))
             }
@@ -80,10 +80,6 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
                     reverse = TRUE)
         }
 
-        observe ({
-            print(boundaries()[[1]])
-        })
-
         territoryOpacity <- 0.5
         boundaries <- getBoundaries(current_data_slice)
         inclusiveBoundaries <- getBoundaries(slice_ignoring_regional_filtering)
@@ -126,55 +122,45 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
 
         #State Layer
         observe({
-            if(nrow(current_data_slice()) == 0) {
-                leafletProxy("map") %>%
-                clearShapes()
-            } else {
-                req(boundaries(), inclusiveBoundaries())
-                df <- boundaries()[[1]]
-                dfi <- inclusiveBoundaries()[[1]]
-                statePalette <- getPalette(dfi$state_count, 10)
-                leafletProxy("map") %>%
-                addPolygons(
-                    data = df,
-                    weight = 1,
-                    fillOpacity = territoryOpacity,
-                    color = ~ statePalette(state_count),
-                    group = "states",
-                    layerId= ~ state,
-                    highlightOptions = mapHighlight,
-                    options= leafletOptions(pane="shapes"),
-                )
-            }
+            req(boundaries(), inclusiveBoundaries())
+            df <- boundaries()[[1]]
+            dfi <- inclusiveBoundaries()[[1]]
+            statePalette <- getPalette(dfi$state_count, 10)
+            leafletProxy("map") %>%
+            addPolygons(
+                data = df,
+                weight = 1,
+                fillOpacity = territoryOpacity,
+                color = ~ statePalette(state_count),
+                group = "states",
+                layerId= ~ state,
+                highlightOptions = mapHighlight,
+                options= leafletOptions(pane="shapes"),
+            )
         })
 
         #County Layer
         observe({
-            if(nrow(current_data_slice()) == 0) {
-                # leafletProxy("map") %>%
-                # clearShapes()
-            } else {
-                req(boundaries(), inclusiveBoundaries())
-                df <- boundaries()[[2]]
-                dfi <- na.omit(inclusiveBoundaries()[[2]])
-                countyPalette <- getPalette(dfi$county_count, 10)
-                leafletProxy("map") %>%
-                addPolygons(
-                    data = df,
-                    weight = 1,
-                    fillOpacity = .75,
-                    color = ~ countyPalette(county_count),
-                    group = "counties",
-                    layerId= ~ FIPS,
-                    options = pathOptions(pane = "shapes"),
-                    popup = ~sprintf(
-                        "Name: %s (%s)",
-                        NAME,
-                        FIPS
-                    ),
-                    highlightOptions = mapHighlight
-                )
-            }
+            req(boundaries(), inclusiveBoundaries())
+            df <- boundaries()[[2]]
+            dfi <- na.omit(inclusiveBoundaries()[[2]])
+            countyPalette <- getPalette(dfi$county_count, 10)
+            leafletProxy("map") %>%
+            addPolygons(
+                data = df,
+                weight = 1,
+                fillOpacity = .75,
+                color = ~ countyPalette(county_count),
+                group = "counties",
+                layerId= ~ FIPS,
+                options = pathOptions(pane = "shapes"),
+                popup = ~sprintf(
+                    "Name: %s (%s)",
+                    NAME,
+                    FIPS
+                ),
+                highlightOptions = mapHighlight
+            )
         })
 
         #Election Points
@@ -207,7 +193,10 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
 
         observe({
             req(input$map_zoom)
-            if (input$map_zoom < 5) {
+            if (nrow(current_data_slice()) == 0) {
+                leafletProxy("map") %>%
+                clearControls()
+            } else if (input$map_zoom < 5) {
                 probs <- seq(0, 1, length.out = 11)
                 breaks <- quantile(inclusiveBoundaries()[[1]]$state_count, probs = probs, na.rm = TRUE)
                 breaks <- unique(breaks)
