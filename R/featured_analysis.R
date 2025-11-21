@@ -9,8 +9,6 @@ featuredAnalysis <- function(id) {
     nav_panel(
         title = "Featured Analysis",
         align = "right",
-        accordion(
-            uiOutput("insertFeaturedAnalysisFromCSV")
-        )
+        uiOutput("insertFeaturedAnalysisFromCSV")
     )
 }

@@ -36,7 +36,7 @@ contact <- function(id) {
             )
         ) %>% tagAppendAttributes(class="contact_us_container"),
         style = css(
-            background_image = "url(www/picket_line.png)",
+            background_image = "url(www/picket_line.jpg)",
             background_repeat = "no-repeat",
             background_size = "cover",
             background_position = "center bottom",

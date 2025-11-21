@@ -193,7 +193,7 @@ observeEvent(input$customGraphType, {
         ii <- i #Without this line only the last loop will be kept.
         output[[paste0("figure", ii)]] <- 
           renderImage({
-            list(src = faCSV$imagePath[ii], width = "80%", height ="auto")
+            list(src = faCSV$imagePath[ii], width = "100%", height ="auto")
           }, deleteFile = FALSE)
       })
     }
@@ -203,20 +203,24 @@ observeEvent(input$customGraphType, {
     req("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
-    formattedPapers <- tagList()
-    for (i in 1:nrow(faCSV)) {
-      if (faCSV$imagePath[i] != "") {
-        formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionWithImage(faCSV, i))
-      } else {
-        formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionNoImage(faCSV, i))
-      }    
+    panels <- lapply(1:nrow(faCSV), function(i) {
+    if (faCSV$imagePath[i] != "") {
+      createFeaturedAnalysisAccordionWithImage(faCSV, i)
+    } else {
+      createFeaturedAnalysisAccordionNoImage(faCSV, i)
     }
-    return(formattedPapers)
+  })
+
+  accordion(
+    !!!panels,
+    open = 1   
+  )
   })
 
   createFeaturedAnalysisAccordionWithImage <- function(faCSV, i) {
     accordion_panel(
       title = faCSV$title[i],
+      collapsed = FALSE,
       div(
         align = "left",
         div(strong("Author(s): "), p(paste(faCSV$author[i], collapse = ", "))),
