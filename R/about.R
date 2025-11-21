@@ -38,9 +38,8 @@ about <- function(id) {
                     bioPanel(
                         "Jonne Kamphorst",
                         "www/resources/images/jonne_kamphorst.jpg",
-                        "I am a Postdoctoral Scholar at Stanford University’s Politics and Social Change Lab and the Human-centered Artificial Intelligence institute. 
-                        I received my Ph.D. in Political Science from the European University Institute (EUI) in 2023. 
-                        I will start as an Assistant Professor in Political Science and Quantitative Social Science Methods at Sciences Po in Paris in January 2026. "
+                        "I am an Assistant Professor in Political Science at Sciences Po in Paris. Previously, I was a postdoctoral scholar at Stanford University's 
+                        Sociology and Computer Science departments. I received my PhD from the European University Institute in 2023."
                     ),
                     bioPanel(
                         "Zachary Schaller",
@@ -76,9 +75,7 @@ about <- function(id) {
                         "Nathan Crane",
                         "www/resources/images/nathan_crane.jpg",
                         "I am an undergraduate student studying Software Engineering and Business at Colorado State 
-                        University. My primary focus is understanding the connection between software development 
-                        and broader business functions. I believe that clear, effective communication about code 
-                        is just as important as writing clean, functional code."
+                        University."
                     )
                 ),
             )
