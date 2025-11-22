@@ -155,7 +155,9 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
                 layerId= ~ FIPS,
                 options = pathOptions(pane = "shapes"),
                 popup = ~sprintf(
-                    "Name: %s (%s)",
+                   ifelse(as.numeric(STATE) < 10,
+                        "Name: %s (0%s)",
+                        "Name: %s (%s)"),
                     NAME,
                     FIPS
                 ),
@@ -199,6 +201,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
             } else if (input$map_zoom < 5) {
                 probs <- seq(0, 1, length.out = 11)
                 breaks <- quantile(inclusiveBoundaries()[[1]]$state_count, probs = probs, na.rm = TRUE)
+                breaks <- round(breaks)
                 breaks <- unique(breaks)
                 if (length(breaks) < 2) {
                     breaks <- c(min(inclusiveBoundaries()[[1]]$state_count, na.rm = TRUE),
@@ -221,6 +224,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
                 probs <- seq(0, 1, length.out = 11)
                 breaks <- quantile(inclusiveBoundaries()[[2]]$county_count, probs = probs, na.rm = TRUE)
                 breaks <- unique(breaks)
+                breaks <- round(breaks)
                 if (length(breaks) < 2) {
                     breaks <- c(min(inclusiveBoundaries()[[2]]$county_count, na.rm = TRUE),
                                 max(inclusiveBoundaries()[[2]]$county_count, na.rm = TRUE))
