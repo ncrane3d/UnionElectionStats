@@ -3,7 +3,6 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @import DBI
 #' @import sendmailR
 #' @import shinyFeedback
 #' @import sf
@@ -11,89 +10,82 @@
 #' @import htmltools
 #' @import htmlwidgets
 #' @import lubridate
-#' @import duckdb
 #' @import glue
 #' @import leafgl
 #' @import viridis
-#' @import rmapshaper
 #' @import tidyverse
 #' @import ggplot2
 #' @import dplyr
 #' @import gcookbook
-#' @import ggiraph
 #' @import sf
 #' @import dplyr
 #' @import htmltools
 #' @import htmlwidgets
 #' @import plotly
+#' @import data.table
 #' @noRd
 
 #'
 
 app_server <- function(input, output, session) {
-  # Your application server logic
+  #Conducts initial filter, without state/county
+  electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
+  slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
 
-  currentDataSelection <- sqlModule("sql", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]))
-
-  pool = dbConnect(duckdb())
-  DBI::dbExecute(pool, "INSTALL httpfs; LOAD httpfs;")
-
-  #current_query <- reactive({currentDataSelection})
+  #Conduct regional filtering and take appropiate slice
   current_data_slice <- reactive({
-    dbGetQuery(pool, currentDataSelection()) #%>%
-    # mutate(
-    #   # Create grouping key for nearby points
-    #   lon_group = round(longitude, 5),
-    #   lat_group = round(latitude, 5)
-    # ) %>%
-    # group_by(lon_group, lat_group) %>%
-    # mutate(
-    #   n = n(),
-    #   jittered = n > 1,
-    #   jittered_lon = if (n() > 1) jitter(longitude, amount = 1e-5) else longitude,
-    #   jittered_lat = if (n() > 1) jitter(latitude, amount = 1e-5) else latitude
-    # ) %>%
-    # ungroup() %>%
-    # select(-n, -lon_group, -lat_group)
+    if (input$state != "All") {
+      if (input$county == "All" | input$county == "No State Selected") {
+        electionDataRegional <- electionDataSubset()[
+          state == input$state
+        ]
+      } else if (input$county == "All Urban Counties" | input$county == "All Rural Counties") {
+         electionDataRegional <- electionDataSubset()[
+          state == input$state 
+        ]
+      }else {
+        electionDataRegional <- electionDataSubset()[
+          state == input$state &
+          FIPS == input$county
+        ]
+      }
+    } else {
+      electionDataRegional <- electionDataSubset()
+    }
+    setDF(electionDataRegional)
   })
-
-  mapModule("mapBuilder", current_data_slice)
+  mapModule("mapBuilder", current_data_slice, slice_ignoring_regional_filtering)
   customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
-  presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
+  # Uncomment this block to enable the preset graph module
+  # presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
 
   current_county_selection <- reactive({
     req(state_choices[input$state])
-    sql <- "
-      SELECT County, FIPS
-      FROM read_csv_auto('resources/Data/Population_Data_2020.csv', ignore_errors=true) 
-      WHERE State = {selectedState}"
-
-    query <- glue(
-      sql,
-      selectedState = sQuote(state_choices[input$state])
-    )
-    stateCounties <- dbGetQuery(pool, query)
+    stateCounties <- unique(current_data_slice()[current_data_slice()$state == input$state & !is.na(current_data_slice()$FIPS), c("county", "FIPS")])
+    stateCounties <- stateCounties[order(stateCounties$county), ]
   })
   
   observeEvent(input$state, {
-    if (input$state == 0) {
+    if (input$state == 0 | input$state == "All") {
+      default <- "No State Selected"
       countyDataframeToText <- c(
-        "All",
+        "No State Selected",
         "All Rural Counties",
         "All Urban Counties"
       )
     } else {
+      default <- "All"
       countyDataframeToText <- c(
         "All",
         "All Rural Counties",
         "All Urban Counties",
         setNames(
           current_county_selection()$FIPS,
-          current_county_selection()$County
+          current_county_selection()$county
         )
       )
     }
-    updateSelectInput(inputId = "county", choices = countyDataframeToText)
+    updateSelectInput(inputId = "county", choices = countyDataframeToText, selected = default)
   })
 
   observeEvent(input$percentageFavor, {
@@ -193,38 +185,42 @@ observeEvent(input$customGraphType, {
   }
 
   observe({
-    req("./resources/csv/featured-analysis.csv")
-    faCSV <- read.csv("./resources/csv/featured-analysis.csv")
+    req("./inst/app/www/resources/csv/featured-analysis.csv")
+    faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
     for (i in 1:nrow(faCSV)) {
       local({
         ii <- i #Without this line only the last loop will be kept.
         output[[paste0("figure", ii)]] <- 
           renderImage({
-            list(src = faCSV$imagePath[ii], width = "80%", height ="auto")
+            list(src = faCSV$imagePath[ii], width = "100%", height ="auto")
           }, deleteFile = FALSE)
       })
     }
   })  
 
   output$insertFeaturedAnalysisFromCSV <- renderUI ({
-    req("./resources/csv/featured-analysis.csv")
-    faCSV <- read.csv("./resources/csv/featured-analysis.csv")
+    req("./inst/app/www/resources/csv/featured-analysis.csv")
+    faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- data.frame(id = 1:nrow(faCSV), faCSV)
-    formattedPapers <- tagList()
-    for (i in 1:nrow(faCSV)) {
-      if (faCSV$imagePath[i] != "") {
-        formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionWithImage(faCSV, i))
-      } else {
-        formattedPapers <- tagAppendChildren(formattedPapers, createFeaturedAnalysisAccordionNoImage(faCSV, i))
-      }    
+    panels <- lapply(1:nrow(faCSV), function(i) {
+    if (faCSV$imagePath[i] != "") {
+      createFeaturedAnalysisAccordionWithImage(faCSV, i)
+    } else {
+      createFeaturedAnalysisAccordionNoImage(faCSV, i)
     }
-    return(formattedPapers)
+  })
+
+  accordion(
+    !!!panels,
+    open = 1   
+  )
   })
 
   createFeaturedAnalysisAccordionWithImage <- function(faCSV, i) {
     accordion_panel(
       title = faCSV$title[i],
+      collapsed = FALSE,
       div(
         align = "left",
         div(strong("Author(s): "), p(paste(faCSV$author[i], collapse = ", "))),
@@ -307,72 +303,6 @@ observeEvent(input$customGraphType, {
         updateTextAreaInput(inputId = "message", value = "")
       }
   })
-  
-  output$jonne <- renderImage(
-    {
-      list(
-        src = "./resources/images/jonne_kamphorst.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$zachary <- renderImage(
-    {
-      list(
-        src = "./resources/images/zachary_schaller.png",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$sam <- renderImage(
-    {
-      list(
-        src = "./resources/images/samuel_young.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-  #Contact Us Background
-  output$contact_bg <- renderImage(
-    {
-      list(
-        src = "./resources/images/rally.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$lucy <- renderImage(
-    {
-      list(
-        src = "./resources/images/lucy_lewark.png",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
-
-  output$nathan <- renderImage(
-    {
-      list(
-        src = "./resources/images/nathan_crane.jpg",
-        height = "auto",
-        width = "100%"
-      )
-    },
-    deleteFile = FALSE
-  )
 
   state_choices <- c(
     "AL" = "Alabama",
@@ -427,4 +357,16 @@ observeEvent(input$customGraphType, {
     "WI" = "Wisconsin",
     "WY" = "Wyoming"
   )
+
+  session$onSessionEnded(function() {
+    # Remove leaflet layers explicitly
+    try(leafletProxy("map") %>% clearShapes() %>% clearMarkers() %>% clearControls(), silent = TRUE)
+    
+    # Clear stored reactive data
+    slice_ignoring_regional_filtering <- NULL
+    current_data_slice <- NULL
+
+    # Run garbage collection
+    gc(full = TRUE)
+  })
 }

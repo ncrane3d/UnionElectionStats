@@ -22,12 +22,12 @@ dashboard <- function(id) {
                     div(
                         p("This website is about union election data (the flow of organizing activity), it is not about union 
                             membership data (the stock of unionized workers). For membership data, please visit ", 
-                            tags$a(href="http://unionstats.com/", "unionstats.com."),  
+                            tags$a(href="http://unionstats.com/", "unionstats.com.", target="_blank"),  
                             "For info on strikes and work stoppages, use the labor action tracker at" , 
-                            tags$a(href="http://striketracker.ilr.cornell.edu", "striketracker.ilr.cornell.edu."),    
+                            tags$a(href="http://striketracker.ilr.cornell.edu", "striketracker.ilr.cornell.edu.", target="_blank"),    
                             "And for additional election analysis (for years after 2000) and some excellent real-time case tracking, 
                             check out ", 
-                            tags$a(href="http://unionelections.org", "unionelections.org."))%>% 
+                            tags$a(href="http://unionelections.org", "unionelections.org.", target="_blank"))%>% 
                                 tagAppendAttributes(class = "paragraphIndent"),
                         p("We stand on the shoulders of giants to bring you this resource.  Many thanks to Henry Farber, Bruce Western, 
                             J.P. Ferguson, Thomas Holmes, David Lee, Alexandre Mas, and Jack Fiorito for their seminal data collection 
@@ -205,18 +205,19 @@ dashboard <- function(id) {
                         card(plotOutput("customGraphBuilder-customVisualization"))
                     )
                 ),
-                card(
-                    card_header("Presets"),
-                    layout_column_wrap(
-                        width = 1/2,
-                        card(card_header("Industries"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-industryPreset")),
-                        card(card_header("Unit Types"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-unitTypePreset")),
-                        card(card_header("Regions"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-regionalPreset")),
-                        card(card_header("Election Types"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-elecTypePreset")),
-                        card(card_header("Heatmap"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-heatmapPreset")),
-                        card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-linePreset"))
-                    )
-                ),
+                # Uncomment this block of code to reintroduce preset ui position
+                # card(
+                #     card_header("Presets"),
+                #     layout_column_wrap(
+                #         width = 1/2,
+                #         card(card_header("Industries"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-industryPreset")),
+                #         card(card_header("Unit Types"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-unitTypePreset")),
+                #         card(card_header("Regions"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-regionalPreset")),
+                #         card(card_header("Election Types"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-elecTypePreset")),
+                #         card(card_header("Heatmap"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-heatmapPreset")),
+                #         card(card_header("Lines"), height="30vh", fill = TRUE, plotOutput("presetGraphBuilder-linePreset"))
+                #     )
+                # ),
                 card(
                     card_header("Responsible Data Use"),
                     "As the saying goes, “figures never lie, but liars sure figure.”  Please use these 
