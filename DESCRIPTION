@@ -1,28 +1,19 @@
 Package: appdemo
 Title: Union Election Stats
 Version: 0.0.0.9000
-Authors@R: 
-    c(person(given = "Zachary",
-           family = "Schaller",
-           role = c("aut", "cre"),
-           email = "zachary.schaller@colostate.edu"),
-    person(given = "Lucy",
-           family = "Lewark",
-           role = "aut",
-           email = "lucylewark@gmail.com"),
-    person(given = "Nathan",
-           family = "Crane",
-           role = "aut",
-           email = "ncrane3d@gmail.com"))
-Description: A shiny app designed to provide data visualizations and downloads for an expanded National Labor Relations Board union election dataset.
+Authors@R: c(
+    person("Zachary", "Schaller", , "zachary.schaller@colostate.edu", role = c("aut", "cre")),
+    person("Lucy", "Lewark", , "lucylewark@gmail.com", role = "aut"),
+    person("Nathan", "Crane", , "ncrane3d@gmail.com", role = "aut")
+  )
+Description: A shiny app designed to provide data visualizations and
+    downloads for an expanded National Labor Relations Board union
+    election dataset.
 License: What license is it under?
 Imports: 
-    attempt,
+    bslib,
     config,
     DBI,
-    DT,
-    RPostgres,
-    bslib,
     dplyr,
     duckdb,
     gcookbook,
@@ -36,7 +27,6 @@ Imports:
     lubridate,
     magrittr,
     plotly,
-    pool,
     rmapshaper,
     sendmailR,
     sf,
@@ -44,12 +34,12 @@ Imports:
     shiny,
     shinyFeedback,
     tidyverse,
-    viridis,
-    pkgload
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.3.2
+    viridis
 Suggests: 
+    spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Encoding: UTF-8
 Language: en-US
+LazyData: true
+RoxygenNote: 7.3.2
