@@ -3,7 +3,7 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
-#' @import sendmailR
+#' @import mailR
 #' @import shinyFeedback
 #' @import sf
 #' @import dplyr
@@ -282,12 +282,29 @@ observeEvent(input$customGraphType, {
 
       #TODO: Add in email functionality (will have to open email socket on computre)
       if(!(input$name == "" || input$email == "" || input$subject == "" || input$message == "")) {
-        print(paste(input$name, input$email, input$subject, input$message, "\n"))
+        #print(paste(input$name, input$email, input$subject, input$message, "\n"))
         # from <- isolate(input$email)
         # to <- isolate("ncrane3d@gmail.com")
         # subject <- isolate(input$subject)
         # msg <- isolate(input$message)
         # sendmail(from, to, subject, msg)
+
+        gmail_pass <- Sys.getenv("GMAIL_PASS")
+
+        send.mail(
+          from = "unionelectionstats@gmail.com",
+          to = "unionelectionstats@gmail.com",
+          subject = isolate(input$subject),
+          body = glue(isolate(input$message), "\n\nEmail sent by: ", isolate(input$name), "\n\nEmail address provided: ", isolate(input$email)),
+          smtp = list(
+            host.name = "smtp.gmail.com", 
+            port = 587, 
+            user.name="unionelectionstats@gmail.com", 
+            passwd = gmail_pass, 
+            tls=TRUE
+          ),
+          authenticate = TRUE,
+          send = TRUE)
 
         showModal(modalDialog(
         title = "Your Feedback Has Been Received",

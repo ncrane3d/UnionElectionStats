@@ -1,5 +1,6 @@
-FROM rocker/geospatial:4.5.0
-RUN apt-get update -y && apt-get install -y  make pandoc libcurl4-openssl-dev libssl-dev libicu-dev libx11-dev xz-utils libcairo2-dev libfontconfig1-dev libfreetype6-dev libpng-dev zlib1g-dev cmake libgdal-dev gdal-bin libgeos-dev libproj-dev libsqlite3-dev libudunits2-dev libfribidi-dev libharfbuzz-dev libjpeg-dev libtiff-dev libwebp-dev git libxml2-dev && rm -rf /var/lib/apt/lists/*
+FROM rocker/shiny:latest
+RUN apt-get update -y && apt-get install -y  make pandoc libcurl4-openssl-dev libssl-dev libicu-dev libx11-dev xz-utils libcairo2-dev libfontconfig1-dev libfreetype6-dev libpng-dev zlib1g-dev cmake libgdal-dev gdal-bin libgeos-dev libproj-dev libsqlite3-dev libudunits2-dev libfribidi-dev libharfbuzz-dev libjpeg-dev libtiff-dev libwebp-dev git libxml2-dev openjdk-8-jdk ca-certificates r-cran-rjava && update-ca-certificates && rm -rf /var/lib/apt/lists/* 
+RUN R CMD javareconf
 RUN mkdir -p /usr/local/lib/R/etc/ /usr/lib/R/etc/
 RUN echo "options(renv.config.pak.enabled = FALSE, repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" | tee /usr/local/lib/R/etc/Rprofile.site | tee /usr/lib/R/etc/Rprofile.site
 RUN R -e 'install.packages("remotes")'
@@ -9,4 +10,4 @@ RUN --mount=type=cache,id=renv-cache,target=/root/.cache/R/renv R -e 'renv::rest
 WORKDIR /srv/shiny-server/
 COPY . /srv/shiny-server/
 EXPOSE 3838
-CMD R -e 'shiny::runApp("/srv/shiny-server",host="0.0.0.0",port=3838)'
+CMD ["/usr/bin/shiny-server"]
