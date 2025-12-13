@@ -280,17 +280,8 @@ observeEvent(input$customGraphType, {
         hideFeedback("message")
       }
 
-      #TODO: Add in email functionality (will have to open email socket on computre)
       if(!(input$name == "" || input$email == "" || input$subject == "" || input$message == "")) {
-        #print(paste(input$name, input$email, input$subject, input$message, "\n"))
-        # from <- isolate(input$email)
-        # to <- isolate("ncrane3d@gmail.com")
-        # subject <- isolate(input$subject)
-        # msg <- isolate(input$message)
-        # sendmail(from, to, subject, msg)
-
         gmail_pass <- Sys.getenv("GMAIL_PASS")
-
         send.mail(
           from = "unionelectionstats@gmail.com",
           to = "unionelectionstats@gmail.com",
