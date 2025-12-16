@@ -16,7 +16,7 @@ about <- function(id) {
                     of data collected from previous scholars and various FOIA requests.  We also painstakingly geocoded the data whenever possible, 
                     chasing down location info by hand when necessary.  The database is thus ambitious in its scope and novel in its comprehensiveness 
                     and accessibility.", align = "left") %>% 
-                        tagAppendAttributes(class = "paragraphIndent"),
+                        tagAppendAttributes(class = "paragraphMarginFix"),
                     tags$br(),
                     p("In a time of high income/wealth inequality and widespread wage suppression and wage theft, the labor movement is enjoying 
                     renewed interest.  But we must learn from history if we are to ensure that modern labor relations fulfills the needs of both 
@@ -26,7 +26,7 @@ about <- function(id) {
                     of data collected from previous scholars and various FOIA requests.  We also painstakingly geocoded the data whenever possible, 
                     chasing down location info by hand when necessary.  The database is thus ambitious in its scope and novel in its comprehensiveness 
                     and accessibility.", align = "left") %>% 
-                        tagAppendAttributes(class = "paragraphIndent"),    
+                        tagAppendAttributes(class = "paragraphMarginFix"),    
                 )
             )%>%
             tagAppendAttributes(class = "scrollable-panel"),

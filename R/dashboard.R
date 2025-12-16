@@ -18,7 +18,7 @@ dashboard <- function(id) {
                     close.  Use the Downloads tab to access the database, check out the Featured Analysis tab to dive deeper 
                     into union scholarship, and use the Contact Us tab with any inquiries or bug reports.", actionLink("citationPopup","Use of data requires 
                     citation")) %>% 
-                        tagAppendAttributes(class = "paragraphIndent"),
+                        tagAppendAttributes(class = "paragraphMarginFix"),
                     div(
                         p("This website is about union election data (the flow of organizing activity), it is not about union 
                             membership data (the stock of unionized workers). For membership data, please visit ", 
@@ -28,11 +28,11 @@ dashboard <- function(id) {
                             "And for additional election analysis (for years after 2000) and some excellent real-time case tracking, 
                             check out ", 
                             tags$a(href="http://unionelections.org", "unionelections.org.", target="_blank"))%>% 
-                                tagAppendAttributes(class = "paragraphIndent"),
+                                tagAppendAttributes(class = "paragraphMarginFix"),
                         p("We stand on the shoulders of giants to bring you this resource.  Many thanks to Henry Farber, Bruce Western, 
                             J.P. Ferguson, Thomas Holmes, David Lee, Alexandre Mas, and Jack Fiorito for their seminal data collection 
                             and research on union elections.  We also thank the Russell Sage Foundation for their support (grant # 2307-44744).") %>% 
-                                tagAppendAttributes(class = "paragraphIndent")
+                                tagAppendAttributes(class = "paragraphMarginFix")
                     ),  
                     
                 ),
