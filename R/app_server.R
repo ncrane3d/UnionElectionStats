@@ -54,6 +54,7 @@ app_server <- function(input, output, session) {
     }
     setDF(electionDataRegional)
   })
+  
   mapModule("mapBuilder", current_data_slice, slice_ignoring_regional_filtering)
   customGraphModule("customGraphBuilder", current_data_slice, reactive(input$customGraphType), reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
   # Uncomment this block to enable the preset graph module

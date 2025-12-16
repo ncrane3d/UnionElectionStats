@@ -92,15 +92,11 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
 
         #Removed with election points, will need to refactor to add back in
         #Error handling for when there are no points to render on map
-        # getCircleMarkerData <- function(){
-        #     if (nrow(current_data_slice()) > 1){
-        #         coord_filtered_slice <- current_data_slice()[!is.na(current_data_slice()$longitude) & !is.na(current_data_slice()$latitude), ]
-        #         return(st_as_sf(coord_filtered_slice, coords = c("longitude", "latitude"), crs = 4326))
-        #     } else {
-        #         #Returns dataframe containing 1 point in Bangladesh, out of constrained view of user
-        #         return(st_as_sf((data.frame(latitude=c(23.6850), longitude=c(90.3563), yrclosed=c(1), employer=c("none"), votes_for= c(1), votes_against=c(1))), coords = c("lon", "lat"), crs = 4326))
-        #     }
-        # }
+        getCircleMarkerData <- function(){
+            coord_filtered_slice <- current_data_slice()[!is.na(current_data_slice()$longitude) & !is.na(current_data_slice()$latitude), ]
+            print(nrow(coord_filtered_slice))
+            return(st_as_sf(coord_filtered_slice, coords = c("longitude", "latitude"), crs = 4326))
+        }
 
         #Zoom on click of territory shape
         observeEvent( input$map_shape_click, {
@@ -167,31 +163,32 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
 
         #Election Points
         #Uncomment this block to reintroduce points to the map
-        # observe({
-        #     #Initial overflowing fix attempt
-        #     #req(input$map_zoom >= 7)
-        #     leafletProxy("map") %>%
-        #     removeGlPoints("electionPopup") %>%
-        #     addGlPoints(
-        #         data = getCircleMarkerData(),
-        #         group = "points",
-        #         pane = "markers",
-        #         layerId = "electionPopup",
-        #         fillColor = "#440154",
-        #         #fillColor = ~ifelse(jittered, "red", "blue"),
-        #         radius = 7,
-        #         opacity =.65,
-        #         popup = ~sprintf(
-        #             "Case Number: %s<br/>Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s<br/>County: %s (%s)",
-        #             case_number,
-        #             employer,
-        #             year_closed,
-        #             round((votes_for / votes_total) * 100, 2),
-        #             county,
-        #             FIPS
-        #         )
-        #     )
-        # })
+        observe({
+            proxy <- leafletProxy("map") %>%
+            clearGroup("points") 
+        
+            if (nrow(current_data_slice()) > 0) {
+                proxy %>%
+                addGlPoints(
+                    data = getCircleMarkerData(),
+                    group = "points",       
+                    pane = "markers",
+                    layerId = getCircleMarkerData()$case_number, 
+                    fillColor = "#440154",
+                    radius = 7,
+                    opacity = 0.65,
+                    popup = ~sprintf(
+                    "Case Number: %s<br/>Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s<br/>County: %s (%s)",
+                    case_number,
+                    employer,
+                    year_closed,
+                    round((votes_for / votes_total) * 100, 2),
+                    county,
+                    FIPS
+                    )
+                )
+            }
+        })
 
         observe({
             req(input$map_zoom)
