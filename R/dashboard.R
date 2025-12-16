@@ -202,7 +202,8 @@ dashboard <- function(id) {
                             )
                         ) %>% 
                         tagAppendAttributes(class = "custom-visualization-margin"),
-                        card(plotOutput("customGraphBuilder-customVisualization"))
+                        card(plotOutput("customGraphBuilder-customVisualization"))  %>% 
+                        tagAppendAttributes(class = "card-border-remover")
                     )
                 ),
                 # Uncomment this block of code to reintroduce preset ui position

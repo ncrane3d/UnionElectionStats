@@ -13,21 +13,22 @@
 app_ui <- function(request) {
   #Set up site theme
   theme <- bs_theme(
-    bg = "#93AFC2", #Light blue background
+    bg = "#F7F8FA", 
     fg = "#283044", #Dark blue of navbar
-    primary = "#93AFC2", #Light blue background
+    primary = "#487cebff", 
     secondary = "#131620", #Black/blue for text
     base_font = "Jost"
   ) %>%
     bs_add_rules(
       list(
         #Shiny adds in classes to most elements it generates, if you'd like to add more rules just inspect the webpage to find what the classes are.
-        ".nav-link, .navbar-brand { color: #FDF9F6; }",
-        ".navbar-brand:hover { color: #FDF9F6; }",
+        ".nav-link, .navbar-brand { color: #FFFFFF; }",
+        ".navbar-brand:hover { color: #FFFFFF; }",
         ".nav-link, .nav-link-active { font-size: medium; }",
-        ".card, .sidebar { background-color:#FDF9F6 !important; border-radius: 0px;}",
+        ".card, .sidebar { background-color:#FFFFFF !important; border-radius: 0px; border-width: 1px; border-color: #c2c3c7ff; }",
+        ".card-border-remover {border-width: 0 !important;}",
         ".centered-card {  width: 80%; margin: auto; overflow: hidden; }",
-        ".dashboardheader, { background-color: #FDF9F6 !important; padding: 25px; margin-top : -25px !important;}",
+        ".dashboardheader, { background-color: #FFFFFF !important; padding: 25px; margin-top : -25px !important;}",
         ".dashboardheader bslib-layout-columns { margin-bottom: 0 !important; }",
         ".scrollable-panel {overflow: hidden !important; }",
         ".sidebar {position: sticky; top: 10vh;}",
@@ -37,7 +38,7 @@ app_ui <- function(request) {
         ".contact_us_container div { margin-bottom: 0px!important; }",
         ".tab-pane {padding:25px 0px 0px 0px !important; }",
         ".navbar div .collapsing { max-height: 200px; }",
-        ".bslib-sidebar-layout {margin-bottom: 0px; border: 0 !important;}",
+        ".bslib-sidebar-layout {margin-bottom: 0px; }",
         ".navbar {position: sticky; top: 0; z-index:1000; }",
         ".tooltip-adjustment, .artificial-gap {margin-bottom: 16px !important; }",
         ".sidebar-content {row-gap: 8px !important; }", 
@@ -46,10 +47,10 @@ app_ui <- function(request) {
         ".modal-body a { color: #283044 !important; }",
         ".modal-title { margin: auto; font-size: 32px !important; }",
         "div h6 {margin-bottom: 0px; margin-top: 8px; }",
-        ".modal-content {background-color: #FDF9F6; }",
+        ".modal-content {background-color: #FFFFFF; }",
         # Below is styling for all accordions, as seen on featured analysis page
         ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
-        ".accordion-item, .accordion-header, .accordion-button{  background-color: #FDF9F6;}",
+        ".accordion-item, .accordion-header, .accordion-button{  background-color: #FFFFFF;}",
         ".accordion-title {font-weight: bold;}",
         ".accordion-item { margin-bottom: 18px; margin-top: 2px; border-top-width: 1px !important; }",
         ".accordion-body p { margin-bottom: 0px; text-align:left; padding: 16px; font-weight: normal;}",
