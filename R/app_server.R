@@ -224,8 +224,10 @@ observeEvent(input$customGraphType, {
       div(
         align = "left",
         div(strong("Author(s): "), p(paste(faCSV$author[i], collapse = ", "))),
-        div(strong("Abstract: "), p(faCSV$abstract[i])),
-        div(strong("Featured Figure: "), div(imageOutput(paste0("figure", i)) %>% tagAppendAttributes(class = "accordion-figure"), align = "center")),
+        div(class="abstract-row",
+          div(class="abstract-text", strong("Abstract: "), p(faCSV$abstract[i])),
+          div(class="abstract-figure", strong("Featured Figure: "), div(imageOutput(paste0("figure", i)) %>% tagAppendAttributes(class = "accordion-figure"), align = "center")),
+      ),
         div(strong("Link: "), p(tags$a(href=faCSV$link[i], faCSV$title[i])))
       ) %>%
       tagAppendAttributes(id = "accordion-analysis"),

@@ -13,7 +13,7 @@ downloads <- function(id) {
                     p("Below are the links to download the cleaned NLRB data. The full dataset is at the election level 
                     (unique case_number, unitID combinations).  For convenience, we also offer aggregated versions at the 
                     state, county, annual, and industry levels") %>% 
-                        tagAppendAttributes(class = "paragraphIndent"),
+                        tagAppendAttributes(class = "paragraphMarginFix"),
                     div(
                         h6("Full Dataset:"),
                         #downloadLink("cleanCSV", label = "Elections_Data_Cleaned_V0.csv"),
@@ -24,6 +24,8 @@ downloads <- function(id) {
                         tags$br(),
                         #downloadLink("cleanFST", label = "Elections_Data_Cleaned_V0.fst"),
                         tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Elections_Data_Cleaned_V0.fst", "Elections_Data_Cleaned_V0.fst"),
+                        tags$br(),
+                        tags$br(),
                         h6("State:"),
                         tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/State_Cross_Section.csv", "State_Cross_Section.csv"),
                         tags$br(),
@@ -54,7 +56,7 @@ downloads <- function(id) {
                     you are A) interested in a particular election and want to see the full set of info available on it, even if 
                     some of it is wrong, messy, or unintelligible; or B) Very comfortable with data wrangling and well-versed in 
                     the NLRB election process/procedures.") %>% 
-                        tagAppendAttributes(class = "paragraphIndent"),
+                        tagAppendAttributes(class = "paragraphMarginFix"),
                     div(
                         h6("Raw File Types:"),
                         #downloadLink("rawCSV", label = "Elections_Data_Raw_V0.csv"),
@@ -72,7 +74,7 @@ downloads <- function(id) {
                     height = height,
                     p("Below are the variable definitions for both the cleaned and raw dataset, as well as a history of version changes. 
                     It is automated through the site’s github which can be found ", tags$a(href="https://github.com/ncrane3d/UnionElectionStats", "here.")) %>% 
-                        tagAppendAttributes(class = "paragraphIndent"),
+                        tagAppendAttributes(class = "paragraphMarginFix"),
                     div(
                         #downloadLink("varDocClean", label = "Variable Documentation Elections Data Cleaned.xlsx"),
                         tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Variable+Documentation+Elections+Data+Cleaned.xlsx", "Variable Documentation Elections Data Cleaned.xlsx"),
