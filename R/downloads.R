@@ -16,34 +16,31 @@ downloads <- function(id) {
                         tagAppendAttributes(class = "paragraphMarginFix"),
                     div(
                         h6("Full Dataset:"),
-                        #downloadLink("cleanCSV", label = "Elections_Data_Cleaned_V0.csv"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Elections_Data_Cleaned_V0.csv", "Elections_Data_Cleaned_V0.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=1A8inZAf2TMBRWedoq_33_KAjSg2R0of1&export=download", "Elections_Data_Cleaned_V0.csv", target="_blank"),
                         tags$br(),
-                        #downloadLink("cleanDTA", label = "Elections_Data_Cleaned_V0.dta"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Elections_Data_Cleaned_V0.dta", "Elections_Data_Cleaned_V0.dta"),
+                        tags$a(href = "http://drive.google.com/uc?id=1T4QovyyRTZDbnf2Ev6TS61exEJuYAtEk&export=download", "Elections_Data_Cleaned_V0.dta", target="_blank"),
                         tags$br(),
-                        #downloadLink("cleanFST", label = "Elections_Data_Cleaned_V0.fst"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Elections_Data_Cleaned_V0.fst", "Elections_Data_Cleaned_V0.fst"),
+                        tags$a(href = "http://drive.google.com/uc?id=1M5JZ6aNJqYlEHtEGvOW54Qqe5UVMQr02&export=download", "Elections_Data_Cleaned_V0.fst", target="_blank"),
                         tags$br(),
                         tags$br(),
                         h6("State:"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/State_Cross_Section.csv", "State_Cross_Section.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=1cd21L32dPGaFI_LEBSHYBaLyXcjzJtnT&export=download", "State_Cross_Section.csv", target="_blank"),
                         tags$br(),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/State_Panel.csv", "State_Panel.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=1BBedxQPKZIPJWE_G5RJBOhwLg8iXJZOS&export=download", "State_Panel.csv", target="_blank"),
                         h6("County:"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/County_Cross_Section.csv", "County_Cross_Section.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=12hotDZtBSOEfdXn0Et1VbYW7uYZ1lUM6&export=download", "County_Cross_Section.csv", target="_blank"),
                         tags$br(),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/County_Panel.csv", "County_Panel.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=1TP9CxFnLClK1uxlpRRbFO0BSimYvWHJv&export=download", "County_Panel.csv", target="_blank"),
                         h6("Annual Time Series:"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Annual_Time_Series.csv", "Annual_Time_Series.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=134PRcJEboo5KksJzRnmtQPYo78SqU-pU&export=download", "Annual_Time_Series.csv", target="_blank"),
                         h6("Industry by SIC Code:"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/SIC_Cross_Section.csv", "SIC_Cross_Section.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=1Rm6SkwldDrwppqk8X3kXavLlvYIhjfK0&export=download", "SIC_Cross_Section.csv", target="_blank"),
                         tags$br(),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/SIC_Panel.csv", "SIC_Panel.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=1fdo4KejX-94vbCPujDYN2dU29mgMEBVq&export=download", "SIC_Panel.csv", target="_blank"),
                         h6("Industry by NAICS Code:"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/NAICS_Cross_Section.csv", "NAICS_Cross_Section.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=1rVo2x9QDabj8CwRhr23jJLNST3aWnPAM&export=download", "NAICS_Cross_Section.csv", target="_blank"),
                         tags$br(),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/NAICS_Panel.csv", "NAICS_Panel.csv")
+                        tags$a(href = "http://drive.google.com/uc?id=11EB10TfQXIdyhwU9IX4QQOSHLioTMUA8&export=download", "NAICS_Panel.csv", target="_blank")
                     )
                 ),
                 card(
@@ -59,32 +56,29 @@ downloads <- function(id) {
                         tagAppendAttributes(class = "paragraphMarginFix"),
                     div(
                         h6("Raw File Types:"),
-                        #downloadLink("rawCSV", label = "Elections_Data_Raw_V0.csv"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Elections_Data_Raw_V0.csv", "Elections_Data_Raw_V0.csv"),
+                        tags$a(href = "http://drive.google.com/uc?id=1kh_EncPPZK83PU54M_ryy4ixfomO5QuQ&export=download", "Elections_Data_Raw_V0.csv", target="_blank"),
                         tags$br(),
-                        #downloadLink("rawDTA", label = "Elections_Data_Raw_V0.dta"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Elections_Data_Raw_V0.dta", "Elections_Data_Raw_V0.dta"),
+                        tags$a(href = "http://drive.google.com/uc?id=1ArLQgYco1KsnCPSRIlVU-tTZFg_Jbqc-&export=download", "Elections_Data_Raw_V0.dta", target="_blank"),
                         tags$br(),
-                        #downloadLink("rawFST", label = "Elections_Data_Raw_V0.fst")
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Elections_Data_Raw_V0.fst", "Elections_Data_Raw_V0.fst"),
+                        tags$a(href = "http://drive.google.com/uc?id=1RUS5BS-eJAtuxGzUEOUu4wTiEX3CmEac&export=download", "Elections_Data_Raw_V0.fst", target="_blank"),
                     )
                 ),
                 card(
                     card_header("Documentation"),
                     height = height,
                     p("Below are the variable definitions for both the cleaned and raw dataset, as well as a history of version changes. 
-                    It is automated through the site’s github which can be found ", tags$a(href="https://github.com/ncrane3d/UnionElectionStats", "here.")) %>% 
+                    It is automated through the site’s github which can be found ", tags$a(href="https://github.com/ncrane3d/UnionElectionStats", "here.", target="_blank")) %>% 
                         tagAppendAttributes(class = "paragraphMarginFix"),
                     div(
                         #downloadLink("varDocClean", label = "Variable Documentation Elections Data Cleaned.xlsx"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Variable+Documentation+Elections+Data+Cleaned.xlsx", "Variable Documentation Elections Data Cleaned.xlsx"),
+                        tags$a(href = "http://drive.google.com/uc?id=15bkPANK1FwyiaxZx8HAZeoPR6tpoeEBq&export=download", "Variable Documentation Elections Data Cleaned.xlsx", target="_blank"),
                         tags$br(),
                         #downloadLink("varDocRaw", label = "Variable Documentation Elections Data Raw.xlsx"),
-                        tags$a(href = "https://unionelectionstats.s3.us-east-2.amazonaws.com/Variable+Documentation+Elections+Data+Raw.xlsx", "Variable Documentation Elections Data Raw.xlsx"),
+                        tags$a(href = "http://drive.google.com/uc?id=1XogQh-legyHCfCRcwKUd_1i1C7un__nL&export=download", "Variable Documentation Elections Data Raw.xlsx", target="_blank"),
                     ),
                     div(
                         h6("Version History"),
-                        tags$a(href = "https://github.com/ncrane3d/UnionElectionStats", "V0.1.0 Alpha"),
+                        tags$a(href = "https://github.com/ncrane3d/UnionElectionStats", "V0.1.0 Alpha", target="_blank"),
                     )
 
                 )
