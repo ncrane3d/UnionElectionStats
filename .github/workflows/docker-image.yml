@@ -1,0 +1,91 @@
+name: Deploy Shiny App
+
+on:
+  workflow_dispatch:
+    inputs:
+      port:
+        description: 'Host Port to map (e.g., 80 or 443)'
+        required: true
+        default: '443'
+  release:
+    types: [published]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: unionelectionstats
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=raw,value=latest,enable=${{ github.event_name == 'workflow_dispatch' }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: Configure Union Election Stats Deployment
+    
+    steps:
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ${{ secrets.SERVER_SSH_KEY_PASSPHRASE }}
+          envs: GMAIL_PASS,GITHUB_ACTOR,GITHUB_TOKEN
+          script: |
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            TAG=${{ github.event.release.tag_name || 'latest' }}
+            IMAGE="ghcr.io/${{ github.repository }}:$TAG"
+            CONTAINER_NAME="unionelectionstats"
+            HOST_PORT=${{ github.event.inputs.port || '443' }}
+
+            echo "Deploying $IMAGE on port $HOST_PORT..."
+
+            docker pull $IMAGE
+
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
+            
+            docker run -d \
+              --name $CONTAINER_NAME \
+              --restart unless-stopped \
+              --memory="11g" \
+              --memory-swap="11g" \
+              -e GMAIL_PASS="${{ secrets.GMAIL_PASS }}" \
+              -p $HOST_PORT:3838 \
+              $IMAGE
+            
+            docker image prune -f
