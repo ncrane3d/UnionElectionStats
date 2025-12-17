@@ -12,7 +12,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: unionelectionstats
 
 jobs:
   build-and-push:
@@ -25,6 +24,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Lowercase the repo name
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -36,7 +38,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.REPO_LC }}
           tags: |
             type=semver,pattern={{version}}
             type=ref,event=branch
@@ -68,7 +70,7 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             TAG=${{ github.event.release.tag_name || 'latest' }}
-            IMAGE="ghcr.io/${{ github.repository }}:$TAG"
+            IMAGE="ghcr.io/$REPO_LC:$TAG"
             CONTAINER_NAME="unionelectionstats"
             HOST_PORT=${{ github.event.inputs.port || '80' }}
 
