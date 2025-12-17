@@ -65,6 +65,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           passphrase: ${{ secrets.SERVER_SSH_KEY_PASSPHRASE }}
+          port: ${{ secrets.SSH_PORT }}
           envs: GMAIL_PASS,GITHUB_ACTOR,GITHUB_TOKEN
           script: |
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
