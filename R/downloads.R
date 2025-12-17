@@ -78,7 +78,7 @@ downloads <- function(id) {
                     ),
                     div(
                         h6("Version History"),
-                        tags$a(href = "https://github.com/ncrane3d/UnionElectionStats", "V0.1.0 Alpha", target="_blank"),
+                        tags$a(href = "https://github.com/ncrane3d/UnionElectionStats/releases/latest", "v1.0.0", target="_blank"),
                     )
 
                 )
