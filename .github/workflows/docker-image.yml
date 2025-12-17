@@ -6,7 +6,7 @@ on:
       port:
         description: 'Host Port to map (e.g., 80 or 443)'
         required: true
-        default: '443'
+        default: '80'
   release:
     types: [published]
 
@@ -70,7 +70,7 @@ jobs:
             TAG=${{ github.event.release.tag_name || 'latest' }}
             IMAGE="ghcr.io/${{ github.repository }}:$TAG"
             CONTAINER_NAME="unionelectionstats"
-            HOST_PORT=${{ github.event.inputs.port || '443' }}
+            HOST_PORT=${{ github.event.inputs.port || '80' }}
 
             echo "Deploying $IMAGE on port $HOST_PORT..."
 
