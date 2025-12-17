@@ -1,4 +1,4 @@
-mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering) {  
+mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering, showElections) {  
   moduleServer(
     id,
     function(input, output, session) { 
@@ -10,7 +10,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
             addMapPane(name="markers", zIndex=420) %>%
             addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
             #Zoom based conditional rendering for layers
-            groupOptions("points", zoomLevels = 7:20) |>
+            groupOptions("points", zoomLevels = 6:20) |>
             groupOptions("counties", zoomLevels = 5:20) |>
             groupOptions("states", zoomLevels = 0:4) |>
             #Map panning bounds
@@ -80,7 +80,6 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
                     reverse = TRUE)
         }
 
-        territoryOpacity <- 0.5
         boundaries <- getBoundaries(current_data_slice)
         inclusiveBoundaries <- getBoundaries(slice_ignoring_regional_filtering)
         mapHighlight <- highlightOptions(
@@ -94,7 +93,6 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
         #Error handling for when there are no points to render on map
         getCircleMarkerData <- function(){
             coord_filtered_slice <- current_data_slice()[!is.na(current_data_slice()$longitude) & !is.na(current_data_slice()$latitude), ]
-            print(nrow(coord_filtered_slice))
             return(st_as_sf(coord_filtered_slice, coords = c("longitude", "latitude"), crs = 4326))
         }
 
@@ -126,7 +124,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
             addPolygons(
                 data = df,
                 weight = 1,
-                fillOpacity = territoryOpacity,
+                fillOpacity = .75,
                 color = ~ statePalette(state_count),
                 group = "states",
                 layerId= ~ state,
@@ -161,13 +159,21 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering)
             )
         })
 
+        observeEvent(showElections(), {
+            if(showElections() == TRUE && input$map_zoom < 6) {
+                leafletProxy("map") %>%
+                setView(lng = -100, lat = 39, zoom = 6)
+            } else {
+                leafletProxy("map") %>%
+                clearGroup("points")
+            }
+        })
+
         #Election Points
-        #Uncomment this block to reintroduce points to the map
         observe({
             proxy <- leafletProxy("map") %>%
             clearGroup("points") 
-        
-            if (nrow(current_data_slice()) > 0) {
+            if (nrow(current_data_slice()) > 0 && showElections() == TRUE) {
                 proxy %>%
                 addGlPoints(
                     data = getCircleMarkerData(),

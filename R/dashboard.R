@@ -169,7 +169,17 @@ dashboard <- function(id) {
                         ),
                         "Sets slider to hundredths place.",
                         placement = "right"
-                    )
+                    ),
+                    tooltip(
+                        checkboxInput(
+                            "showElections",
+                            "Show Individual Elections",
+                            value = FALSE
+                        ),
+                        "Will also zoom map to the zoom level of points.",
+                        placement = "right"
+                    ),
+                    p(style="color:red;", "Warning: Loading all election points is resource intensive, filtering will be slower.")
                 ),
                 layout_columns(
                     card(leafletOutput("mapBuilder-map"), height = "75vh"),
