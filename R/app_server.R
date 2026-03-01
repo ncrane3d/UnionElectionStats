@@ -26,8 +26,8 @@
 #' @import fst
 #' @import tidyr
 #' @import forcats
-#' @import ggthemes
 #' @import ggoutlier
+#' @import ggthemes
 #' @noRd
 
 #'
@@ -312,7 +312,7 @@ app_server <- function(input, output, session) {
   })
 
   plotMargin <- function(){
-    return(theme_calc() + theme(plot.background = element_rect(fill = "#F2F4FA", color = "#F2F4FA"),
+    return(ggthemes::theme_calc() + theme(plot.background = element_rect(fill = "#F2F4FA", color = "#F2F4FA"),
                                 panel.background = element_rect(fill = 'white'),
                                 panel.grid.major.y = element_line("gray")))
   }
