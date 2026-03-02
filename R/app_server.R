@@ -28,11 +28,13 @@
 #' @import forcats
 #' @import ggoutlier
 #' @import ggthemes
+#' @import shinyalert
 #' @noRd
 
 #'
 
 app_server <- function(input, output, session) {
+  shinyalert::shinyalert(title = "Title", text = "Text", closeOnClickOutside = TRUE, showConfirmButton = FALSE)
   #Conducts initial filter, without state/county
   electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
   slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
@@ -81,7 +83,7 @@ app_server <- function(input, output, session) {
                  summarize(avg_eligible = mean(eligible, na.rm=T),
                            med_eligible = median(eligible),
                            .groups = "drop") %>%
-                 pivot_longer(cols = c(avg_eligible,med_eligible),
+                 tidyr::pivot_longer(cols = c(avg_eligible,med_eligible),
                               names_to = "variable",
                               values_to = "stats"))
       }
@@ -92,7 +94,7 @@ app_server <- function(input, output, session) {
                  summarize(avgVotesAgainst = mean(votes_against,na.rm = T),
                            avgVotesFor = mean(votes_for,na.rm = T),
                            .groups = "drop") %>%
-                 pivot_longer(cols = c(avgVotesAgainst,avgVotesFor),
+                 tidyr::pivot_longer(cols = c(avgVotesAgainst,avgVotesFor),
                               names_to = "variable",
                               values_to = "stats"))
       }
@@ -131,7 +133,7 @@ app_server <- function(input, output, session) {
                  mutate(winRate = ifelse((votes_for/votes_total) > .5,1,0)) %>%
                  summarise(winRate = as.numeric(100*(sum(winRate,na.rm = T)/length(winRate))),
                            votesFor = 100*(sum(votes_for,na.rm = T)/sum(votes_total))) %>%
-                 pivot_longer(cols = c(winRate,votesFor),
+                 tidyr::pivot_longer(cols = c(winRate,votesFor),
                               names_to = "variable",
                               values_to = "stats"))
       }
@@ -182,7 +184,7 @@ app_server <- function(input, output, session) {
                          electionTypeShareC = 100*(sum((election_type == "C"))/ length(election_type)),
                          electionTypeShareB = 100*(sum((election_type == "B"))/ length(election_type)),
                          electionTypeShareE = 100*(sum((election_type == "E"))/ length(election_type))) %>%
-               pivot_longer(cols = c(electionTypeShareS, electionTypeShareR, electionTypeShareC,electionTypeShareB,electionTypeShareE),
+               tidyr::pivot_longer(cols = c(electionTypeShareS, electionTypeShareR, electionTypeShareC,electionTypeShareB,electionTypeShareE),
                             names_to = "variable",
                             values_to = "stats"))
     }
