@@ -34,7 +34,11 @@
 #'
 
 app_server <- function(input, output, session) {
-  shinyalert::shinyalert(title = "Title", text = "Text", closeOnClickOutside = TRUE, showConfirmButton = FALSE)
+  shinyalert::shinyalert(title = "Welcome to Union Election Stats",
+                         text = "This website is a user-friendly hub for data on National Labor Relations Board (NLRB) representation elections.
+                         Use the filter panel on the left to explore the history of union organizing through interactive visualizations.
+                         Use the Downloads tab to access the database containing the known universe of elections from 1962 to 2024.
+                         Read more about the project on the About page. Use of data requires citation.", closeOnClickOutside = TRUE, showConfirmButton = FALSE)
   #Conducts initial filter, without state/county
   electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
   slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
