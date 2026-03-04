@@ -9,26 +9,18 @@ dashboard <- function(id) {
       right = "10vw",
       card_header(
         layout_columns(
-          p("Welcome to Union Election Stats, a user-friendly hub for data on National Labor Relations Board (NLRB)
-                    representation elections.  Here you can explore the history of union organizing through interactive
-                    visualizations, learn about recent trends in the labor movement, and download data for your own bespoke
-                    analysis.  The database was constructed by a team of academic economists/political scientists, Zachary
-                    Schaller, Sammy Young, and Jonne Kamphorst, and is based on NLRB records.  It contains the known universe
-                    of representation elections from 1962 to 2024.  Soon it will also track the most recent elections as cases
-                    close.  Use the Downloads tab to access the database, check out the Featured Analysis tab to dive deeper
-                    into union scholarship, and use the Contact Us tab with any inquiries or bug reports.", actionLink("citationPopup","Use of data requires
-                    citation")) %>%
+          p("The database was constructed by a team of academic economists/political scientists and is based on NLRB records.
+          Please cite if you use the data or maps/graphs. Use the Contact Us tab with any inquiries or bug reports.
+          This website is about union election data (the flow of organizing activity), it is not about union
+            membership data (the stock of unionized workers). For membership data, please visit",
+            tags$a(href="http://unionstats.com/", "unionstats.com.", target="_blank"),"For info on strikes and work stoppages, use the labor action tracker at" ,
+            tags$a(href="http://striketracker.ilr.cornell.edu", "striketracker.ilr.cornell.edu.", target="_blank"),
+            "And for additional election analysis (for years after 2000) and some excellent real-time case tracking,
+                            check out ",
+            tags$a(href="http://unionelections.org", "unionelections.org.", target="_blank"),
+            actionLink("citationPopup","Please cite if you use the data or maps/graphs")) %>%
             tagAppendAttributes(class = "paragraphMarginFix"),
           div(
-            p("This website is about union election data (the flow of organizing activity), it is not about union
-                            membership data (the stock of unionized workers). For membership data, please visit ",
-              tags$a(href="http://unionstats.com/", "unionstats.com.", target="_blank"),
-              "For info on strikes and work stoppages, use the labor action tracker at" ,
-              tags$a(href="http://striketracker.ilr.cornell.edu", "striketracker.ilr.cornell.edu.", target="_blank"),
-              "And for additional election analysis (for years after 2000) and some excellent real-time case tracking,
-                            check out ",
-              tags$a(href="http://unionelections.org", "unionelections.org.", target="_blank"))%>%
-              tagAppendAttributes(class = "paragraphMarginFix"),
             p("We stand on the shoulders of giants to bring you this resource.  Many thanks to Henry Farber, Bruce Western,
                             J.P. Ferguson, Thomas Holmes, David Lee, Alexandre Mas, and Jack Fiorito for their seminal data collection
                             and research on union elections.  We also thank the Russell Sage Foundation for their support (grant # 2307-44744).") %>%

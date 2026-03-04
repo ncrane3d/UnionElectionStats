@@ -8,24 +8,22 @@ about <- function(id) {
             card(
                 card_header("Research Purpose", align = "center"),
                 div(
-                    p("In a time of high income/wealth inequality and widespread wage suppression and wage theft, the labor movement is enjoying
-                    renewed interest.  But we must learn from history if we are to ensure that modern labor relations fulfills the needs of both
-                    capital and labor.  To that end, quality data is essential.  This team brings over 15 years of combined expertise on union
-                    organizing records to provide the richest and most complete dataset on NLRB elections ever compiled.  We do not say this to
-                    brag, but to highlight that this project is the outcome of a multi-year effort to gather, harmonize, and merge many fragments
-                    of data collected from previous scholars and various FOIA requests.  We also painstakingly geocoded the data whenever possible,
-                    chasing down location info by hand when necessary.  The database is thus ambitious in its scope and novel in its comprehensiveness
-                    and accessibility.", align = "left") %>%
+                    p("In a time of high income/wealth inequality and widespread wage theft, the labor movement is enjoying renewed interest.
+                      But we must learn from history if we are to ensure that modern policy fulfills the needs of both capital and labor.
+                      To that end, quality data is essential.
+                      This team brings over 15 years of combined expertise on union organizing records to provide the richest and most complete dataset on NLRB elections ever compiled.
+                      We do not say this to brag, but to highlight that this project is the outcome of a multi-year effort to gather, harmonize, and merge many fragments of data collected from previous scholars and various FOIA requests.
+                      We also painstakingly geocoded the data whenever possible, chasing down location info by hand when necessary.
+                      The database is thus ambitious in its scope and novel in its comprehensiveness and accessibility.
+                      It contains the known universe of representation elections from 1962 to 2024.
+                      Soon it will also track the most recent elections as cases close.", align = "left") %>%
                         tagAppendAttributes(class = "paragraphMarginFix"),
                     tags$br(),
-                    p("In a time of high income/wealth inequality and widespread wage suppression and wage theft, the labor movement is enjoying
-                    renewed interest.  But we must learn from history if we are to ensure that modern labor relations fulfills the needs of both
-                    capital and labor.  To that end, quality data is essential.  This team brings over 15 years of combined expertise on union
-                    organizing records to provide the richest and most complete dataset on NLRB elections ever compiled.  We do not say this to
-                    brag, but to highlight that this project is the outcome of a multi-year effort to gather, harmonize, and merge many fragments
-                    of data collected from previous scholars and various FOIA requests.  We also painstakingly geocoded the data whenever possible,
-                    chasing down location info by hand when necessary.  The database is thus ambitious in its scope and novel in its comprehensiveness
-                    and accessibility.", align = "left") %>%
+                    p("Election data are especially useful since they are generated from high-frequency events with rich geographic and industry detail.
+                      Whereas membership data come primarily from annual surveys reported at coarse levels of aggregation,
+                      election records are administrative micro-data, allowing for much richer analysis.
+                      Our hope is that by making the data more accessible, other folks can make bold new contributions to knowledge and policy.
+                      Happy researching!", align = "left") %>%
                         tagAppendAttributes(class = "paragraphMarginFix"),
                 )
             )%>%
