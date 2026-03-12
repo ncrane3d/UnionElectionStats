@@ -78,18 +78,18 @@ customGraphModule <- function(id, current_data_slice_processed, labelsDF,
                         aes(x=current_data_slice_processed()$petition,
                             fill = current_data_slice_processed()$petition)) +
                    geom_bar(color = "black") +
-                   scale_fill_manual(values = c("#481A6CFF", "#31688EFF", "#A5DB36FF"))+
+                   scale_fill_manual(values = c( "#A5DB36FF", "#31688EFF","#481A6CFF"))+
                    labs(title = customAxes,
                         x = NULL,
                         y = "Frequency"))
         } else if (customAxes == "Election Type") {
           return(ggplot(data.frame(current_data_slice_processed()$election_type),
-                        aes(x= forcats::fct_infreq(current_data_slice_processed()$election_type),
+                        aes(x=current_data_slice_processed()$election_type,
                             fill = current_data_slice_processed()$election_type)) +
                    geom_bar(position = position_dodge(width = 0.9), color = "black") +
                    geom_text(data = labelsDF(), aes(x = x_pos, y = y_pos, label = paste(stats,"%"), fill = election_type),
                              position = position_dodge(width = 0.9), vjust = -.5, size = 11 / .pt)+
-                   scale_fill_manual(values = c("#481A6CFF","#414487FF", "#31688EFF","#22A884FF","#A5DB36FF")) +
+                   scale_fill_manual(values = c("#A5DB36FF","#22A884FF", "#31688EFF","#414487FF","#481A6CFF")) +
                    scale_x_discrete(labels = c("Stipulation", "Regional Director", "Consent",
                                                "Board ordered", "Expedited "))+
                    labs(title = customAxes,

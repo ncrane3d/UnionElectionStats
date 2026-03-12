@@ -138,7 +138,9 @@ app_server <- function(input, output, session) {
                  filter(is.na(petition)==F))
       }
       else if (input$customAxes == "Election Type"){
-        return(current_data_slice_processed %>% filter(is.na(election_type)==F))
+        return(current_data_slice_processed %>%
+                 filter(is.na(election_type)==F)%>%
+                 mutate(election_type = fct_relevel(election_type,"S", "R", "C", "B", "E")))
       }
       else if (input$customAxes == "Union Support"){
         return(current_data_slice_processed %>%
