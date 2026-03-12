@@ -9,16 +9,15 @@ dashboard <- function(id) {
       right = "10vw",
       card_header(
         layout_columns(
-          p("The database was constructed by a team of academic economists/political scientists and is based on NLRB records.
-          Please cite if you use the data or maps/graphs. Use the Contact Us tab with any inquiries or bug reports.
+          p("This database was constructed by a team of academic economists/political scientists and is based on NLRB records.
+          Please", actionLink("citationPopup","cite"), "if you use the data or maps/graphs. Use the Contact Us tab with any inquiries or bug reports.
           This website is about union election data (the flow of organizing activity), it is not about union
             membership data (the stock of unionized workers). For membership data, please visit",
             tags$a(href="http://unionstats.com/", "unionstats.com.", target="_blank"),"For info on strikes and work stoppages, use the labor action tracker at" ,
             tags$a(href="http://striketracker.ilr.cornell.edu", "striketracker.ilr.cornell.edu.", target="_blank"),
-            "And for additional election analysis (for years after 2000) and some excellent real-time case tracking,
+            "And for additional election analysis and some excellent real-time case tracking,
                             check out ",
-            tags$a(href="http://unionelections.org", "unionelections.org.", target="_blank"),
-            actionLink("citationPopup","Please cite if you use the data or maps/graphs")) %>%
+            tags$a(href="http://unionelections.org", "unionelections.org.", target="_blank")) %>%
             tagAppendAttributes(class = "paragraphMarginFix"),
           div(
             p("We stand on the shoulders of giants to bring you this resource.  Many thanks to Henry Farber, Bruce Western,
@@ -198,7 +197,7 @@ dashboard <- function(id) {
                   "Avg. Votes per Election",
                   "Avg. Union Vote Share",
                   "Avg. Participation Rate",
-                  "Avg. Win Rate"
+                  "Union Win Rate"
                 )
               )
             ) %>%

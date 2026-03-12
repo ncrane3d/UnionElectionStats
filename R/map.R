@@ -1,7 +1,7 @@
-mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering, showElections) {  
+mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering, showElections) {
   moduleServer(
     id,
-    function(input, output, session) { 
+    function(input, output, session) {
         output$map <- renderLeaflet({
             leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
@@ -109,7 +109,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
                     bounds = st_bbox(shape)
                     #Fit bounds of map to clicked shape
                     leafletProxy("map") %>% fitBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
-                } 
+                }
             }
         })
 
@@ -172,15 +172,15 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
         #Election Points
         observe({
             proxy <- leafletProxy("map") %>%
-            clearGroup("points") 
+            clearGroup("points")
             if (nrow(current_data_slice()) > 0 && showElections() == TRUE) {
                 proxy %>%
                 addGlPoints(
                     data = getCircleMarkerData(),
-                    group = "points",       
+                    group = "points",
                     pane = "markers",
-                    layerId = getCircleMarkerData()$case_number, 
-                    fillColor = "#440154",
+                    layerId = getCircleMarkerData()$case_number,
+                    fillColor = "black",
                     radius = 7,
                     opacity = 0.65,
                     popup = ~sprintf(
@@ -210,19 +210,19 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
                     breaks <- c(min(inclusiveBoundaries()[[1]]$state_count, na.rm = TRUE),
                                 max(inclusiveBoundaries()[[1]]$state_count, na.rm = TRUE))
                 }
-                labels <- character(length(breaks) - 1)  
+                labels <- character(length(breaks) - 1)
                 for (i in seq_along(labels)) {
                     labels[i] <- paste0(breaks[i], " – ", breaks[i + 1])
                 }
 
                 leafletProxy("map") %>%
                 clearControls() %>%
-                addLegend("bottomleft", 
-                    colors = rev(viridis(length(breaks) - 1)), 
+                addLegend("bottomleft",
+                    colors = rev(viridis(length(breaks) - 1)),
                     labels = labels,
                     title = "Election Frequency",
                     opacity = 1
-                )   
+                )
             } else {
                 probs <- seq(0, 1, length.out = 11)
                 breaks <- quantile(inclusiveBoundaries()[[2]]$county_count, probs = probs, na.rm = TRUE)
@@ -232,15 +232,15 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
                     breaks <- c(min(inclusiveBoundaries()[[2]]$county_count, na.rm = TRUE),
                                 max(inclusiveBoundaries()[[2]]$county_count, na.rm = TRUE))
                 }
-                labels <- character(length(breaks) - 1) 
+                labels <- character(length(breaks) - 1)
                 for (i in seq_along(labels)) {
                     labels[i] <- paste0(breaks[i], " – ", breaks[i + 1])
                 }
 
                 leafletProxy("map") %>%
                 clearControls() %>%
-                addLegend("bottomleft", 
-                    colors = rev(viridis(length(breaks) - 1)), 
+                addLegend("bottomleft",
+                    colors = rev(viridis(length(breaks) - 1)),
                     labels = labels,
                     title = "Election Frequency",
                     opacity = 1
@@ -249,4 +249,4 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
         })
     }
   )
-}  
+}

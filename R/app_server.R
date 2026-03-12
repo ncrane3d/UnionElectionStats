@@ -34,11 +34,19 @@
 #'
 
 app_server <- function(input, output, session) {
-  shinyalert::shinyalert(title = "Welcome to Union Election Stats",
-                         text = "This website is a user-friendly hub for data on National Labor Relations Board (NLRB) representation elections.
-                         Use the filter panel on the left to explore the history of union organizing through interactive visualizations.
-                         Use the Downloads tab to access the database containing the known universe of elections from 1962 to 2024.
-                         Read more about the project on the About page. Use of data requires citation.", closeOnClickOutside = TRUE, showConfirmButton = FALSE)
+  #popup at website start
+  observeEvent(session, {
+    showModal(modalDialog(
+      title = "Welcome to Union Election Stats",
+      p("This website is a user-friendly hub for data on National Labor Relations Board (NLRB) representation elections.") %>%
+        p("Use the filter panel on the left to explore the history of union organizing through interactive visualizations.
+          Use the Downloads tab to access the database containing the known universe of elections from 1962 to 2024.") %>%
+        p("Read more about the project on the About page. Use of data requires citation."),
+      easyClose = TRUE
+    ))
+  })
+
+
   #Conducts initial filter, without state/county
   electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
   slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
@@ -114,7 +122,7 @@ app_server <- function(input, output, session) {
                           (100 * (sum(votes_for) + sum(votes_against))/sum(eligible))) %>%
                  ungroup())
       }
-      else if (input$customAxes == "Avg. Win Rate"){
+      else if (input$customAxes == "Union Win Rate"){
         return(current_data_slice_processed %>%
                  mutate(winRate = ifelse((votes_for/votes_total) > .5,1,0),
                         winRateCalc = (100*(sum(winRate, na.rm = T) / length(winRate)))))
@@ -283,7 +291,7 @@ app_server <- function(input, output, session) {
         "Avg. Votes per Election",
         "Avg. Union Vote Share",
         "Avg. Participation Rate",
-        "Avg. Win Rate"
+        "Union Win Rate"
       )
       axisLabel <- "Select Y Axis"
     } else if (input$customGraphType == "HIST") {
@@ -335,7 +343,8 @@ app_server <- function(input, output, session) {
                  axis.text.y = element_text(size = 12),
                  axis.title.x = element_text(size = 15),
                  axis.title.y = element_text(size = 15),
-                 plot.title = element_text(size = 18)))
+                 plot.title = element_text(size = 18),
+                 plot.subtitle = element_text(size = 11)))
   }
 
   statLine <- function(func, color, alpha, show_guide) {
