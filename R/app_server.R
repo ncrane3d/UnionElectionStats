@@ -26,7 +26,7 @@
 #' @import fst
 #' @import tidyr
 #' @import forcats
-#' @import ggoutlier
+#' @import GGoutlieR
 #' @import ggthemes
 #' @import shinyalert
 #' @noRd

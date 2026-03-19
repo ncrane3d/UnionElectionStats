@@ -72,8 +72,7 @@ about <- function(id) {
                     bioPanel(
                         "Nathan Crane",
                         "www/resources/images/nathan_crane.jpg",
-                        "I am an undergraduate student studying Software Engineering and Business at Colorado State
-                        University."
+                        "I am a recent CSU graduate working as a software engineer in the Colorado area. Feel free to reach out!"
                     ),
                     bioPanel(
                       "Alison Podgorski",
