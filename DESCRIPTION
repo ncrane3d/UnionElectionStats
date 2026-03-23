@@ -18,7 +18,7 @@ Imports:
     forcats,
     fst,
     gcookbook,
-    GGoutlieR,
+    ggoutlier,
     ggplot2,
     ggthemes,
     glue,
