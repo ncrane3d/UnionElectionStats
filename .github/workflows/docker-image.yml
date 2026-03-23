@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       port:
-        description: 'Host Port to map (e.g., 80 or 443)'
+        description: 'Internal Port to map (usually 3838)'
         required: true
-        default: '80'
+        default: '3838'
   release:
     types: [published]
 
@@ -19,7 +19,8 @@ jobs:
     permissions:
       contents: read
       packages: write
-
+    outputs:
+      image_tag: ${{ steps.meta.outputs.version }} # Passes the exact tag to the deploy job
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,7 +57,6 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     environment: Union Election Stats Deployment
-    
     steps:
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -66,30 +66,37 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           passphrase: ${{ secrets.SERVER_SSH_KEY_PASSPHRASE }}
           port: ${{ secrets.SSH_PORT }}
-          envs: GMAIL_PASS,GITHUB_ACTOR,GITHUB_TOKEN
           script: |
-            REPO_PATH="ncrane3d/unionelectionstats"
+            set -e # Terminate script if any command fails
+            
+            # Use lowercase repo name to match registry
+            REPO_PATH="${{ github.repository }}"
+            REPO_PATH_LC=$(echo "$REPO_PATH" | tr '[:upper:]' '[:lower:]')
+            
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            TAG=${{ github.event.release.tag_name || 'latest' }}
-            IMAGE="ghcr.io/$REPO_PATH:$TAG"
+            # Use the output from the build job to ensure tag consistency
+            TAG="${{ needs.build-and-push.outputs.image_tag }}"
+            IMAGE="ghcr.io/$REPO_PATH_LC:$TAG"
             CONTAINER_NAME="unionelectionstats"
-            HOST_PORT=${{ github.event.inputs.port || '80' }}
+            
+            # Use 127.0.0.1 to hide the port from the public internet
+            HOST_PORT="${{ github.event.inputs.port || '3838' }}"
 
-            echo "Deploying $IMAGE on port $HOST_PORT..."
+            echo "Deploying $IMAGE on 127.0.0.1:$HOST_PORT..."
 
             docker pull $IMAGE
 
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
-            
+
             docker run -d \
               --name $CONTAINER_NAME \
               --restart unless-stopped \
               --memory="11g" \
               --memory-swap="11g" \
               -e GMAIL_PASS="${{ secrets.GMAIL_PASS }}" \
-              -p $HOST_PORT:3838 \
+              -p 127.0.0.1:$HOST_PORT:3838 \
               $IMAGE
-            
+
             docker image prune -f
