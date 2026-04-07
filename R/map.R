@@ -6,6 +6,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
             leaflet(options = leafletOptions(minZoom = 3)) |>
             addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
             addMapPane(name="shapes", zIndex=410) %>%
+            addMapPane(name="lines", zIndex=413)%>%
             addMapPane(name="labels", zIndex=415) %>%
             addMapPane(name="markers", zIndex=420) %>%
             addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
@@ -108,7 +109,10 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
                     #Get bounds of clicked shape
                     bounds = st_bbox(shape)
                     #Fit bounds of map to clicked shape
-                    leafletProxy("map") %>% fitBounds(lat2 = as.numeric(bounds$ymin), lng2= as.numeric(bounds$xmin), lat1=as.numeric(bounds$ymax), lng1=as.numeric(bounds$xmax))
+                    leafletProxy("map") %>% fitBounds(lat2 = as.numeric(bounds$ymin),
+                                                      lng2= as.numeric(bounds$xmin),
+                                                      lat1=as.numeric(bounds$ymax),
+                                                      lng1=as.numeric(bounds$xmax))
                 }
             }
         })
@@ -130,7 +134,13 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
                 layerId= ~ state,
                 highlightOptions = mapHighlight,
                 options= leafletOptions(pane="shapes"),
-            )
+            )%>%
+              addPolylines(data = boundaries()[[1]],
+                           color = "black",
+                           opacity = 1,
+                           weight = 1,
+                           group = "states",
+                           options = pathOptions(pane = "lines"))
         })
 
         #County Layer
@@ -156,7 +166,14 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
                     FIPS
                 ),
                 highlightOptions = mapHighlight
-            )
+            )%>%
+              addPolylines(data = boundaries()[[1]],
+                           color = "black",
+                           opacity = 1,
+                           weight = 2,
+                           group = "counties",
+                           options = pathOptions(pane = "lines"))
+
         })
 
         observeEvent(showElections(), {

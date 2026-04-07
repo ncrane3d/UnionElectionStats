@@ -13,9 +13,9 @@
 app_ui <- function(request) {
   #Set up site theme
   theme <- bs_theme(
-    bg = "#F7F8FA", 
+    bg = "#F7F8FA",
     fg = "#283044", #Dark blue of navbar
-    primary = "#487cebff", 
+    primary = "#487cebff",
     secondary = "#131620", #Black/blue for text
     base_font = "Jost"
   ) %>%
@@ -41,15 +41,18 @@ app_ui <- function(request) {
         ".bslib-sidebar-layout {margin-bottom: 0px; }",
         ".navbar {position: sticky; top: 0; z-index:1000; }",
         ".tooltip-adjustment, .artificial-gap {margin-bottom: 16px !important; }",
-        ".sidebar-content {row-gap: 8px !important; }", 
+        ".sidebar-content {row-gap: 8px !important; }",
         ".custom-visualization-margin { margin-bottom: 10px !important; }",
         "paragraphMarginFix { margin-bottom: 0px !important;}",
         ".modal-body a { color: #283044 !important; }",
         ".modal-title { margin: auto; font-size: 32px !important; }",
         "div h6 {margin-bottom: 0px; margin-top: 8px; }",
         ".modal-content {background-color: #FFFFFF; }",
+
         # Below is styling for all accordions, as seen on featured analysis page
-        ".accordion { width: 80%; margin-left: auto; margin-right: auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
+
+        ".accordion { width: 80%; margin-left: auto; margin-right:
+        auto; --bs-accordion-btn-focus-box-shadow: 0 0 0 .25rem rgba(147, 175, 194, 0) !important;}",
         ".accordion-item, .accordion-header, .accordion-button{  background-color: #FFFFFF;}",
         ".accordion-title {font-weight: bold;}",
         ".accordion-item { margin-bottom: 18px; margin-top: 2px; border-top-width: 1px !important; }",
@@ -58,9 +61,11 @@ app_ui <- function(request) {
         ".accordion-figure { height: auto !important; }",
         ".abstract-row { display: flex; flex-wrap: wrap; gap: 1rem;}",
         ".abstract-figure img { width: 100%; height: auto; display: block; }",
-        ".abstract-figure { flex: 0 1 320px; align-self: flex-start; height: auto !important;}",
+        ".abstract-figure { flex: 0 1 450px; align-self: flex-start; height: auto !important;}",
         ".abstract-text { flex: 1 1 320px; }",
+
         #Below is styling for text accordions, as seen on the download page
+
         "#accordion-download { margin: 0px; }",
         "#accordion-download .accordion-title { font-weight: normal;}",
         "#accordion-download .accordion-header { display: inline-block; font-weight: normal !important;}",
