@@ -51,7 +51,7 @@ app_server <- function(input, output, session) {
   electionDataSubset <- filteringModule("filtering", reactive(input$electionType), reactive(input$industry), reactive(input$county), reactive(input$state), reactive(input$timeframe[1]), reactive(input$timeframe[2]), reactive(input$percentageFavor[1]), reactive(input$percentageFavor[2]), populationData, electionData)
   slice_ignoring_regional_filtering <- reactive({setDF(electionDataSubset())})
 
-  #Conduct regional filtering and take appropiate slice
+  #Conduct regional filtering and take appropriate slice
   current_data_slice <- reactive({
     if (input$state != "All") {
       if (input$county == "All" | input$county == "No State Selected") {
@@ -365,6 +365,7 @@ app_server <- function(input, output, session) {
     return(stat_summary(fun.y = func, geom="line", color = color, alpha = alpha))
   }
 
+  #parses CSV to find image path for each featured paper -> renders image
   observe({
     req("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
@@ -380,6 +381,7 @@ app_server <- function(input, output, session) {
     }
   })
 
+  #parses CSV to check if a row has an image or not -> creates accordion obj
   output$insertFeaturedAnalysisFromCSV <- renderUI ({
     req("./inst/app/www/resources/csv/featured-analysis.csv")
     faCSV <- read.csv("./inst/app/www/resources/csv/featured-analysis.csv")
@@ -398,6 +400,7 @@ app_server <- function(input, output, session) {
     )
   })
 
+  #func. that creates accordion obj
   createFeaturedAnalysisAccordionWithImage <- function(faCSV, i) {
     accordion_panel(
       title = faCSV$title[i],
@@ -409,7 +412,7 @@ app_server <- function(input, output, session) {
             div(class="abstract-text", strong("Abstract: "), p(faCSV$abstract[i])),
             div(class="abstract-figure", strong("Featured Figure: "), div(imageOutput(paste0("figure", i)) %>% tagAppendAttributes(class = "accordion-figure"), align = "center")),
         ),
-        div(strong("Link: "), p(tags$a(href=faCSV$link[i], faCSV$title[i])))
+        div(p(strong("Link: "),tags$a(href=faCSV$link[i], faCSV$title[i])))
       ) %>%
         tagAppendAttributes(id = "accordion-analysis"),
     )
@@ -438,6 +441,7 @@ app_server <- function(input, output, session) {
     ))
   })
 
+  #helpers for contact page
   observeEvent(input$submitButton, {
     if(input$name == "") {
       feedbackWarning("name", (input$name == ""), "Please fill out the name field before pressing submit.")
@@ -549,6 +553,7 @@ app_server <- function(input, output, session) {
     "WY" = "Wyoming"
   )
 
+  #restarts session once app is closed
   session$onSessionEnded(function() {
     # Remove leaflet layers explicitly
     try(leafletProxy("map") %>% clearShapes() %>% clearMarkers() %>% clearControls(), silent = TRUE)
