@@ -188,7 +188,7 @@ app_server <- function(input, output, session) {
   })
 
   #helper method for labels
-  dataLabel <- reactive({
+  dataLabelElection <- reactive({
     if (input$customAxes == "Election Type"){
       current_data_slice <- current_data_slice()
       return(current_data_slice %>%
@@ -204,10 +204,10 @@ app_server <- function(input, output, session) {
     }
   })
 
-  labelsDF <- reactive({
+  labelsDFElection <- reactive({
     yPosAdd <- sum(current_data_slice()$election_type == "S",na.rm = T) * .03
     return(data.frame(
-      label_text = round(dataLabel()[,2],1),
+      label_text = round(dataLabelElection()[,2],1),
       y_pos = c(sum(current_data_slice()$election_type == "S",na.rm = T)+yPosAdd,
                 sum(current_data_slice()$election_type == "R",na.rm = T)+yPosAdd,
                 sum(current_data_slice()$election_type == "C", na.rm = T)+yPosAdd,
@@ -217,10 +217,35 @@ app_server <- function(input, output, session) {
       election_type = c("S", "R", "C", "B", "E")))
   })
 
+  dataLabelPetition <- reactive({
+    if (input$customAxes == "Petition Type"){
+      current_data_slice <- current_data_slice()
+      return(current_data_slice %>%
+               filter(is.na(petition)==F) %>%
+               summarise(RC = 100*(sum((petition == "RC"))/ length(petition)),
+                         RD = 100*(sum((petition == "RD"))/ length(petition)),
+                         RM = 100*(sum((petition == "RM"))/ length(petition))) %>%
+               tidyr::pivot_longer(cols = c(RC,RD,RM),
+                                   names_to = "variable",
+                                   values_to = "stats"))
+    }
+  })
+
+  labelsDFPetition <- reactive({
+    yPosAdd <- sum(current_data_slice()$petition == "RC",na.rm = T) * .03
+    return(data.frame(
+      label_text = round(dataLabelPetition()[,2],1),
+      y_pos = c(sum(current_data_slice()$petition == "RC",na.rm = T)+yPosAdd,
+                sum(current_data_slice()$petition == "RD",na.rm = T)+yPosAdd,
+                sum(current_data_slice()$petition == "RM", na.rm = T)+yPosAdd),
+      x_pos = c(1,2,3),
+      petition_type = c("RC", "RD", "RM")))
+  })
+
   mapModule("mapBuilder", current_data_slice, slice_ignoring_regional_filtering,
             reactive(input$showElections))
 
-  customGraphModule("customGraphBuilder", current_data_slice_processed, labelsDF,
+  customGraphModule("customGraphBuilder", current_data_slice_processed, labelsDFElection,labelsDFPetition,
                     reactive(input$customGraphType),
                     reactive(input$customAxes), plotTheme(), plotMargin(),
                     PlotElementsSize(), statLine())
@@ -341,12 +366,12 @@ app_server <- function(input, output, session) {
 
   #changes the size of tick marks and x/y titles
   PlotElementsSize <- function() {
-    return(theme(axis.text.x = element_text(size = 12),
-                 axis.text.y = element_text(size = 12),
-                 axis.title.x = element_text(size = 15),
-                 axis.title.y = element_text(size = 15),
-                 plot.title = element_text(size = 18),
-                 plot.subtitle = element_text(size = 11)))
+    return(theme(axis.text.x = element_text(size = 14),
+                 axis.text.y = element_text(size = 14),
+                 axis.title.x = element_text(size = 17),
+                 axis.title.y = element_text(size = 17),
+                 plot.title = element_text(size = 20),
+                 plot.subtitle = element_text(size = 12)))
   }
 
   statLine <- function(func, color, alpha, show_guide) {

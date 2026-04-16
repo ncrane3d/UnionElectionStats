@@ -1,7 +1,7 @@
-customGraphModule <- function(id, current_data_slice_processed, labelsDF,
-                              graphTypeInput,
-                              customAxesInput, plotTheme, plotMargin, PlotElementsSize,
-                              statLine) {
+customGraphModule <- function(id, current_data_slice_processed,
+                              labelsDFElection, labelsDFPetition,
+                              graphTypeInput, customAxesInput,
+                              plotTheme, plotMargin, PlotElementsSize,statLine) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -15,41 +15,36 @@ customGraphModule <- function(id, current_data_slice_processed, labelsDF,
         } else if (customAxes == "Eligible Employees") {
           return(ggplot(current_data_slice_processed(),aes(x=year_closed,y=sum_eligible))+
                    geom_line()+
-                   scale_y_continuous(labels = scales::comma,
-                                      limits = c(0,max(current_data_slice_processed()$sum_eligible,na.rm = TRUE)))+
+                   scale_y_continuous(limits = c(0,max(current_data_slice_processed()$sum_eligible,na.rm = TRUE)))+
                    labs(y = "Employees",
                         title = "Sum of Eligible Employees Across Elections")
           )
         } else if (customAxes == "Total Votes") {
           return(ggplot(current_data_slice_processed(), aes(x = year_closed,y=sum_votes))+
                    geom_line()+
-                   scale_y_continuous(labels = scales::comma,
-                                      limits = c(0,max(current_data_slice_processed()$sum_votes,na.rm = TRUE)))+
+                   scale_y_continuous(limits = c(0,max(current_data_slice_processed()$sum_votes,na.rm = TRUE)))+
                    labs(y = customAxes,
                         title = "Sum of Votes Across Elections")
           )
         } else if (customAxes == "Eligible per Election") {
           return(ggplot(current_data_slice_processed(), aes(x=year_closed, y=stats, colour=variable)) +
                    geom_line()+
-                   scale_y_continuous(labels = scales::comma,
-                                      limits = c(0,max(current_data_slice_processed()$stats,na.rm = TRUE)))+
+                   scale_y_continuous(limits = c(0,max(current_data_slice_processed()$stats,na.rm = TRUE)))+
                    scale_color_manual(values = c("#471164FF","#22A884FF"), labels = (labels = c("Mean", "Median")))+
                    labs(y = "Employees",
                         title = "Eligible Employees per Election"))
         } else if (customAxes == "Avg. Votes per Election") {
           return(ggplot(current_data_slice_processed(), aes(x=year_closed, y= stats, colour = variable))+
                    geom_line()+
-                   scale_y_continuous(labels = scales::comma,
-                                      limits = c(0,max(current_data_slice_processed()$stats,na.rm = TRUE)))+
+                   scale_y_continuous(limits = c(0,max(current_data_slice_processed()$stats,na.rm = TRUE)))+
                    scale_color_manual(values = c("#471164FF","#22A884FF"), labels = (labels = c("Against Union", "For Union")))+
                    labs(y = customAxes,
                         title = "Breakdown of Votes"))
         } else if (customAxes == "Avg. Union Vote Share") {
           return(ggplot(current_data_slice_processed(), aes(x=year_closed,y= unionVoteShare))+
                    geom_line()+
-                   scale_y_continuous(labels = scales::comma,
-                                      limits = c(0,100))+
-                   labs(y = "(%) of Votes For A Union",
+                   scale_y_continuous(limits = c(0,100))+
+                   labs(y = "(%) of Votes for a Union",
                         title = customAxes))
         } else if (customAxes == "Avg. Participation Rate") {
           return(ggplot(current_data_slice_processed(), aes(x=year_closed,y= participationRate))+
@@ -59,8 +54,7 @@ customGraphModule <- function(id, current_data_slice_processed, labelsDF,
         } else if (customAxes == "Union Win Rate") {
           return(ggplot(current_data_slice_processed(), aes(x = year_closed, y = winRateCalc))+
                    geom_line()+
-                   scale_y_continuous(labels = scales::comma,
-                                      limits = c(0,100))+
+                   scale_y_continuous(limits = c(0,100))+
                    labs(y = "(%) Won By Unions",
                         title = customAxes))
         }
@@ -78,6 +72,8 @@ customGraphModule <- function(id, current_data_slice_processed, labelsDF,
                         aes(x=current_data_slice_processed()$petition,
                             fill = current_data_slice_processed()$petition)) +
                    geom_bar(color = "black") +
+                   geom_text(data = labelsDFPetition(), aes(x = x_pos, y = y_pos, label = paste(stats,"%"), fill = petition_type),
+                             position = position_dodge(width = 0.9), vjust = -.5, size = 11 / .pt)+
                    scale_fill_manual(values = c( "#A5DB36FF", "#31688EFF","#481A6CFF"))+
                    labs(title = customAxes,
                         x = NULL,
@@ -87,7 +83,7 @@ customGraphModule <- function(id, current_data_slice_processed, labelsDF,
                         aes(x=current_data_slice_processed()$election_type,
                             fill = current_data_slice_processed()$election_type)) +
                    geom_bar(position = position_dodge(width = 0.9), color = "black") +
-                   geom_text(data = labelsDF(), aes(x = x_pos, y = y_pos, label = paste(stats,"%"), fill = election_type),
+                   geom_text(data = labelsDFElection(), aes(x = x_pos, y = y_pos, label = paste(stats,"%"), fill = election_type),
                              position = position_dodge(width = 0.9), vjust = -.5, size = 11 / .pt)+
                    scale_fill_manual(values = c("#A5DB36FF","#22A884FF", "#31688EFF","#414487FF","#481A6CFF")) +
                    scale_x_discrete(labels = c("Stipulation", "Regional Director", "Consent",
@@ -122,7 +118,7 @@ customGraphModule <- function(id, current_data_slice_processed, labelsDF,
           return(ggplot(current_data_slice_processed(), aes(x = participationRate))+
                    geom_histogram(bins = 15,fill = "#39568CFF", color = "black")+
                    labs(title = customAxes,
-                        x = customAxes,
+                        x = "(%) of Eligible Who Voted",
                         y = "Frequency"))
         } else {
           return()
@@ -137,6 +133,7 @@ customGraphModule <- function(id, current_data_slice_processed, labelsDF,
           req(customLineGraphVariableHandler())
           customLineGraphVariableHandler() + labs(x = "Year",
                                                   caption = "Source: unionelectionstats.com")+
+            scale_y_continuous(labels = label_comma())+
             plotTheme +
             PlotElementsSize +
             theme(legend.position = "bottom", legend.title = element_blank(),
@@ -145,6 +142,7 @@ customGraphModule <- function(id, current_data_slice_processed, labelsDF,
         } else if (graphType == "HIST") {
           req(customHistogramVariableHandler())
           customHistogramVariableHandler() + labs(caption = "Source: unionelectionstats.com") +
+            scale_y_continuous(labels = label_comma())+
             plotTheme + PlotElementsSize + theme(legend.position = "none")
         }
       })

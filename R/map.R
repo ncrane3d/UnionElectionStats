@@ -133,7 +133,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
                 group = "states",
                 layerId= ~ state,
                 highlightOptions = mapHighlight,
-                options= leafletOptions(pane="shapes"),
+                options= leafletOptions(pane="shapes")
             )%>%
               addPolylines(data = boundaries()[[1]],
                            color = "black",
@@ -170,7 +170,7 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
               addPolylines(data = boundaries()[[1]],
                            color = "black",
                            opacity = 1,
-                           weight = 2,
+                           weight = 1,
                            group = "counties",
                            options = pathOptions(pane = "lines"))
 
@@ -201,7 +201,9 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
                     radius = 7,
                     opacity = 0.65,
                     popup = ~sprintf(
-                    "Case Number: %s<br/>Employer: %s<br/>Year closed: %s<br/>Pro-union vote share: %s<br/>County: %s (%s)",
+                      ifelse(nchar(FIPS) < 5,
+                             "Case Number: %s<br/>Employer: %s<br/>Year case closed: %s<br/>Pro-union vote share: %s<br/>County: %s (0%s)",
+                             "Case Number: %s<br/>Employer: %s<br/>Year case closed: %s<br/>Pro-union vote share: %s<br/>County: %s (%s)"),
                     case_number,
                     employer,
                     year_closed,
