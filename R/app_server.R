@@ -205,14 +205,13 @@ app_server <- function(input, output, session) {
   })
 
   labelsDFElection <- reactive({
-    yPosAdd <- sum(current_data_slice()$election_type == "S",na.rm = T) * .03
     return(data.frame(
       label_text = round(dataLabelElection()[,2],1),
-      y_pos = c(sum(current_data_slice()$election_type == "S",na.rm = T)+yPosAdd,
-                sum(current_data_slice()$election_type == "R",na.rm = T)+yPosAdd,
-                sum(current_data_slice()$election_type == "C", na.rm = T)+yPosAdd,
-                sum(current_data_slice()$election_type == "B",na.rm = T)+yPosAdd,
-                sum(current_data_slice()$election_type == "E",na.rm = T)+yPosAdd),
+      y_pos = c(sum(current_data_slice()$election_type == "S",na.rm = T),
+                sum(current_data_slice()$election_type == "R",na.rm = T),
+                sum(current_data_slice()$election_type == "C", na.rm = T),
+                sum(current_data_slice()$election_type == "B",na.rm = T),
+                sum(current_data_slice()$election_type == "E",na.rm = T)),
       x_pos = c(1,2,3,4,5),
       election_type = c("S", "R", "C", "B", "E")))
   })
@@ -232,12 +231,11 @@ app_server <- function(input, output, session) {
   })
 
   labelsDFPetition <- reactive({
-    yPosAdd <- sum(current_data_slice()$petition == "RC",na.rm = T) * .03
     return(data.frame(
       label_text = round(dataLabelPetition()[,2],1),
-      y_pos = c(sum(current_data_slice()$petition == "RC",na.rm = T)+yPosAdd,
-                sum(current_data_slice()$petition == "RD",na.rm = T)+yPosAdd,
-                sum(current_data_slice()$petition == "RM", na.rm = T)+yPosAdd),
+      y_pos = c(sum(current_data_slice()$petition == "RC",na.rm = T),
+                sum(current_data_slice()$petition == "RD",na.rm = T),
+                sum(current_data_slice()$petition == "RM", na.rm = T)),
       x_pos = c(1,2,3),
       petition_type = c("RC", "RD", "RM")))
   })
