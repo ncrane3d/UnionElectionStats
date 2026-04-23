@@ -42,15 +42,15 @@ about <- function(id) {
                     bioPanel(
                         "Zachary Schaller",
                         "www/resources/images/zachary_schaller.png",
-                        "I am an applied microeconomist specializing in industrial relations, regional economic development, construction IO, and economic history.
-                        I am particularly interested in labor market institutions, with my current research focused on unions and how deunionization in the US has affected local labor markets."
+                        "I am an Assistant Professor of Economics at Colorado State University.  I received my PhD from University of California, Irvine in 2020.
+                        I am an applied microeconomist specializing in industrial relations, labor history, and construction economics."
                     ),
                     bioPanel(
                         "Samuel Young",
                         "www/resources/images/samuel_young.jpg",
-                        "I am currently an assistant professor of economics at Arizona State University.
+                        "I am currently an Assistant Professor of Economics at Arizona State University.
                         Previously, I was a postdoctoral fellow at the U.S. Census Bureau.
-                        I received my Ph.D. in economics from MIT in 2022."
+                        I received my PhD in economics from MIT in 2022."
                     ),
                 ),
             ),
