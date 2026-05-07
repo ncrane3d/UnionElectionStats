@@ -246,7 +246,7 @@ app_server <- function(input, output, session) {
   customGraphModule("customGraphBuilder", current_data_slice_processed, labelsDFElection,labelsDFPetition,
                     reactive(input$customGraphType),
                     reactive(input$customAxes), plotTheme(), plotMargin(),
-                    PlotElementsSize(), statLine())
+                    PlotElementsSize())
 
   # Uncomment this block to enable the preset graph module
   # presetGraphModule("presetGraphBuilder", current_data_slice, reactive(input$customAxes), plotTheme(), plotMargin(), limitToMaxEligible(), totalVotes(), unionVotes(), unionVoteShare(), participationRate(), statLine())
@@ -370,22 +370,6 @@ app_server <- function(input, output, session) {
                  axis.title.y = element_text(size = 17),
                  plot.title = element_text(size = 20),
                  plot.subtitle = element_text(size = 12)))
-  }
-
-  statLine <- function(func, color, alpha, show_guide) {
-    if (missing(func)){
-      func = "mean"
-    }
-    if (missing(color)){
-      color = "black"
-    }
-    if (missing(alpha)) {
-      alpha = 1
-    }
-    if (missing(show_guide)){
-      show.legend = FALSE
-    }
-    return(stat_summary(fun.y = func, geom="line", color = color, alpha = alpha))
   }
 
   #parses CSV to find image path for each featured paper -> renders image
