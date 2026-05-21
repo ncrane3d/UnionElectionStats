@@ -112,7 +112,7 @@ golem_add_external_resources <- function() {
       path = app_sys("app/www"),
       app_title = "UnionElectionStats"
     ),
-    includeHTML(("Google_analytics.html"))
+    includeHTML(app_sys("app/www/Google_analytics.html"))
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
   )
