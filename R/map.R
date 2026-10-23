@@ -4,12 +4,12 @@ mapModule <- function(id, current_data_slice, slice_ignoring_regional_filtering,
     function(input, output, session) {
         output$map <- renderLeaflet({
             leaflet(options = leafletOptions(minZoom = 3)) |>
-            addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png") |>
+            addTiles("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png?key=cb1_4sey_1_f5fe8a585fad8b80164c238b") |>
             addMapPane(name="shapes", zIndex=410) %>%
             addMapPane(name="lines", zIndex=413)%>%
             addMapPane(name="labels", zIndex=415) %>%
             addMapPane(name="markers", zIndex=420) %>%
-            addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png", options= leafletOptions(pane = "labels")) |>
+            addTiles("https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png?key=cb1_4sey_1_f5fe8a585fad8b80164c238b", options= leafletOptions(pane = "labels")) |>
             #Zoom based conditional rendering for layers
             groupOptions("points", zoomLevels = 6:20) |>
             groupOptions("counties", zoomLevels = 5:20) |>
